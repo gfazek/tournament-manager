@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+  
+    <parent>
+        <groupId>hu.unideb.gergofazekas</groupId>
+        <artifactId>tournamentapp</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+  
+    <artifactId>tournamentapp-service</artifactId>
+    <packaging>ejb</packaging>
+    <name>Tournament Manager Application Service Module</name>
+ 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ejb-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>hu.unideb.gergofazekas</groupId>
+            <artifactId>tournamentapp-data</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>hu.unideb.gergofazekas</groupId>
+            <artifactId>tournamentapp-service-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+</project>
