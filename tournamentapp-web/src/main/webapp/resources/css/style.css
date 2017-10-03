@@ -1,0 +1,32 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2017.10.01., 0:00:45
+    Author     : gfazekas
+*/
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 60px;
+    line-height: 60px; /* Vertically center the text there */
+    background-color: #20b2aa;
+}
+
+.footer-rounded-top{
+    border-top-left-radius:.50rem!important;
+    border-top-right-radius:.50rem!important
+}
+
+.footer-text{
+    color:#fff!important
+}
+
+.navbar-bg {
+    background-color: #20b2aa;
+}
