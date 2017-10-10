@@ -30,3 +30,25 @@ and open the template in the editor.
 .navbar-bg {
     background-color: #20b2aa;
 }
+
+.custom-card {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 3px solid #20b2aa;
+    border-radius: .50rem
+}
+
+.custom-card-header {
+    padding: .75rem 1.25rem;
+    margin-bottom: 0;
+    color: #fff;
+    background-color: #20b2aa;
+    border-bottom: 1px solid rgba(0,0,0,.125)
+}
