@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hu.unideb.gergofazekas.web;
+package hu.unideb.gergofazekas.web.bean;
 
 import hu.unideb.gergofazekas.service.PersonServiceLocal;
 import hu.unideb.gergofazekas.vo.GenderVo;
 import hu.unideb.gergofazekas.vo.PersonVo;
 import java.util.Date;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
@@ -27,7 +28,7 @@ public class RegistrationBean {
     private String email;
     private String firstName;
     private String lastName;
-    private GenderVo gender;
+    private GenderVo[] genders;
     private Date dob;
     
     @EJB
@@ -36,8 +37,17 @@ public class RegistrationBean {
     public RegistrationBean() {
     }
     
+    @PostConstruct
+    public void init() {
+        personVo = new PersonVo();
+    }
+    
     public void createPerson() {
         personServiceLocal.createPerson(personVo);
+    }
+    
+    public GenderVo[] getGenders() {
+        return GenderVo.values();
     }
 
     public PersonVo getPersonVo() {

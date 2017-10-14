@@ -29,17 +29,17 @@ and open the template in the editor.
                                 <div class="form-row">
                                     <div class="form-group col-sm-6">
                                         <h:outputLabel for="username" value="Username" styleClass="col-form-label"/>
-                                        <h:inputText id="username" required="true" styleClass="form-control"/>
+                                        <h:inputText id="username" value="#{registrationBean.personVo.username}" required="true" styleClass="form-control"/>
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <h:outputLabel for="email" value="E-mail" styleClass="col-form-label"/>
-                                        <h:inputText id="email" required="true" styleClass="form-control"/>
+                                        <h:inputText id="email" value="#{registrationBean.personVo.email}" required="true" styleClass="form-control"/>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-sm-6">
                                         <h:outputLabel for="pw" value="Password" styleClass="col-form-label"/>
-                                        <h:inputSecret id="pw" required="true" styleClass="form-control"/>
+                                        <h:inputSecret id="pw" value="#{registrationBean.personVo.password}" required="true" styleClass="form-control"/>
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <h:outputLabel for="pwConfirm" value="Password again" styleClass="col-form-label"/>
@@ -51,46 +51,41 @@ and open the template in the editor.
                                 <div class="form-row">
                                     <div class="form-group col-sm-6">
                                         <h:outputLabel for="fname" value="First Name" styleClass="col-form-label"/>
-                                        <h:inputText id="fname" required="true" styleClass="form-control"/>
+                                        <h:inputText id="fname" value="#{registrationBean.personVo.firstName}" required="true" styleClass="form-control"/>
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <h:outputLabel for="lname" value="Last Name" styleClass="col-form-label"/>
-                                        <h:inputText id="lname" required="true" styleClass="form-control"/>
+                                        <h:inputText id="lname" value="#{registrationBean.personVo.lastName}" required="true" styleClass="form-control"/>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-sm-6">
-                                        <h:outputLabel for="pw" value="Password" styleClass="col-form-label"/>
-                                        <h:selectOneRadio id="gender" required="true">
-                                            <f:selectItem itemValue="female" itemLabel="Female" />
-                                            <f:selectItem itemValue="male" itemLabel="Male"/>
-                                        </h:selectOneRadio>
-                                    </div>
-                                    <div class="form-group col-sm-6">
-                                        <h:outputLabel for="dob" value="Date of birth" styleClass="col-form-label"/>
-                                        <h:inputText id="dob" required="true" styleClass="form-control"/>
-                                    </div>
+                                        <h:outputLabel for="gender" value="Gender" styleClass="col-form-label"/>
+                                        <h:selectOneRadio id="gender" value="#{registrationBean.personVo.gender}" required="true">
+                                            <f:selectItems value="#{registrationBean.genders}" var="gender" itemValue="#{gender}" itemLabel="#{gender.name()}" />
+                                    </h:selectOneRadio>
                                 </div>
+                                <div class="form-group col-sm-6">
+                                    <h:outputLabel for="dob" value="Date of birth" styleClass="col-form-label"/>
+                                    <h:inputText id="dob" value="#{registrationBean.personVo.dob}" required="true" styleClass="form-control">
+                                        <f:convertDateTime pattern="yyyy-MM-dd"/>
+                                    </h:inputText>
+                                </div>
+                            </div>
 
-                                <div class="row justify-content-end">
-                                    <div class="col-4">
-                                        <h:commandButton id="submit" styleClass="btn btn-primary" value="SUBMIT" />
-                                    </div>
+                            <div class="row justify-content-end">
+                                <div class="col-4">
+                                    <h:commandButton id="submit" styleClass="btn btn-primary" value="SUBMIT" action="#{registrationBean.createPerson()}"/>
                                 </div>
-                            </h:form>
-                        </div>
+                            </div>
+                        </h:form>
                     </div>
                 </div>
-                <div class="col-12 col-md-4" style="background-color: yellow">
-                    <h:message showSummary="true" showDetail="false"
-                               style="color: #d20005;
-                               font-family: 'New Century Schoolbook', serif;
-                               font-style: oblique;
-                               text-decoration: overline"
-                               id="errors1"
-                               for="username"/>
-                </div>
+            </div>
+            <div class="col-12 col-md-4" style="background-color: yellow">
+                <h:messages showSummary="true" showDetail="false" />
             </div>
         </div>
-    </ui:define>
+    </div>
+</ui:define>
 </ui:composition>
