@@ -63,29 +63,29 @@ and open the template in the editor.
                                         <h:outputLabel for="gender" value="Gender" styleClass="col-form-label"/>
                                         <h:selectOneRadio id="gender" value="#{registrationBean.personVo.gender}" required="true">
                                             <f:selectItems value="#{registrationBean.genders}" var="gender" itemValue="#{gender}" itemLabel="#{gender.name()}" />
-                                    </h:selectOneRadio>
+                                        </h:selectOneRadio>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <h:outputLabel for="dob" value="Date of birth" styleClass="col-form-label"/>
+                                        <h:inputText id="dob" value="#{registrationBean.personVo.dob}" required="true" styleClass="form-control">
+                                            <f:convertDateTime pattern="yyyy-MM-dd"/>
+                                        </h:inputText>
+                                    </div>
                                 </div>
-                                <div class="form-group col-sm-6">
-                                    <h:outputLabel for="dob" value="Date of birth" styleClass="col-form-label"/>
-                                    <h:inputText id="dob" value="#{registrationBean.personVo.dob}" required="true" styleClass="form-control">
-                                        <f:convertDateTime pattern="yyyy-MM-dd"/>
-                                    </h:inputText>
-                                </div>
-                            </div>
 
-                            <div class="row justify-content-end">
-                                <div class="col-4">
-                                    <h:commandButton id="submit" styleClass="btn btn-primary" value="SUBMIT" action="#{registrationBean.createPerson()}"/>
+                                <div class="row justify-content-end">
+                                    <div class="col-4">
+                                        <h:commandButton id="submit" styleClass="btn btn-primary" value="SUBMIT" action="#{registrationBean.createPerson()}"/>
+                                    </div>
                                 </div>
-                            </div>
-                        </h:form>
+                            </h:form>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-12 col-md-4" style="background-color: yellow">
-                <h:messages showSummary="true" showDetail="false" />
+                <div class="col-12 col-md-4">
+                    <h:messages showSummary="true" showDetail="false" />
+                </div>
             </div>
         </div>
-    </div>
-</ui:define>
+    </ui:define>
 </ui:composition>
