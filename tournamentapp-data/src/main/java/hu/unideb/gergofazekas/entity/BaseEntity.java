@@ -3,42 +3,34 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hu.unideb.gergofazekas;
+package hu.unideb.gergofazekas.entity;
 
-import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 
 /**
  *
  * @author gfazekas
  */
 
-@Entity
-public class Person implements Serializable {
+@MappedSuperclass
+public class BaseEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
-    
-    private String name;
+    @Column(name = "ID")
+    private Long id;
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
-    public void setId(Long Id) {
-        this.Id = Id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setId(Long id) {
+        this.id = id;
     }
     
 }

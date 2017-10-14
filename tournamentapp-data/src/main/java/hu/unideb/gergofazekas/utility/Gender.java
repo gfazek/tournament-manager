@@ -3,14 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hu.unideb.gergofazekas;
-
-import hu.unideb.gergofazekas.PersonVO;
+package hu.unideb.gergofazekas.utility;
 
 /**
  *
  * @author gfazekas
  */
-public interface PersonService {
-    void addPerson(PersonVO personVO);
+public enum Gender {
+    MALE, FEMALE
 }

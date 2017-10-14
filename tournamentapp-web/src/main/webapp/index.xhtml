@@ -16,12 +16,14 @@ and open the template in the editor.
         <title>indeex</title>
     </ui:define>
     <ui:define name="customContent">
-        <h:form>
-            <h:inputText value="#{indexBean.name}" />
-            <h:commandButton action="#{indexBean.adding()}" value="Submit" />
-        </h:form>
-        <div class="alert alert-primary" role="alert">
-            This is a primary alert—check it out!
+        <div class="jumbotron">
+            <h1 class="display-3">Have you ever thought about creating and managing your own tournaments?</h1>
+            <p class="lead">This is the application you're looking for. </p>
+            <hr class="my-4"/>
+                <p>Feel free to register or if you've already had an account log in.</p>
+                <p class="lead">
+                    <a class="btn btn-primary btn-lg" href="#" role="button">Register</a>
+                </p>
         </div>
     </ui:define>
 </ui:composition>
