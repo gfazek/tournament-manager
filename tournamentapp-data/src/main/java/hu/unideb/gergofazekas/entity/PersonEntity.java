@@ -45,7 +45,7 @@ public class PersonEntity extends BaseEntity implements Serializable{
     @Column(name = "GENDER")
     private Gender gender;
     @Basic(optional = false)
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     @Column(name = "DATE_OF_BIRTH")
     private Date dob;
 
