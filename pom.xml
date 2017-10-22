@@ -83,6 +83,16 @@
                 <version>${eclipselink.version}</version>
                 <scope>provided</scope>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-web</artifactId>
+                <version>4.2.3.RELEASE</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-config</artifactId>
+                <version>4.2.3.RELEASE</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
