@@ -13,6 +13,10 @@ import javax.ejb.Stateless;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 /**
  *
@@ -38,5 +42,22 @@ public class PersonBean implements PersonServiceLocal{
         em.persist(personEntity);
         return personVo;
     }
+
+    @Override
+    public PersonVo getPersonByUsername(String username) {
+        PersonEntity personEntity = (PersonEntity) em.createNamedQuery("findPersonByUsername").setParameter("username", username).getSingleResult();
+        PersonVo personVo = new PersonVo();
+        personVo.setUsername(personEntity.getUsername());
+        personVo.setEmail(personEntity.getEmail());
+        personVo.setPassword(personEntity.getPassword());
+        personVo.setEnabled(personEntity.isEnabled());
+        personVo.setFirstName(personEntity.getFirstName());
+        personVo.setLastName(personEntity.getLastName());
+        personVo.setGender(GenderVo.valueOf(personEntity.getGender().name()));
+        personVo.setDob(personEntity.getDob());
+        return personVo;
+    }
+    
+    
     
 }

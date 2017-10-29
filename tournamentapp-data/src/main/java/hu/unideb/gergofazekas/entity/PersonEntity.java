@@ -13,6 +13,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -23,8 +25,11 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "PERSON")
-public class PersonEntity extends BaseEntity implements Serializable{
-    
+@NamedQueries({
+    @NamedQuery(name = "findPersonByUsername", query = "SELECT p FROM PersonEntity p WHERE p.username LIKE :username")
+})
+public class PersonEntity extends BaseEntity implements Serializable {
+
     @Basic(optional = false)
     @Column(name = "USERNAME")
     private String username;
@@ -34,6 +39,12 @@ public class PersonEntity extends BaseEntity implements Serializable{
     @Basic(optional = false)
     @Column(name = "PASSWORD")
     private String password;
+    @Basic(optional = false)
+    @Column(name = "ENABLED")
+    private boolean enabled = true;
+    @Basic(optional = false)
+    @Column(name = "ROLE")
+    private String role = "USER";
     @Basic(optional = false)
     @Column(name = "FIRSTNAME")
     private String firstName;
@@ -76,6 +87,22 @@ public class PersonEntity extends BaseEntity implements Serializable{
         this.password = password;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -107,5 +134,5 @@ public class PersonEntity extends BaseEntity implements Serializable{
     public void setDob(Date dob) {
         this.dob = dob;
     }
-    
+
 }
