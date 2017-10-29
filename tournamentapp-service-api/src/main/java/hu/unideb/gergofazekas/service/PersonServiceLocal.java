@@ -16,5 +16,6 @@ import javax.ejb.Local;
 public interface PersonServiceLocal {
     
     PersonVo createPerson(PersonVo personVo);
+    PersonVo getPersonByUsername(String username);
     
 }
