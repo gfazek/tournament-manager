@@ -21,17 +21,18 @@ and open the template in the editor.
                 <h4 class="custom-card-header">Login</h4>
                 <div class="card-body">
                     <h4 class="card-title">If you don't have an account, click here to register.</h4>
-                    <h:form id="loginForm" styleClass="form-signin">
+                    <form id="loginForm" class="form-signin" method="post" action="/tournamentapp/login">
                         <div class="form-group" >
-                            <h:outputLabel for="username" value="Username" />
-                            <h:inputText id="username" styleClass="form-control" />
+                            <label for="username">Username</label>
+                            <input type="text" id="username" name="username" class="form-control" />
                         </div>
                         <div class="form-group">
-                            <h:outputLabel for="password" value="Password" />
-                            <h:inputSecret id="password" styleClass="form-control" />
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" name="password" id="password"/>
+                            
                         </div>
-                        <h:commandButton id="submit" styleClass="btn-lg btn btn-primary" value="SIGN IN"/>
-                    </h:form>
+                        <button type="submit" class="btn-lg btn btn-primary">SIGN IN</button>
+                    </form>
                 </div>
             </div>
         </div>
