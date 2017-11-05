@@ -32,15 +32,15 @@ public class TournamentEntity extends BaseEntity implements Serializable {
     private CompetitorType competitorType;
     
     @Basic(optional = false)
-    @Column(name = "USERNAME")
+    @Column(name = "WIN_POINT")
     private int winPoint;
     
     @Basic(optional = false)
-    @Column(name = "USERNAME")
+    @Column(name = "LOOSE_POINT")
     private int loosePoint;
     
     @Basic(optional = false)
-    @Column(name = "USERNAME")
+    @Column(name = "DRAW_POINT")
     private int drawPoint;
     
      
