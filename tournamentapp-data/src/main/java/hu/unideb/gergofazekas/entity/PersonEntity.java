@@ -8,11 +8,16 @@ package hu.unideb.gergofazekas.entity;
 import hu.unideb.gergofazekas.utility.Gender;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -43,9 +48,6 @@ public class PersonEntity extends BaseEntity implements Serializable {
     @Column(name = "ENABLED")
     private boolean enabled = true;
     @Basic(optional = false)
-    @Column(name = "ROLE")
-    private String role = "USER";
-    @Basic(optional = false)
     @Column(name = "FIRSTNAME")
     private String firstName;
     @Basic(optional = false)
@@ -59,6 +61,15 @@ public class PersonEntity extends BaseEntity implements Serializable {
     @Temporal(TemporalType.DATE)
     @Column(name = "DATE_OF_BIRTH")
     private Date dob;
+
+    @JoinTable(name = "PERSON_ROLE", joinColumns = {
+        @JoinColumn(name = "PERSON_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
+        @JoinColumn(name = "GROUP_ID", referencedColumnName = "ID")})
+    @ManyToMany
+    private List<RoleEntity> roles;
+    
+    @ManyToOne //needs joincolumn
+    private TeamEntity team;
 
     public PersonEntity() {
     }
@@ -95,12 +106,12 @@ public class PersonEntity extends BaseEntity implements Serializable {
         this.enabled = enabled;
     }
 
-    public String getRole() {
-        return role;
+    public List<RoleEntity> getRoles() {
+        return roles;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoles(List<RoleEntity> roles) {
+        this.roles = roles;
     }
 
     public String getFirstName() {
@@ -133,6 +144,14 @@ public class PersonEntity extends BaseEntity implements Serializable {
 
     public void setDob(Date dob) {
         this.dob = dob;
+    }
+
+    public TeamEntity getTeam() {
+        return team;
+    }
+
+    public void setTeam(TeamEntity team) {
+        this.team = team;
     }
 
 }
