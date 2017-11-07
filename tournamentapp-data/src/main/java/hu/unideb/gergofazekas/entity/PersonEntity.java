@@ -74,6 +74,18 @@ public class PersonEntity extends BaseEntity implements Serializable {
     public PersonEntity() {
     }
 
+    public PersonEntity(String username, String email, String password, String firstName, String lastName, Gender gender, Date dob, List<RoleEntity> roles, TeamEntity team) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.gender = gender;
+        this.dob = dob;
+        this.roles = roles;
+        this.team = team;
+    }
+
     public String getUsername() {
         return username;
     }
