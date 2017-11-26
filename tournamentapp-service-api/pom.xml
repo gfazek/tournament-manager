@@ -11,5 +11,13 @@
     <artifactId>tournamentapp-service-api</artifactId>
     <packaging>jar</packaging>
     <name>Tournament Manager Application Service-API Module</name>
+    
+    <dependencies>
+        <dependency>
+            <groupId>hu.unideb.gergofazekas</groupId>
+            <artifactId>tournamentapp-data</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
   
 </project>
