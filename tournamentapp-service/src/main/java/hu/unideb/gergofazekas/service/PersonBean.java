@@ -6,6 +6,7 @@
 package hu.unideb.gergofazekas.service;
 
 import hu.unideb.gergofazekas.entity.PersonEntity;
+import hu.unideb.gergofazekas.entity.RoleEntity;
 import hu.unideb.gergofazekas.utility.Gender;
 import hu.unideb.gergofazekas.vo.GenderVo;
 import hu.unideb.gergofazekas.vo.PersonVo;
@@ -58,6 +59,12 @@ public class PersonBean implements PersonServiceLocal{
         return personVo;
     }
     
+    public void persistPerson(PersonEntity person, RoleEntity role) {
+        role.getPeople().add(person);
+        person.getRoles().add(role);
+        em.merge(role);
+        em.persist(person);
+    }
     
     
 }
