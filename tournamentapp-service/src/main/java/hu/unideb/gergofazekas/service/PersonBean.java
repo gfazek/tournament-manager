@@ -59,12 +59,12 @@ public class PersonBean implements PersonServiceLocal{
         return personVo;
     }
     
+    @Override
     public void persistPerson(PersonEntity person, RoleEntity role) {
         role.getPeople().add(person);
         person.getRoles().add(role);
         em.merge(role);
         em.persist(person);
     }
-    
     
 }

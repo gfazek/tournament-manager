@@ -19,11 +19,12 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 @Named
-public class TeamBean {
+public class TeamBean implements TeamServiceLocal {
 
     @PersistenceContext
     private EntityManager em;
 
+    @Override
     public void persistTeam(TeamEntity team, PersonEntity person) {
         person.getTeams().add(team);
         em.merge(person);
