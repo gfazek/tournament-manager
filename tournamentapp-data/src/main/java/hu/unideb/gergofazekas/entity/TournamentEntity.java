@@ -42,7 +42,9 @@ public class TournamentEntity extends BaseEntity implements Serializable {
     @Basic(optional = false)
     @Column(name = "DRAW_POINT")
     private int drawPoint;
-    
+
+    public TournamentEntity() {
+    }
      
     
 }

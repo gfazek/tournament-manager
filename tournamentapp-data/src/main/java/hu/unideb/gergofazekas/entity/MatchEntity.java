@@ -17,7 +17,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "MATCH")
-public class MatchEntity extends BaseEntity implements Serializable{
+public class MatchEntity extends BaseEntity implements Serializable {
     
     @Basic(optional = false)
     @Column(name = "HOME_SCORE")
@@ -26,5 +26,8 @@ public class MatchEntity extends BaseEntity implements Serializable{
     @Basic(optional = false)
     @Column(name = "AWAY_SCORE")
     private int awayScore;
+
+    public MatchEntity() {
+    }
     
 }

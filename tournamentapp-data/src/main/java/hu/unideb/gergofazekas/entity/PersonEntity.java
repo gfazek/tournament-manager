@@ -6,7 +6,9 @@
 package hu.unideb.gergofazekas.entity;
 
 import hu.unideb.gergofazekas.utility.Gender;
+import hu.unideb.gergofazekas.utility.Role;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -64,17 +66,21 @@ public class PersonEntity extends BaseEntity implements Serializable {
 
     @JoinTable(name = "PERSON_ROLE", joinColumns = {
         @JoinColumn(name = "PERSON_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
-        @JoinColumn(name = "GROUP_ID", referencedColumnName = "ID")})
+        @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID")})
     @ManyToMany
     private List<RoleEntity> roles;
-    
-    @ManyToOne //needs joincolumn
-    private TeamEntity team;
+
+    @JoinTable(name = "PERSON_TEAM", joinColumns = {
+        @JoinColumn(name = "PERSON_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
+        @JoinColumn(name = "TEAM_ID", referencedColumnName = "ID")})
+    @ManyToMany
+    @JoinColumn(name = "TEAM_ID")
+    private List<TeamEntity> teams;
 
     public PersonEntity() {
     }
 
-    public PersonEntity(String username, String email, String password, String firstName, String lastName, Gender gender, Date dob, List<RoleEntity> roles, TeamEntity team) {
+    public PersonEntity(String username, String email, String password, String firstName, String lastName, Gender gender, Date dob) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -82,8 +88,59 @@ public class PersonEntity extends BaseEntity implements Serializable {
         this.lastName = lastName;
         this.gender = gender;
         this.dob = dob;
-        this.roles = roles;
-        this.team = team;
+        this.roles = new ArrayList<>();
+        this.teams = new ArrayList<>();
+    }
+
+    public static class PersonBuilder {
+
+        private String nestedUsername;
+        private String nestedEmail;
+        private String nestedPassword;
+        private String nestedFirstName;
+        private String nestedLastName;
+        private Gender nestedGender;
+        private Date nestedDob;
+
+        public PersonBuilder username(String username) {
+            this.nestedUsername = username;
+            return this;
+        }
+
+        public PersonBuilder email(String email) {
+            this.nestedEmail = email;
+            return this;
+        }
+
+        public PersonBuilder password(String password) {
+            this.nestedPassword = password;
+            return this;
+        }
+
+        public PersonBuilder firstName(String firstName) {
+            this.nestedFirstName = firstName;
+            return this;
+        }
+
+        public PersonBuilder lastName(String lastName) {
+            this.nestedLastName = lastName;
+            return this;
+        }
+
+        public PersonBuilder gender(Gender gender) {
+            this.nestedGender = gender;
+            return this;
+        }
+
+        public PersonBuilder dob(Date dob) {
+            this.nestedDob = dob;
+            return this;
+        }
+        
+        public PersonEntity createPerson() {
+            return new PersonEntity(nestedUsername, nestedEmail, nestedPassword, nestedFirstName, nestedLastName, nestedGender, nestedDob);
+        }
+
     }
 
     public String getUsername() {
@@ -158,12 +215,12 @@ public class PersonEntity extends BaseEntity implements Serializable {
         this.dob = dob;
     }
 
-    public TeamEntity getTeam() {
-        return team;
+    public List<TeamEntity> getTeams() {
+        return teams;
     }
 
-    public void setTeam(TeamEntity team) {
-        this.team = team;
+    public void setTeams(List<TeamEntity> teams) {
+        this.teams = teams;
     }
 
 }

@@ -7,6 +7,7 @@ package hu.unideb.gergofazekas.entity;
 
 import hu.unideb.gergofazekas.utility.Role;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -30,9 +31,15 @@ public class RoleEntity extends BaseEntity implements Serializable {
     private Role role;
     
     @ManyToMany(mappedBy = "roles")
-    private List<PersonEntity> persons;
+    private List<PersonEntity> people;
 
     public RoleEntity() {
+        this.people = new ArrayList<>();
+    }
+    
+    public RoleEntity(Role role) {
+        this.role = role;
+        this.people = new ArrayList<>();
     }
     
     public Role getRole() {
@@ -43,12 +50,12 @@ public class RoleEntity extends BaseEntity implements Serializable {
         this.role = role;
     }
 
-    public List<PersonEntity> getPersons() {
-        return persons;
+    public List<PersonEntity> getPeople() {
+        return people;
     }
 
-    public void setPersons(List<PersonEntity> persons) {
-        this.persons = persons;
+    public void setPeople(List<PersonEntity> people) {
+        this.people = people;
     }
     
 }

@@ -6,10 +6,12 @@
 package hu.unideb.gergofazekas.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -25,10 +27,15 @@ public class TeamEntity extends BaseEntity implements Serializable {
     @Column(name = "NAME")
     private String name;
     
-    @OneToMany(mappedBy = "team")
+    @ManyToMany(mappedBy = "teams")
     private List<PersonEntity> players;
     
     public TeamEntity() {
+    }
+
+    public TeamEntity(String name) {
+        this.name = name;
+        this.players = new ArrayList<>();
     }
 
     public List<PersonEntity> getPlayers() {
