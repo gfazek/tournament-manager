@@ -5,10 +5,13 @@
  */
 package hu.unideb.gergofazekas.web.bean;
 
+import hu.unideb.gergofazekas.entity.PersonEntity;
+import hu.unideb.gergofazekas.entity.RoleEntity;
 import hu.unideb.gergofazekas.service.PersonServiceLocal;
-import hu.unideb.gergofazekas.vo.GenderVo;
-import hu.unideb.gergofazekas.vo.PersonVo;
+import hu.unideb.gergofazekas.utility.Gender;
+import hu.unideb.gergofazekas.utility.Role;
 import java.util.Date;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
@@ -22,13 +25,16 @@ import javax.inject.Named;
 @RequestScoped
 public class RegistrationBean {
     
-    private PersonVo personVo;
+    private static final Logger logger
+            = Logger.getLogger("service.InitializerBean");
+    
+    private PersonEntity personEntity;
     private String username;
     private String password;
     private String email;
     private String firstName;
     private String lastName;
-    private GenderVo[] genders;
+    private Gender[] genders;
     private Date dob;
     
     @EJB
@@ -39,23 +45,24 @@ public class RegistrationBean {
     
     @PostConstruct
     public void init() {
-        personVo = new PersonVo();
+        personEntity = new PersonEntity();
     }
     
     public void createPerson() {
-        personServiceLocal.createPerson(personVo);
+        logger.info("In createPerson");
+        personServiceLocal.persistPerson(personEntity, Role.USER);
     }
     
-    public GenderVo[] getGenders() {
-        return GenderVo.values();
+    public Gender[] getGenders() {
+        return Gender.values();
     }
 
-    public PersonVo getPersonVo() {
-        return personVo;
+    public PersonEntity getPersonEntity() {
+        return personEntity;
     }
 
-    public void setPersonVo(PersonVo personVo) {
-        this.personVo = personVo;
+    public void setPersonEntity(PersonEntity personEntity) {
+        this.personEntity = personEntity;
     }
     
 }

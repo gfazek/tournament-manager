@@ -15,6 +15,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -23,6 +25,9 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "ROLE")
+@NamedQueries({
+    @NamedQuery(name = "findRoleByName", query = "SELECT r FROM RoleEntity r WHERE r.id LIKE 1")
+})
 public class RoleEntity extends BaseEntity implements Serializable {
     
     @Basic(optional = false)

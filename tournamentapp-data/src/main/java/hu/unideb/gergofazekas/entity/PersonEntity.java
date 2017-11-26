@@ -78,6 +78,7 @@ public class PersonEntity extends BaseEntity implements Serializable {
     private List<TeamEntity> teams;
 
     public PersonEntity() {
+        this.roles = new ArrayList<>();
     }
 
     public PersonEntity(String username, String email, String password, String firstName, String lastName, Gender gender, Date dob) {
