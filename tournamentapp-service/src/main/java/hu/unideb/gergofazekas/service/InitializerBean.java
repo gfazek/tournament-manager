@@ -5,9 +5,12 @@
  */
 package hu.unideb.gergofazekas.service;
 
+import hu.unideb.gergofazekas.entity.MatchEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.RoleEntity;
 import hu.unideb.gergofazekas.entity.TeamEntity;
+import hu.unideb.gergofazekas.entity.TournamentEntity;
+import hu.unideb.gergofazekas.utility.CompetitorType;
 import hu.unideb.gergofazekas.utility.Gender;
 import hu.unideb.gergofazekas.utility.Role;
 import java.util.ArrayList;
@@ -44,6 +47,12 @@ public class InitializerBean {
     
     @EJB
     private TeamServiceLocal teamServiceLocal;
+    
+    @EJB
+    private TournamentServiceLocal tournamentServiceLocal;
+    
+    @EJB
+    private MatchServiceLocal matchServiceLocal;
 
     @PostConstruct
     public void init() {
@@ -76,6 +85,12 @@ public class InitializerBean {
         teamServiceLocal.persistTeam(teamEntity1, personEntity1);
         teamServiceLocal.persistTeam(teamEntity1, personEntity2);
         teamServiceLocal.persistTeam(teamEntity3, personEntity5);
+        
+        TournamentEntity tournamentEntity = new TournamentEntity("Premier League", CompetitorType.TEAM, 3, 0, 1);
+        tournamentServiceLocal.persistTournament(tournamentEntity);
+        
+        MatchEntity matchEntity = new MatchEntity(3, 2);
+        matchServiceLocal.persistMatch(matchEntity, tournamentEntity);
     }
 
     private Date calendarToDate(int year, int month, int day) {
