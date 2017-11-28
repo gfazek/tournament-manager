@@ -89,7 +89,7 @@ public class InitializerBean {
         TournamentEntity tournamentEntity = new TournamentEntity("Premier League", CompetitorType.TEAM, 3, 0, 1);
         tournamentServiceLocal.persistTournament(tournamentEntity);
         
-        MatchEntity matchEntity = new MatchEntity(3, 2);
+        MatchEntity matchEntity = new MatchEntity(1, 2, 3, 2);
         matchServiceLocal.persistMatch(matchEntity, tournamentEntity);
     }
 
