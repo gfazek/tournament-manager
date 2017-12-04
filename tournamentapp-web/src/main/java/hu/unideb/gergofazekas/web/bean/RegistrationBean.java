@@ -48,9 +48,10 @@ public class RegistrationBean {
         personEntity = new PersonEntity();
     }
     
-    public void createPerson() {
+    public String createPerson() {
         logger.info("In createPerson");
         personServiceLocal.persistPerson(personEntity, Role.USER);
+        return "index";
     }
     
     public Gender[] getGenders() {

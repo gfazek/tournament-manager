@@ -20,28 +20,20 @@ and open the template in the editor.
             <div class="custom-card">
                 <h4 class="custom-card-header">Tournament creation</h4>
                 <div class="card-body">
-                    <h4 class="card-title">Join us! Fill the registration form, submit it to become a user!</h4>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <h4 class="card-title">Creating tournaments</h4>
+                    <p class="card-text">Fill the form below to create a tournament</p>
                     <h:form id="registrationForm">
                         <h5>Details</h5>
                         <div class="form-row">
                             <div class="form-group col-sm-6">
                                 <h:outputLabel for="tournamentname" value="Tournament Name" styleClass="col-form-label"/>
-                                <h:inputText id="tournamentname" value="#{registrationBean.personVo.username}" required="true" styleClass="form-control"/>
+                                <h:inputText id="tournamentname" value="#{tournamentRegistrationBean.tournamentEntity.name}" required="true" styleClass="form-control"/>
                             </div>
                             <div class="form-group col-sm-6">
-                                <h:outputLabel for="email" value="E-mail" styleClass="col-form-label"/>
-                                <h:inputText id="email" value="#{registrationBean.personVo.email}" required="true" styleClass="form-control"/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-sm-6">
-                                <h:outputLabel for="pw" value="Password" styleClass="col-form-label"/>
-                                <h:inputSecret id="pw" value="#{registrationBean.personVo.password}" required="true" styleClass="form-control"/>
-                            </div>
-                            <div class="form-group col-sm-6">
-                                <h:outputLabel for="pwConfirm" value="Password again" styleClass="col-form-label"/>
-                                <h:inputSecret id="pwConfirm" required="true" styleClass="form-control"/>
+                                <h:outputLabel for="tournamenttype" value="Type of the tournament" styleClass="col-form-label"/>
+                                <h:selectOneRadio id="competitorType" value="#{tournamentRegistrationBean.tournamentEntity.competitorType}" required="true">
+                                    <f:selectItems value="#{tournamentRegistrationBean.competitorTypes}" var="competitorType" itemValue="#{competitorType}" itemLabel="#{competitorType.name()}" />
+                                </h:selectOneRadio>
                             </div>
                         </div>
                         <hr/>
@@ -49,35 +41,20 @@ and open the template in the editor.
                         <div class="form-row">
                             <div class="form-group col-sm-4">
                                 <h:outputLabel for="winpoint" value="Win point" styleClass="col-form-label"/>
-                                <h:inputText id="winpoint" value="#{registrationBean.personVo.firstName}" required="true" styleClass="form-control"/>
+                                <h:inputText id="winpoint" value="#{tournamentRegistrationBean.tournamentEntity.winPoint}" required="true" styleClass="form-control"/>
                             </div>
                             <div class="form-group col-sm-4">
                                 <h:outputLabel for="drawpoint" value="Draw point" styleClass="col-form-label"/>
-                                <h:inputText id="drawpoint" value="#{registrationBean.personVo.lastName}" required="true" styleClass="form-control"/>
+                                <h:inputText id="drawpoint" value="#{tournamentRegistrationBean.tournamentEntity.drawPoint}" required="true" styleClass="form-control"/>
                             </div>
                             <div class="form-group col-sm-4">
                                 <h:outputLabel for="loosepoint" value="Loose point" styleClass="col-form-label"/>
-                                <h:inputText id="loosepoint" value="#{registrationBean.personVo.lastName}" required="true" styleClass="form-control"/>
+                                <h:inputText id="loosepoint" value="#{tournamentRegistrationBean.tournamentEntity.loosePoint}" required="true" styleClass="form-control"/>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="form-group col-sm-6">
-                                <h:outputLabel for="tournamenttype" value="Type of the tournament" styleClass="col-form-label"/>
-                                <h:selectOneRadio id="gender" value="#{registrationBean.personVo.gender}" required="true">
-                                    <f:selectItems value="#{registrationBean.genders}" var="gender" itemValue="#{gender}" itemLabel="#{gender.name()}" />
-                                </h:selectOneRadio>
-                            </div>
-                            <div class="form-group col-sm-6">
-                                <h:outputLabel for="dob" value="Deadline for registration" styleClass="col-form-label"/>
-                                <h:inputText id="dob" value="#{registrationBean.personVo.dob}" required="true" styleClass="form-control">
-                                    <f:convertDateTime pattern="yyyy-MM-dd"/>
-                                </h:inputText>
-                            </div>
-                        </div>
-
                         <div class="row justify-content-end">
                             <div class="col-4">
-                                <h:commandButton id="submit" styleClass="btn btn-primary" value="CREATE" action="#{registrationBean.createPerson()}"/>
+                                <h:commandButton id="submit" styleClass="btn btn-primary" value="CREATE" action="#{tournamentRegistrationBean.createTournament()}"/>
                             </div>
                         </div>
                     </h:form>
