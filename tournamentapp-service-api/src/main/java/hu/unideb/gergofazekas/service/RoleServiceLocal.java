@@ -7,7 +7,7 @@ package hu.unideb.gergofazekas.service;
 
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.RoleEntity;
-import hu.unideb.gergofazekas.utility.Role;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -15,9 +15,9 @@ import javax.ejb.Local;
  * @author gfazekas
  */
 @Local
-public interface PersonServiceLocal {
+public interface RoleServiceLocal {
     
-    void persistPerson(PersonEntity personEntity, RoleEntity roleEntity);
-    void persistPerson(PersonEntity personEntity, Role role);
+    void persistRole(RoleEntity roleEntity);
+    void addPeopleToRole(RoleEntity roleEntity, List<PersonEntity> people);
     
 }

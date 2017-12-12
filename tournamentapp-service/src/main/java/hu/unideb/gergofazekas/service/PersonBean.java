@@ -8,8 +8,8 @@ package hu.unideb.gergofazekas.service;
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.RoleEntity;
 import hu.unideb.gergofazekas.utility.Gender;
-import hu.unideb.gergofazekas.vo.GenderVo;
-import hu.unideb.gergofazekas.vo.PersonVo;
+import hu.unideb.gergofazekas.utility.Role;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -27,44 +27,32 @@ import javax.persistence.criteria.Root;
 @Named
 public class PersonBean implements PersonServiceLocal{
 
+    private static final Logger logger
+            = Logger.getLogger("service.InitializerBean");
+    
     @PersistenceContext
     private EntityManager em;
     
     @Override
-    public PersonVo createPerson(PersonVo personVo) {
-        PersonEntity personEntity = new PersonEntity();
-        personEntity.setUsername(personVo.getUsername());
-        personEntity.setEmail(personVo.getEmail());
-        personEntity.setPassword(personVo.getPassword());
-        personEntity.setFirstName(personVo.getFirstName());
-        personEntity.setLastName(personVo.getLastName());
-        personEntity.setGender(Gender.valueOf(personVo.getGender().name()));
-        personEntity.setDob(personVo.getDob());
-        em.persist(personEntity);
-        return personVo;
-    }
-
-    @Override
-    public PersonVo getPersonByUsername(String username) {
-        PersonEntity personEntity = (PersonEntity) em.createNamedQuery("findPersonByUsername").setParameter("username", username).getSingleResult();
-        PersonVo personVo = new PersonVo();
-        personVo.setUsername(personEntity.getUsername());
-        personVo.setEmail(personEntity.getEmail());
-        personVo.setPassword(personEntity.getPassword());
-        personVo.setEnabled(personEntity.isEnabled());
-        personVo.setFirstName(personEntity.getFirstName());
-        personVo.setLastName(personEntity.getLastName());
-        personVo.setGender(GenderVo.valueOf(personEntity.getGender().name()));
-        personVo.setDob(personEntity.getDob());
-        return personVo;
-    }
-    
     public void persistPerson(PersonEntity person, RoleEntity role) {
         role.getPeople().add(person);
         person.getRoles().add(role);
         em.merge(role);
         em.persist(person);
     }
-    
+
+    @Override
+    public void persistPerson(PersonEntity personEntity, Role role) {
+        logger.info("personentity is: " + personEntity);
+        logger.info("In persistPerson....");
+        logger.info("Role is: " + role.name());
+        //RoleEntity roleEntity = (RoleEntity) em.createNamedQuery("findRoleByName").getSingleResult();
+        RoleEntity roleEntity = em.find(RoleEntity.class, new Long(1));
+        logger.info("roleentity is: " + roleEntity);
+        roleEntity.getPeople().add(personEntity);
+        personEntity.getRoles().add(roleEntity);
+        em.merge(roleEntity);
+        em.persist(personEntity);
+    }
     
 }

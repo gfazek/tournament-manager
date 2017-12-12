@@ -5,9 +5,7 @@
  */
 package hu.unideb.gergofazekas.service;
 
-import hu.unideb.gergofazekas.entity.PersonEntity;
-import hu.unideb.gergofazekas.entity.TeamEntity;
-import java.util.List;
+import hu.unideb.gergofazekas.entity.TournamentEntity;
 import javax.ejb.Stateless;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -19,16 +17,15 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 @Named
-public class TeamBean implements TeamServiceLocal {
+public class TournamentBean implements TournamentServiceLocal {
 
     @PersistenceContext
     private EntityManager em;
-
+    
     @Override
-    public void persistTeam(TeamEntity team, PersonEntity person) {
-        person.getTeams().add(team);
-        em.merge(person);
-        team.getPlayers().add(person);
-        em.persist(team);
+    public void persistTournament(TournamentEntity tournamentEntity) {
+        em.persist(tournamentEntity);
     }
+    
+    
 }

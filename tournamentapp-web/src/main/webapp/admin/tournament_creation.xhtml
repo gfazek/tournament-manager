@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:dt="http://java.sun.com/jsf/composite/components"
+                template="../template.xhtml">
+
+    <ui:define name="customHead">
+        <title>Tournament creation</title>
+    </ui:define>
+    <ui:define name="customContent">
+        <div class="container">
+            <div class="custom-card">
+                <h4 class="custom-card-header">Tournament creation</h4>
+                <div class="card-body">
+                    <h4 class="card-title">Creating tournaments</h4>
+                    <p class="card-text">Fill the form below to create a tournament</p>
+                    <h:form id="registrationForm">
+                        <h5>Details</h5>
+                        <div class="form-row">
+                            <div class="form-group col-sm-6">
+                                <h:outputLabel for="tournamentname" value="Tournament Name" styleClass="col-form-label"/>
+                                <h:inputText id="tournamentname" value="#{tournamentRegistrationBean.tournamentEntity.name}" required="true" styleClass="form-control"/>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <h:outputLabel for="tournamenttype" value="Type of the tournament" styleClass="col-form-label"/>
+                                <h:selectOneRadio id="competitorType" value="#{tournamentRegistrationBean.tournamentEntity.competitorType}" required="true">
+                                    <f:selectItems value="#{tournamentRegistrationBean.competitorTypes}" var="competitorType" itemValue="#{competitorType}" itemLabel="#{competitorType.name()}" />
+                                </h:selectOneRadio>
+                            </div>
+                        </div>
+                        <hr/>
+                        <h5>Parameters</h5>
+                        <div class="form-row">
+                            <div class="form-group col-sm-4">
+                                <h:outputLabel for="winpoint" value="Win point" styleClass="col-form-label"/>
+                                <h:inputText id="winpoint" value="#{tournamentRegistrationBean.tournamentEntity.winPoint}" required="true" styleClass="form-control"/>
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <h:outputLabel for="drawpoint" value="Draw point" styleClass="col-form-label"/>
+                                <h:inputText id="drawpoint" value="#{tournamentRegistrationBean.tournamentEntity.drawPoint}" required="true" styleClass="form-control"/>
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <h:outputLabel for="loosepoint" value="Loose point" styleClass="col-form-label"/>
+                                <h:inputText id="loosepoint" value="#{tournamentRegistrationBean.tournamentEntity.loosePoint}" required="true" styleClass="form-control"/>
+                            </div>
+                        </div>
+                        <div class="row justify-content-end">
+                            <div class="col-4">
+                                <h:commandButton id="submit" styleClass="btn btn-primary" value="CREATE" action="#{tournamentRegistrationBean.createTournament()}"/>
+                            </div>
+                        </div>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

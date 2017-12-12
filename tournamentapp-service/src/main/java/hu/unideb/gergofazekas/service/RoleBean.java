@@ -20,28 +20,23 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 @Named
-public class RoleBean {
+public class RoleBean implements RoleServiceLocal {
     
     @PersistenceContext
     private EntityManager em;
     
+    @Override
     public void persistRole(RoleEntity roleEntity) {
         em.persist(roleEntity);
     }
     
+    @Override
     public void addPeopleToRole(RoleEntity role, List<PersonEntity> people) {
         role.getPeople().addAll(people);
         for (PersonEntity person : people) {
             person.getRoles().add(role);
         }
         em.merge(role);
-    }
-    
-    public void persistPerson(PersonEntity person, RoleEntity role) {
-        role.getPeople().add(person);
-        person.getRoles().add(role);
-        em.merge(role);
-        em.persist(person);
     }
     
 }
