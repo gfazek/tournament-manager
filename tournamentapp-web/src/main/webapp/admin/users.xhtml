@@ -10,6 +10,7 @@ and open the template in the editor.
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:dt="http://java.sun.com/jsf/composite/components"
+                xmlns:p="http://primefaces.org/ui"
                 template="../template.xhtml">
 
     <ui:define name="customHead">
@@ -21,32 +22,41 @@ and open the template in the editor.
                 <h4 class="custom-card-header">User list</h4>
                 <div class="card-body">
                     <h4 class="card-title">If you don't have an account, click here to register.</h4>
-                    <h:dataTable id="userTable" value="#{usersBean.users}" var="user" styleClass="table table-striped">
-                        <h:column>
+                    <h:form>
+                        <p:dataTable id="userTable" value="#{usersBean.users}" var="user" widgetVar="usersTable" 
+                                     rows="10" paginator="true" reflow="true" filteredValue="#{usersBean.filteredUsers}" sortBy="#{user.username}"> <!-- styleClass="table table-striped" -->
                             <f:facet name="header">
-                                <h:outputText value="Username"/>
+                                <p:outputPanel>
+                                    <h:outputText value="Search all fields:" />
+                                    <p:inputText id="globalFilter" onkeyup="PF('usersTable').filter()" style="width:150px" placeholder="Enter keyword"/>
+                                </p:outputPanel>
                             </f:facet>
-                            <h:outputText value="#{user.username}"/>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">
-                                <h:outputText value="Full name" />
-                            </f:facet>
-                            <h:outputText value="#{user.firstName} #{user.lastName}" />
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">
-                                <h:outputText value="E-mail" />
-                            </f:facet>
-                            <h:outputText value="#{user.email}" />
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">
-                                <h:outputText value="Status" />
-                            </f:facet>
-                            <h:outputText value="#{user.enabled}" />
-                        </h:column>
-                    </h:dataTable>
+                            <p:column filterBy="#{user.username}">
+                                <f:facet name="header">
+                                    <h:outputText value="Username"/>
+                                </f:facet>
+                                <h:outputText value="#{user.username}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Full name" />
+                                </f:facet>
+                                <h:outputText value="#{user.firstName} #{user.lastName}" />
+                            </p:column>
+                            <p:column filterBy="#{user.email}">
+                                <f:facet name="header">
+                                    <h:outputText value="E-mail" />
+                                </f:facet>
+                                <h:outputText value="#{user.email}" />
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Status" />
+                                </f:facet>
+                                <h:outputText value="#{user.enabled ? 'Active' : 'Inactive'}" />
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
                 </div>
             </div>
         </div>
