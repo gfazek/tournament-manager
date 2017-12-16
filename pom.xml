@@ -93,6 +93,11 @@
                 <artifactId>spring-security-config</artifactId>
                 <version>4.2.3.RELEASE</version>
             </dependency>
+            <dependency>
+                <groupId>org.primefaces</groupId>
+                <artifactId>primefaces</artifactId>
+                <version>6.1</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
