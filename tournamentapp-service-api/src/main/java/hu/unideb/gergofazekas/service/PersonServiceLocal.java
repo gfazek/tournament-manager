@@ -21,5 +21,6 @@ public interface PersonServiceLocal {
     void persistPerson(PersonEntity personEntity, RoleEntity roleEntity);
     void persistPerson(PersonEntity personEntity, Role role);
     List<PersonEntity> getPeople();
+    void deletePerson(Long id);
     
 }

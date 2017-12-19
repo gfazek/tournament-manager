@@ -55,6 +55,12 @@ and open the template in the editor.
                                 </f:facet>
                                 <h:outputText value="#{user.enabled ? 'Active' : 'Inactive'}" />
                             </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Operations" />
+                                </f:facet>
+                                <h:commandLink value="Delete"  actionListener="#{usersBean.deleteUser(user.id)}"/>
+                            </p:column>
                         </p:dataTable>
                     </h:form>
                 </div>

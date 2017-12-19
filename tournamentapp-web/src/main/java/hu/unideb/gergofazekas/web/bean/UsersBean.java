@@ -9,6 +9,8 @@ import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.service.PersonServiceLocal;
 import java.io.Serializable;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
@@ -24,6 +26,9 @@ import javax.inject.Named;
 @ViewScoped
 public class UsersBean implements Serializable {
 
+    private static final Logger logger
+            = Logger.getLogger("web.bean.UsersBean");
+    
     private List<PersonEntity> users;
     private List<PersonEntity> filteredUsers;
     
@@ -36,6 +41,11 @@ public class UsersBean implements Serializable {
     @PostConstruct
     public void init() {
         users = personServiceLocal.getPeople();
+    }
+    
+    public void deleteUser(Long id) {
+        personServiceLocal.deletePerson(id);
+        init();
     }
 
     public List<PersonEntity> getUsers() {

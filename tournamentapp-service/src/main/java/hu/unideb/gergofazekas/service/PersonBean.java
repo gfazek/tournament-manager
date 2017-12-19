@@ -10,6 +10,7 @@ import hu.unideb.gergofazekas.entity.RoleEntity;
 import hu.unideb.gergofazekas.utility.Gender;
 import hu.unideb.gergofazekas.utility.Role;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Named;
@@ -60,5 +61,14 @@ public class PersonBean implements PersonServiceLocal{
     public List<PersonEntity> getPeople() {
         return em.createNamedQuery("Person.findAll", PersonEntity.class).getResultList();
     }
+
+    @Override
+    public void deletePerson(Long id) {
+        PersonEntity personEntity = em.find(PersonEntity.class, id);
+        logger.log(Level.INFO, ">>>>>>>>>>" + personEntity.toString());
+        em.remove(personEntity);
+    }
+    
+    
     
 }
