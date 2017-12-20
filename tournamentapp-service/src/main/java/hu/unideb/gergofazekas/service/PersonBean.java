@@ -68,7 +68,13 @@ public class PersonBean implements PersonServiceLocal{
         logger.log(Level.INFO, ">>>>>>>>>>" + personEntity.toString());
         em.remove(personEntity);
     }
-    
+
+    @Override
+    public void changeUserStatus(Long id) {
+        PersonEntity personEntity = em.find(PersonEntity.class, id);
+        personEntity.setEnabled(!personEntity.isEnabled());
+        em.merge(personEntity);
+    }
     
     
 }

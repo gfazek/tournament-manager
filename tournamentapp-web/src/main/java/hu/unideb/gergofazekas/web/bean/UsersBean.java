@@ -47,6 +47,11 @@ public class UsersBean implements Serializable {
         personServiceLocal.deletePerson(id);
         init();
     }
+    
+    public void changeUserStatus(Long id) {
+        personServiceLocal.changeUserStatus(id);
+        init();
+    }
 
     public List<PersonEntity> getUsers() {
         return users;
