@@ -45,7 +45,7 @@ and open the template in the editor.
                                 <h:outputText value="#{user.enabled ? 'Active' : 'Inactive'}" />
                             </p:column>
                             <p:column headerText="Operations">
-                                <h:commandLink value="Delete"  actionListener="#{usersBean.deleteUser(user.id)}"/>
+                                <h:commandLink value="Delete"  actionListener="#{usersBean.deleteUser(user.id)}"/><br/>
                                 <h:commandLink value="Change Status"  actionListener="#{usersBean.changeUserStatus(user.id)}"/>
                             </p:column>
                         </p:dataTable>
