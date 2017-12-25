@@ -8,6 +8,7 @@ package hu.unideb.gergofazekas.service;
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.RoleEntity;
 import hu.unideb.gergofazekas.utility.Role;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -19,5 +20,8 @@ public interface PersonServiceLocal {
     
     void persistPerson(PersonEntity personEntity, RoleEntity roleEntity);
     void persistPerson(PersonEntity personEntity, Role role);
+    List<PersonEntity> getPeople();
+    void deletePerson(Long id);
+    void changeUserStatus(Long id);
     
 }
