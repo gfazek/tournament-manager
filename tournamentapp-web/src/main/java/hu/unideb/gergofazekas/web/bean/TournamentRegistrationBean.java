@@ -33,7 +33,7 @@ public class TournamentRegistrationBean {
     
     @PostConstruct
     public void init() {
-        tournamentEntity = new TournamentEntity();
+//        tournamentEntity = new TournamentEntity();
     }
     
     public String createTournament() {
