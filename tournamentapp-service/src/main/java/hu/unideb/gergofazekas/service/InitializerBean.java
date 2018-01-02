@@ -5,10 +5,12 @@
  */
 package hu.unideb.gergofazekas.service;
 
+import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
 import hu.unideb.gergofazekas.entity.MatchEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.RoleEntity;
 import hu.unideb.gergofazekas.entity.TeamEntity;
+import hu.unideb.gergofazekas.entity.TeamRoundRobinTournamentEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
 import hu.unideb.gergofazekas.utility.CompetitorType;
 import hu.unideb.gergofazekas.utility.Gender;
@@ -86,8 +88,11 @@ public class InitializerBean {
         teamServiceLocal.persistTeam(teamEntity1, personEntity2);
         teamServiceLocal.persistTeam(teamEntity3, personEntity5);
         
-        TournamentEntity tournamentEntity = new TournamentEntity("Premier League", CompetitorType.TEAM, 3, 0, 1);
+        TournamentEntity tournamentEntity = new IndividualRoundRobinTournamentEntity("Premier League", 3, 1, 0);
+        TournamentEntity teamtournamentEntity = new TeamRoundRobinTournamentEntity("Premier League", 3, 1, 0);
         tournamentServiceLocal.persistTournament(tournamentEntity);
+        tournamentServiceLocal.persistTournament(teamtournamentEntity);
+        
         
         MatchEntity matchEntity = new MatchEntity(1, 2, 3, 2);
         matchServiceLocal.persistMatch(matchEntity, tournamentEntity);

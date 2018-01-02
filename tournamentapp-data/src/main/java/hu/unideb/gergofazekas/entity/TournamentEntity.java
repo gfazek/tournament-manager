@@ -11,9 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -23,42 +26,26 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "TOURNAMENT")
-public class TournamentEntity extends BaseEntity implements Serializable {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "TYPE")
+public abstract class TournamentEntity extends BaseEntity implements Serializable {
     
     @Basic(optional = false)
     @Column(name = "NAME")
     private String name;
     
-    @Basic(optional = false)
-    @Column(name = "COMPETITOR_TYPE")
-    @Enumerated(EnumType.STRING)
-    private CompetitorType competitorType;
-    
-    @Basic(optional = false)
-    @Column(name = "WIN_POINT")
-    private int winPoint;
-    
-    @Basic(optional = false)
-    @Column(name = "LOOSE_POINT")
-    private int loosePoint;
-    
-    @Basic(optional = false)
-    @Column(name = "DRAW_POINT")
-    private int drawPoint;
-    
     @OneToMany(mappedBy = "tournament")
     private List<MatchEntity> matches;
 
+//    public TournamentEntity() {
+//        this.matches = new ArrayList<>();
+//    }
+
     public TournamentEntity() {
-        this.matches = new ArrayList<>();
     }
 
-    public TournamentEntity(String name, CompetitorType competitorType, int winPoint, int loosePoint, int drawPoint) {
+    public TournamentEntity(String name) {
         this.name = name;
-        this.competitorType = competitorType;
-        this.winPoint = winPoint;
-        this.loosePoint = loosePoint;
-        this.drawPoint = drawPoint;
         this.matches = new ArrayList<>();
     }
 
@@ -68,38 +55,6 @@ public class TournamentEntity extends BaseEntity implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public CompetitorType getCompetitorType() {
-        return competitorType;
-    }
-
-    public void setCompetitorType(CompetitorType competitorType) {
-        this.competitorType = competitorType;
-    }
-
-    public int getWinPoint() {
-        return winPoint;
-    }
-
-    public void setWinPoint(int winPoint) {
-        this.winPoint = winPoint;
-    }
-
-    public int getLoosePoint() {
-        return loosePoint;
-    }
-
-    public void setLoosePoint(int loosePoint) {
-        this.loosePoint = loosePoint;
-    }
-
-    public int getDrawPoint() {
-        return drawPoint;
-    }
-
-    public void setDrawPoint(int drawPoint) {
-        this.drawPoint = drawPoint;
     }
 
     public List<MatchEntity> getMatches() {
