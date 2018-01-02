@@ -6,6 +6,7 @@
 package hu.unideb.gergofazekas.entity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -30,8 +31,8 @@ public class IndividualRoundRobinTournamentEntity extends RoundRobinTournamentEn
     public IndividualRoundRobinTournamentEntity() {
     }
     
-    public IndividualRoundRobinTournamentEntity(String name, int winPoint, int drawPoint, int loosePoint) {
-        super(name, winPoint, drawPoint, loosePoint);
+    public IndividualRoundRobinTournamentEntity(String name, int numberOfCompetitors, Date start, int winPoint, int drawPoint, int loosePoint) {
+        super(name, numberOfCompetitors, start, winPoint, drawPoint, loosePoint);
         people = new ArrayList<>();
     }
 

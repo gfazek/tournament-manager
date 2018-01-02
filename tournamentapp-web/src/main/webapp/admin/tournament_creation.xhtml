@@ -10,6 +10,7 @@ and open the template in the editor.
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:dt="http://java.sun.com/jsf/composite/components"
+                xmlns:p="http://primefaces.org/ui"
                 template="../template.xhtml">
 
     <ui:define name="customHead">
@@ -24,37 +25,57 @@ and open the template in the editor.
                     <p class="card-text">Fill the form below to create a tournament</p>
                     <h:form id="registrationForm">
                         <h5>Details</h5>
+                        <p:outputLabel for="tournamentType" value="Type of the tournament: " />
+                        <h:selectOneMenu id="tournamentType" onchange="showTournamentType(this.value)" value="#{tournamentRegistrationBean.tournamentVo.tournamentType}">
+                            <f:selectItem itemLabel="Select one" itemValue="" />
+                            <f:selectItem itemLabel="Round Robin" itemValue="RoundRobin" />
+                            <f:selectItem itemLabel="Elimination" itemValue="Elimination" />
+                        </h:selectOneMenu>
                         <div class="form-row">
                             <div class="form-group col-sm-6">
                                 <h:outputLabel for="tournamentname" value="Tournament Name" styleClass="col-form-label"/>
-                                <h:inputText id="tournamentname" value="#{tournamentRegistrationBean.tournamentEntity.name}" required="true" styleClass="form-control"/>
+                                <h:inputText id="tournamentname" value="#{tournamentRegistrationBean.tournamentVo.name}" required="true" styleClass="form-control"/>
                             </div>
                             <div class="form-group col-sm-6">
                                 <h:outputLabel for="tournamenttype" value="Type of the tournament" styleClass="col-form-label"/>
-                                <h:selectOneRadio id="competitorType" value="#{tournamentRegistrationBean.tournamentEntity.competitorType}" required="true">
+                                <h:selectOneRadio id="competitorType" value="#{tournamentRegistrationBean.tournamentVo.competitorType}" required="true">
                                     <f:selectItems value="#{tournamentRegistrationBean.competitorTypes}" var="competitorType" itemValue="#{competitorType}" itemLabel="#{competitorType.name()}" />
                                 </h:selectOneRadio>
                             </div>
                         </div>
-                        <hr/>
-                        <h5>Parameters</h5>
                         <div class="form-row">
-                            <div class="form-group col-sm-4">
-                                <h:outputLabel for="winpoint" value="Win point" styleClass="col-form-label"/>
-                                <h:inputText id="winpoint" value="#{tournamentRegistrationBean.tournamentEntity.winPoint}" required="true" styleClass="form-control"/>
+                            <div class="form-group col-sm-6">
+                                <h:outputLabel for="numberOfCompetitors" value="Number of Competitors" styleClass="col-form-label"/>
+                                <h:inputText id="numberOfCompetitors" value="#{tournamentRegistrationBean.tournamentVo.numberOfCompetitors}" required="true" styleClass="form-control"/>
                             </div>
-                            <div class="form-group col-sm-4">
-                                <h:outputLabel for="drawpoint" value="Draw point" styleClass="col-form-label"/>
-                                <h:inputText id="drawpoint" value="#{tournamentRegistrationBean.tournamentEntity.drawPoint}" required="true" styleClass="form-control"/>
-                            </div>
-                            <div class="form-group col-sm-4">
-                                <h:outputLabel for="loosepoint" value="Loose point" styleClass="col-form-label"/>
-                                <h:inputText id="loosepoint" value="#{tournamentRegistrationBean.tournamentEntity.loosePoint}" required="true" styleClass="form-control"/>
+                            <div class="form-group col-sm-6">
+                                <h:outputLabel for="tournamentStart" value="Start date" styleClass="col-form-label"/>
+                                <h:inputText id="tournamentStart" value="#{tournamentRegistrationBean.tournamentVo.start}" required="true" styleClass="form-control">
+                                    <f:convertDateTime pattern="yyyy-MM-dd"/>
+                                </h:inputText>
                             </div>
                         </div>
-                        <div class="row justify-content-end">
-                            <div class="col-4">
-                                <h:commandButton id="submit" styleClass="btn btn-primary" value="CREATE" action="#{tournamentRegistrationBean.createTournament()}"/>
+                        <hr/>
+                        <div id="roundrobin" style="display: none">
+                            <h5>Parameters</h5>
+                            <div class="form-row">
+                                <div class="form-group col-sm-4">
+                                    <h:outputLabel for="winpoint" value="Win point" styleClass="col-form-label"/>
+                                    <h:inputText id="winpoint" value="#{tournamentRegistrationBean.tournamentVo.winPoint}" required="true" styleClass="form-control"/>
+                                </div>
+                                <div class="form-group col-sm-4">
+                                    <h:outputLabel for="drawpoint" value="Draw point" styleClass="col-form-label"/>
+                                    <h:inputText id="drawpoint" value="#{tournamentRegistrationBean.tournamentVo.drawPoint}" required="true" styleClass="form-control"/>
+                                </div>
+                                <div class="form-group col-sm-4">
+                                    <h:outputLabel for="loosepoint" value="Loose point" styleClass="col-form-label"/>
+                                    <h:inputText id="loosepoint" value="#{tournamentRegistrationBean.tournamentVo.loosePoint}" required="true" styleClass="form-control"/>
+                                </div>
+                            </div>
+                            <div class="row justify-content-end">
+                                <div class="col-4">
+                                    <h:commandButton id="submit" styleClass="btn btn-primary" value="CREATE" action="#{tournamentRegistrationBean.createTournament()}"/>
+                                </div>
                             </div>
                         </div>
                     </h:form>

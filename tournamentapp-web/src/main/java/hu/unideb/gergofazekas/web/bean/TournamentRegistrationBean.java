@@ -5,9 +5,14 @@
  */
 package hu.unideb.gergofazekas.web.bean;
 
+import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
+import hu.unideb.gergofazekas.entity.RoundRobinTournamentEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
 import hu.unideb.gergofazekas.service.TournamentServiceLocal;
-import hu.unideb.gergofazekas.utility.CompetitorType;
+import hu.unideb.gergofazekas.web.utility.CompetitorType;
+import hu.unideb.gergofazekas.web.utility.TournamentType;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
@@ -21,8 +26,12 @@ import javax.inject.Named;
 @RequestScoped
 public class TournamentRegistrationBean {
 
+    private static final Logger logger
+            = Logger.getLogger("bean.TournamentRegistrationBean");
+    
     private TournamentEntity tournamentEntity;
     private CompetitorType[] competitorTypes;
+    private TournamentVo tournamentVo;
     
     @EJB
     private TournamentServiceLocal tournamentServiceLocal;
@@ -33,10 +42,16 @@ public class TournamentRegistrationBean {
     
     @PostConstruct
     public void init() {
-//        tournamentEntity = new TournamentEntity();
+        tournamentVo = new TournamentVo();
     }
     
     public String createTournament() {
+        if (tournamentVo.getTournamentType() == TournamentType.ROUNDROBIN 
+                && tournamentVo.getCompetitorType() == CompetitorType.PLAYER) {
+            tournamentEntity = new IndividualRoundRobinTournamentEntity(tournamentVo.getName(), tournamentVo.getNumberOfCompetitors(), tournamentVo.getStart(), 
+                    tournamentVo.getWinPoint(), tournamentVo.getDrawPoint(), tournamentVo.getLoosePoint());
+        }
+        logger.log(Level.INFO, ">>>>>>>>>" + tournamentEntity.toString());
         tournamentServiceLocal.persistTournament(tournamentEntity);
         return "index";
     }
@@ -47,6 +62,14 @@ public class TournamentRegistrationBean {
 
     public void setTournamentEntity(TournamentEntity tournamentEntity) {
         this.tournamentEntity = tournamentEntity;
+    }
+
+    public TournamentVo getTournamentVo() {
+        return tournamentVo;
+    }
+
+    public void setTournamentVo(TournamentVo tournamentVo) {
+        this.tournamentVo = tournamentVo;
     }
 
     public CompetitorType[] getCompetitorTypes() {

@@ -52,3 +52,7 @@ and open the template in the editor.
     background-color: #20b2aa;
     border-bottom: 1px solid rgba(0,0,0,.125)
 }
+
+.ui-widget, .ui-widget .ui-widget {
+    font-size: 90%;
+}
