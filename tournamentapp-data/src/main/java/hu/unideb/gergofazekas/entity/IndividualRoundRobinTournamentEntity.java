@@ -24,8 +24,8 @@ public class IndividualRoundRobinTournamentEntity extends RoundRobinTournamentEn
     
     @ManyToMany
     @JoinTable(name = "PERSON_ROUNDROBIN", joinColumns = {
-        @JoinColumn(name = "PERSON_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
-        @JoinColumn(name = "TOURNAMENT_ID", referencedColumnName = "ID")})
+        @JoinColumn(name = "TOURNAMENT_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
+        @JoinColumn(name = "PERSON_ID", referencedColumnName = "ID")})
     private List<PersonEntity> people;
 
     public IndividualRoundRobinTournamentEntity() {

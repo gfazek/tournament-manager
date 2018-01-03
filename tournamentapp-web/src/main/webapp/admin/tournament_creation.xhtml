@@ -11,13 +11,13 @@ and open the template in the editor.
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:dt="http://java.sun.com/jsf/composite/components"
                 xmlns:p="http://primefaces.org/ui"
-                template="../template.xhtml">
+                template="../admin_template.xhtml">
 
     <ui:define name="customHead">
         <title>Tournament creation</title>
     </ui:define>
-    <ui:define name="customContent">
-        <div class="container">
+    <ui:define name="adminCustomContent">
+        <div class="col-12 col-md-6">
             <div class="custom-card">
                 <h4 class="custom-card-header">Tournament creation</h4>
                 <div class="card-body">
@@ -27,9 +27,7 @@ and open the template in the editor.
                         <h5>Details</h5>
                         <p:outputLabel for="tournamentType" value="Type of the tournament: " />
                         <h:selectOneMenu id="tournamentType" onchange="showTournamentType(this.value)" value="#{tournamentRegistrationBean.tournamentVo.tournamentType}">
-                            <f:selectItem itemLabel="Select one" itemValue="" />
-                            <f:selectItem itemLabel="Round Robin" itemValue="RoundRobin" />
-                            <f:selectItem itemLabel="Elimination" itemValue="Elimination" />
+                            <f:selectItems value="#{tournamentRegistrationBean.tournamentTypes}" var="tournamentType" itemValue="#{tournamentType}" itemLabel="#{tournamentType.name()}" />
                         </h:selectOneMenu>
                         <div class="form-row">
                             <div class="form-group col-sm-6">
@@ -56,7 +54,7 @@ and open the template in the editor.
                             </div>
                         </div>
                         <hr/>
-                        <div id="roundrobin" style="display: none">
+                        <div id="roundrobin">
                             <h5>Parameters</h5>
                             <div class="form-row">
                                 <div class="form-group col-sm-4">

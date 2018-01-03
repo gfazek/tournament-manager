@@ -5,6 +5,8 @@
  */
 package hu.unideb.gergofazekas.service;
 
+import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
+import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
 import javax.ejb.Stateless;
 import javax.inject.Named;
@@ -26,6 +28,13 @@ public class TournamentBean implements TournamentServiceLocal {
     public void persistTournament(TournamentEntity tournamentEntity) {
         em.persist(tournamentEntity);
     }
-    
+
+    @Override
+    public void persistIndividualCompetitor(IndividualRoundRobinTournamentEntity tournament, PersonEntity personEntity) {
+        tournament.getPeople().add(personEntity);
+        personEntity.getRoundRobinTournaments().add(tournament);
+        em.merge(tournament);
+        em.merge(personEntity);
+    }
     
 }

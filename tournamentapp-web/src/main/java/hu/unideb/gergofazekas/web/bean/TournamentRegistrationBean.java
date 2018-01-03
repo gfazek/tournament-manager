@@ -31,6 +31,7 @@ public class TournamentRegistrationBean {
     
     private TournamentEntity tournamentEntity;
     private CompetitorType[] competitorTypes;
+    private TournamentType[] tournamentTypes;
     private TournamentVo tournamentVo;
     
     @EJB
@@ -74,6 +75,10 @@ public class TournamentRegistrationBean {
 
     public CompetitorType[] getCompetitorTypes() {
         return CompetitorType.values();
+    }
+    
+    public TournamentType[] getTournamentTypes() {
+        return TournamentType.values();
     }
 
     public TournamentServiceLocal getTournamentServiceLocal() {

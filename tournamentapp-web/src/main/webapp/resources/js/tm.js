@@ -1,9 +1,9 @@
 function showTournamentType(type) {
     switch (type) {
-        case "RoundRobin":
+        case "ROUNDROBIN":
             $("#roundrobin").show();
             break;
-        case "Elimination":
+        case "ELIMINATION":
             $("#roundrobin").hide();
             break;
         default :

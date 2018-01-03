@@ -77,6 +77,10 @@ public class PersonEntity extends BaseEntity implements Serializable {
     @ManyToMany
     @JoinColumn(name = "TEAM_ID")
     private List<TeamEntity> teams;
+    
+    @ManyToMany(mappedBy = "people")
+    private List<IndividualRoundRobinTournamentEntity> roundRobinTournaments;
+    
 
     public PersonEntity() {
         this.roles = new ArrayList<>();
@@ -92,6 +96,7 @@ public class PersonEntity extends BaseEntity implements Serializable {
         this.dob = dob;
         this.roles = new ArrayList<>();
         this.teams = new ArrayList<>();
+        this.roundRobinTournaments = new ArrayList<>();
     }
 
     public static class PersonBuilder {
@@ -223,6 +228,14 @@ public class PersonEntity extends BaseEntity implements Serializable {
 
     public void setTeams(List<TeamEntity> teams) {
         this.teams = teams;
+    }
+
+    public List<IndividualRoundRobinTournamentEntity> getRoundRobinTournaments() {
+        return roundRobinTournaments;
+    }
+
+    public void setRoundRobinTournaments(List<IndividualRoundRobinTournamentEntity> roundRobinTournaments) {
+        this.roundRobinTournaments = roundRobinTournaments;
     }
 
 }
