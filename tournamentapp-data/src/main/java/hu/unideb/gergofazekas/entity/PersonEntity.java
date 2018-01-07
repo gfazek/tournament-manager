@@ -22,6 +22,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -64,6 +65,11 @@ public class PersonEntity extends BaseEntity implements Serializable {
     @Temporal(TemporalType.DATE)
     @Column(name = "DATE_OF_BIRTH")
     private Date dob;
+    
+    @OneToMany(mappedBy = "homeCompetitor")
+    private List<IndividualMatchEntity> homeMatches;
+    @OneToMany(mappedBy = "awayCompetitor")
+    private List<IndividualMatchEntity> awayMatches;
 
     @JoinTable(name = "PERSON_ROLE", joinColumns = {
         @JoinColumn(name = "PERSON_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
@@ -238,4 +244,20 @@ public class PersonEntity extends BaseEntity implements Serializable {
         this.roundRobinTournaments = roundRobinTournaments;
     }
 
+    public List<IndividualMatchEntity> getHomeMatches() {
+        return homeMatches;
+    }
+
+    public void setHomeMatches(List<IndividualMatchEntity> homeMatches) {
+        this.homeMatches = homeMatches;
+    }
+
+    public List<IndividualMatchEntity> getAwayMatches() {
+        return awayMatches;
+    }
+
+    public void setAwayMatches(List<IndividualMatchEntity> awayMatches) {
+        this.awayMatches = awayMatches;
+    }
+    
 }

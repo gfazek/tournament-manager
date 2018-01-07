@@ -8,6 +8,7 @@ package hu.unideb.gergofazekas.service;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -19,5 +20,6 @@ public interface TournamentServiceLocal {
     
     void persistTournament(TournamentEntity tournamentEntity);
     void persistIndividualCompetitor(IndividualRoundRobinTournamentEntity tournament, PersonEntity personEntity);
-    
+    List<TournamentEntity> getTournaments();
+    List<TournamentEntity> getOpens();
 }

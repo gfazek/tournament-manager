@@ -49,7 +49,7 @@ public class TournamentRegistrationBean {
     public String createTournament() {
         if (tournamentVo.getTournamentType() == TournamentType.ROUNDROBIN 
                 && tournamentVo.getCompetitorType() == CompetitorType.PLAYER) {
-            tournamentEntity = new IndividualRoundRobinTournamentEntity(tournamentVo.getName(), tournamentVo.getNumberOfCompetitors(), tournamentVo.getStart(), 
+            tournamentEntity = new IndividualRoundRobinTournamentEntity(tournamentVo.getName(), tournamentVo.getDescription(), tournamentVo.getNumberOfCompetitors(), tournamentVo.getStart(), 
                     tournamentVo.getWinPoint(), tournamentVo.getDrawPoint(), tournamentVo.getLoosePoint());
         }
         logger.log(Level.INFO, ">>>>>>>>>" + tournamentEntity.toString());

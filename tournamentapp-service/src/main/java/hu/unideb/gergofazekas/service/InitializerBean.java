@@ -5,6 +5,7 @@
  */
 package hu.unideb.gergofazekas.service;
 
+import hu.unideb.gergofazekas.entity.IndividualMatchEntity;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
 import hu.unideb.gergofazekas.entity.MatchEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
@@ -15,6 +16,7 @@ import hu.unideb.gergofazekas.entity.TournamentEntity;
 import hu.unideb.gergofazekas.utility.CompetitorType;
 import hu.unideb.gergofazekas.utility.Gender;
 import hu.unideb.gergofazekas.utility.Role;
+import hu.unideb.gergofazekas.utility.TournamentStatus;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -88,16 +90,16 @@ public class InitializerBean {
         teamServiceLocal.persistTeam(teamEntity1, personEntity2);
         teamServiceLocal.persistTeam(teamEntity3, personEntity5);
         
-        TournamentEntity tournamentEntity = new IndividualRoundRobinTournamentEntity("Premier League", 20, calendarToDate(2018, 2, 1), 3, 1, 0);
-        TournamentEntity teamtournamentEntity = new TeamRoundRobinTournamentEntity("Premier League", 10, calendarToDate(2018, 1, 19), 3, 1, 0);
+        TournamentEntity tournamentEntity = new IndividualRoundRobinTournamentEntity("Premier League", "English first class championship", 20, calendarToDate(2018, 2, 1), 3, 1, 0);
+        TournamentEntity teamtournamentEntity = new TeamRoundRobinTournamentEntity("NB1", "Hungarian first class championship", 10, calendarToDate(2018, 1, 19), 3, 1, 0);
         tournamentServiceLocal.persistTournament(tournamentEntity);
         tournamentServiceLocal.persistTournament(teamtournamentEntity);
         
         tournamentServiceLocal.persistIndividualCompetitor((IndividualRoundRobinTournamentEntity) tournamentEntity, personEntity1);
         tournamentServiceLocal.persistIndividualCompetitor((IndividualRoundRobinTournamentEntity) tournamentEntity, personEntity2);
         
-        MatchEntity matchEntity = new MatchEntity(1, 2, 3, 2);
-        matchServiceLocal.persistMatch(matchEntity, tournamentEntity);
+        MatchEntity matchEntity = new IndividualMatchEntity(4, 3, personEntity1, personEntity2);
+        matchServiceLocal.persistMatch((IndividualMatchEntity) matchEntity, tournamentEntity);
     }
 
     private Date calendarToDate(int year, int month, int day) {

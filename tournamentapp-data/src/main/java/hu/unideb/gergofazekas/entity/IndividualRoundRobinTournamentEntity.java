@@ -31,8 +31,8 @@ public class IndividualRoundRobinTournamentEntity extends RoundRobinTournamentEn
     public IndividualRoundRobinTournamentEntity() {
     }
     
-    public IndividualRoundRobinTournamentEntity(String name, int numberOfCompetitors, Date start, int winPoint, int drawPoint, int loosePoint) {
-        super(name, numberOfCompetitors, start, winPoint, drawPoint, loosePoint);
+    public IndividualRoundRobinTournamentEntity(String name, String description, int numberOfCompetitors, Date start, int winPoint, int drawPoint, int loosePoint) {
+        super(name, description, numberOfCompetitors, start, winPoint, drawPoint, loosePoint);
         people = new ArrayList<>();
     }
 

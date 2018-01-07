@@ -32,8 +32,8 @@ public abstract class RoundRobinTournamentEntity extends TournamentEntity {
     public RoundRobinTournamentEntity() {
     }
     
-    public RoundRobinTournamentEntity(String name, int numberOfCompetitors, Date start, int winPoint, int drawPoint, int loosePoint) {
-        super(name, numberOfCompetitors, start);
+    public RoundRobinTournamentEntity(String name, String description, int numberOfCompetitors, Date start, int winPoint, int drawPoint, int loosePoint) {
+        super(name, description, numberOfCompetitors, start);
         this.winPoint = winPoint;
         this.loosePoint = loosePoint;
         this.drawPoint = drawPoint;

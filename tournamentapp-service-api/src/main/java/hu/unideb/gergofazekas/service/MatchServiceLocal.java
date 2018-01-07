@@ -5,6 +5,7 @@
  */
 package hu.unideb.gergofazekas.service;
 
+import hu.unideb.gergofazekas.entity.IndividualMatchEntity;
 import hu.unideb.gergofazekas.entity.MatchEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
 import javax.ejb.Local;
@@ -16,6 +17,6 @@ import javax.ejb.Local;
 @Local
 public interface MatchServiceLocal {
     
-    void persistMatch(MatchEntity matchEntity, TournamentEntity tournamentEntity);
+    void persistMatch(IndividualMatchEntity matchEntity, TournamentEntity tournamentEntity);
     
 }

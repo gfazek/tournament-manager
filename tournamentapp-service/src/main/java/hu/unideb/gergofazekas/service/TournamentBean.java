@@ -8,6 +8,7 @@ package hu.unideb.gergofazekas.service;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -35,6 +36,16 @@ public class TournamentBean implements TournamentServiceLocal {
         personEntity.getRoundRobinTournaments().add(tournament);
         em.merge(tournament);
         em.merge(personEntity);
+    }
+
+    @Override
+    public List<TournamentEntity> getTournaments() {
+        return em.createNamedQuery("Tournament.findAll", TournamentEntity.class).getResultList();
+    }
+    
+    @Override
+    public List<TournamentEntity> getOpens() {
+        return em.createNamedQuery("Tournament.findOpens", TournamentEntity.class).getResultList();
     }
     
 }

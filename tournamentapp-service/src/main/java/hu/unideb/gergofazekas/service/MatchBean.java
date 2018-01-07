@@ -5,7 +5,9 @@
  */
 package hu.unideb.gergofazekas.service;
 
+import hu.unideb.gergofazekas.entity.IndividualMatchEntity;
 import hu.unideb.gergofazekas.entity.MatchEntity;
+import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
 import javax.ejb.Stateless;
 import javax.inject.Named;
@@ -24,11 +26,17 @@ public class MatchBean implements MatchServiceLocal {
     private EntityManager em;
     
     @Override
-    public void persistMatch(MatchEntity matchEntity, TournamentEntity tournamentEntity) {
-        tournamentEntity.getMatches().add(matchEntity);
-        matchEntity.setTournament(tournamentEntity);
+    public void persistMatch(IndividualMatchEntity individualMatchEntity, TournamentEntity tournamentEntity) {
+        tournamentEntity.getMatches().add(individualMatchEntity);
+        individualMatchEntity.setTournament(tournamentEntity);
+        PersonEntity homePerson = individualMatchEntity.getHomeCompetitor();
+        PersonEntity awayPerson = individualMatchEntity.getAwayCompetitor();
+        homePerson.getHomeMatches().add(individualMatchEntity);
+        awayPerson.getAwayMatches().add(individualMatchEntity);
         em.merge(tournamentEntity);
-        em.persist(matchEntity);
+        em.persist(individualMatchEntity);
     }
+    
+    
     
 }
