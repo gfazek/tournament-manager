@@ -32,7 +32,9 @@ and open the template in the editor.
                                                             </p:outputPanel>
                                                         </f:facet>-->
                             <p:column headerText="Name" filterBy="#{tournament.name}">
-                                <h:outputText value="#{tournament.name}"/>
+                                <h:link value="#{tournament.name}" outcome="/secured/tournament">
+                                    <f:param name="id" value="#{tournament.id}" />
+                                </h:link>
                             </p:column>
                             <p:column headerText="Description" >
                                 <h:outputText value="#{tournament.description}" />

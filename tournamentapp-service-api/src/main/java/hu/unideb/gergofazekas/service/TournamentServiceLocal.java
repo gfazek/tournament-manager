@@ -22,4 +22,5 @@ public interface TournamentServiceLocal {
     void persistIndividualCompetitor(IndividualRoundRobinTournamentEntity tournament, PersonEntity personEntity);
     List<TournamentEntity> getTournaments();
     List<TournamentEntity> getOpens();
+    TournamentEntity findTournament(Long id);
 }

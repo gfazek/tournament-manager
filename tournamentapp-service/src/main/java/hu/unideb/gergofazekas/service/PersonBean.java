@@ -30,7 +30,7 @@ import javax.persistence.criteria.Root;
 public class PersonBean implements PersonServiceLocal{
 
     private static final Logger logger
-            = Logger.getLogger("service.InitializerBean");
+            = Logger.getLogger("service.PersonBean");
     
     @PersistenceContext
     private EntityManager em;

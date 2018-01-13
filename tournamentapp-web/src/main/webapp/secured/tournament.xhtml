@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:dt="http://java.sun.com/jsf/composite/components"
+                xmlns:p="http://primefaces.org/ui"
+                template="../template.xhtml">
+
+    <ui:define name="customHead">
+        <title>Tournament Details</title>
+    </ui:define>
+    <ui:define name="customContent">
+        <f:metadata>
+            <f:viewParam name="id" value="#{tournamentDetailBean.tournamentEntity}" converter="#{tournamentConverter}" 
+                         converterMessage="Unknown tournament, please use a link from within the system." 
+                         required="true" requiredMessage="Bad request, please use a link from within the system." />
+        </f:metadata>
+        <div class="container">
+            <div class="custom-card">
+                <h4 class="custom-card-header">Tournament Details</h4>
+                <div class="card-body">
+                    <h:form rendered="#{not empty tournamentDetailBean.tournamentEntity}">
+                        <h:inputText value="#{tournamentDetailBean.tournamentEntity.name}" />
+                    </h:form>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
