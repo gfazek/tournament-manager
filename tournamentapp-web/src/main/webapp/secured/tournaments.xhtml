@@ -32,15 +32,15 @@ and open the template in the editor.
                                                             </p:outputPanel>
                                                         </f:facet>-->
                             <p:column headerText="Name" filterBy="#{tournament.name}">
-                                <h:link value="#{tournament.name}" outcome="/secured/tournament">
+                                <p:link value="#{tournament.name}" outcome="/secured/tournament">
                                     <f:param name="id" value="#{tournament.id}" />
-                                </h:link>
+                                </p:link>
+                            </p:column>
+                            <p:column headerText="Status">
+                                <h:outputText value="#{tournament.status}" />
                             </p:column>
                             <p:column headerText="Description" >
                                 <h:outputText value="#{tournament.description}" />
-                            </p:column>
-                            <p:column headerText="Entry">
-                                <h:commandLink value="Entry"  actionListener="#{usersBean.deleteUser(user.id)}"/>
                             </p:column>
                         </p:dataTable>
                     </h:form>

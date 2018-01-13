@@ -92,6 +92,7 @@ public class InitializerBean {
         
         TournamentEntity tournamentEntity = new IndividualRoundRobinTournamentEntity("Premier League", "English first class championship", 20, calendarToDate(2018, 2, 1), 3, 1, 0);
         TournamentEntity teamtournamentEntity = new TeamRoundRobinTournamentEntity("NB1", "Hungarian first class championship", 10, calendarToDate(2018, 1, 19), 3, 1, 0);
+        teamtournamentEntity.setStatus(TournamentStatus.IN_PROGRESS);
         tournamentServiceLocal.persistTournament(tournamentEntity);
         tournamentServiceLocal.persistTournament(teamtournamentEntity);
         

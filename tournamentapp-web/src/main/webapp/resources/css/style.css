@@ -56,3 +56,10 @@ and open the template in the editor.
 .ui-widget, .ui-widget .ui-widget {
     font-size: 90%;
 }
+
+.custom-link {
+    color: #007bff;
+    text-decoration: none;
+    background-color: transparent;
+    -webkit-text-decoration-skip: objects;
+}

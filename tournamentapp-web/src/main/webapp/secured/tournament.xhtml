@@ -11,7 +11,8 @@ and open the template in the editor.
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:dt="http://java.sun.com/jsf/composite/components"
                 xmlns:p="http://primefaces.org/ui"
-                template="../template.xhtml">
+                template="../template.xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <ui:define name="customHead">
         <title>Tournament Details</title>
@@ -22,15 +23,56 @@ and open the template in the editor.
                          converterMessage="Unknown tournament, please use a link from within the system." 
                          required="true" requiredMessage="Bad request, please use a link from within the system." />
         </f:metadata>
-        <div class="container">
-            <div class="custom-card">
-                <h4 class="custom-card-header">Tournament Details</h4>
-                <div class="card-body">
-                    <h:form rendered="#{not empty tournamentDetailBean.tournamentEntity}">
-                        <h:inputText value="#{tournamentDetailBean.tournamentEntity.name}" />
-                    </h:form>
+        <h:messages />
+        <h:form rendered="#{not empty tournamentDetailBean.tournamentEntity}">
+            <div class="container">
+                <div class="custom-card">
+                    <h4 class="custom-card-header">#{tournamentDetailBean.tournamentEntity.name}</h4>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h:outputLabel for="tournamentName" value="Name" styleClass="font-weight-bold"/>
+                            </div>
+                            <div class="col-md-3">
+                                <h:outputText id="tournamentName" value="#{tournamentDetailBean.tournamentEntity.name}"/>
+                            </div>
+                            <div class="col-md-3">
+                                <h:outputLabel for="tournamentType" value="Type" styleClass="font-weight-bold"/>
+                            </div>
+                            <div class="col-md-3">
+                                <h:outputText id="tournamentType" value="{TYPE}" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h:outputLabel for="tournamentStatus" value="Status" styleClass="font-weight-bold" />
+                            </div>
+                            <div class="col-md-3">
+                                <h:outputText id="tournamentStatus" value="#{tournamentDetailBean.tournamentEntity.status}" />
+                            </div>
+                            <div class="col-md-3">
+                                <h:outputLabel for="tournamentNo" value="Given number of competitors" styleClass="font-weight-bold" />
+                            </div>
+                            <div class="col-md-3">
+                                <h:outputText id="tournamentNo" value="#{tournamentDetailBean.tournamentEntity.numberOfCompetitors}" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h:outputLabel for="tournamentDescription" value="Description" styleClass="font-weight-bold" />
+                            </div>
+                            <div class="col-md-9">
+                                <h:outputText id="tournamentDescription" value="#{tournamentDetailBean.tournamentEntity.description}" />
+                            </div>
+                        </div>
+                        <div class="row justify-content-end">
+                            <div class="col-4">
+                                <h:commandButton id="submit" rendered="#{tournamentDetailBean.tournamentEntity.status eq 'OPEN'}" styleClass="btn btn-lg btn-primary" value="ENTRY" action="#{registrationBean.createPerson()}"/>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </h:form>
     </ui:define>
 </ui:composition>

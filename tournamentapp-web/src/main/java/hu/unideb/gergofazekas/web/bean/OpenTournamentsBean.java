@@ -34,7 +34,7 @@ public class OpenTournamentsBean implements Serializable {
     
     @PostConstruct
     public void init() {
-        tournaments = tournamentServiceLocal.getOpens();
+        tournaments = tournamentServiceLocal.getTournaments();
     }
 
     public List<TournamentEntity> getTournaments() {
