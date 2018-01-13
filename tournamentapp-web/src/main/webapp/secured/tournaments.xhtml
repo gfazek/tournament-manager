@@ -11,41 +11,36 @@ and open the template in the editor.
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:dt="http://java.sun.com/jsf/composite/components"
                 xmlns:p="http://primefaces.org/ui"
-                template="../admin_template.xhtml">
+                template="../template.xhtml">
 
     <ui:define name="customHead">
-        <title>Users</title>
+        <title>Open tournaments</title>
     </ui:define>
-    <ui:define name="adminCustomContent">
-        <div class="col-12 col-md-6">
+    <ui:define name="customContent">
+        <div class="container">
             <div class="custom-card">
-                <h4 class="custom-card-header">User list</h4>
+                <h4 class="custom-card-header">List of the open tournaments</h4>
                 <div class="card-body">
                     <h:form>
-                        <p:dataTable id="userTable" value="#{usersBean.users}" var="user" widgetVar="usersTable" 
+                        <p:dataTable id="openTournaments" value="#{openTournamentsBean.tournaments}" var="tournament" widgetVar="openTournaments" 
                                      rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" 
-                                     reflow="true" filteredValue="#{usersBean.filteredUsers}" sortBy="#{user.username}"> <!-- styleClass="table table-striped" -->
+                                     reflow="true" filteredValue="#{openTournamentsBean.filteredTournaments}" sortBy="#{tournament.name}"> <!-- styleClass="table table-striped" -->
                             <!--                            <f:facet name="header">
                                                             <p:outputPanel>
                                                                 <h:outputText value="Search all fields:" />
                                                                 <p:inputText id="globalFilter" onkeyup="PF('usersTable').filter()" style="width:150px" placeholder="Enter keyword"/>
                                                             </p:outputPanel>
                                                         </f:facet>-->
-                            <p:column headerText="Username" filterBy="#{user.username}">
-                                <h:outputText value="#{user.username}"/>
-                            </p:column>
-                            <p:column headerText="Name" >
-                                <h:outputText value="#{user.firstName} #{user.lastName}" />
-                            </p:column>
-                            <p:column headerText="Email" filterBy="#{user.email}">
-                                <h:outputText value="#{user.email}" />
+                            <p:column headerText="Name" filterBy="#{tournament.name}">
+                                <p:link value="#{tournament.name}" outcome="/secured/tournament">
+                                    <f:param name="id" value="#{tournament.id}" />
+                                </p:link>
                             </p:column>
                             <p:column headerText="Status">
-                                <h:outputText value="#{user.enabled ? 'Active' : 'Inactive'}" />
+                                <h:outputText value="#{tournament.status}" />
                             </p:column>
-                            <p:column headerText="Operations">
-                                <h:commandLink value="Delete"  actionListener="#{usersBean.deleteUser(user.id)}"/><br/>
-                                <h:commandLink value="Change Status"  actionListener="#{usersBean.changeUserStatus(user.id)}"/>
+                            <p:column headerText="Description" >
+                                <h:outputText value="#{tournament.description}" />
                             </p:column>
                         </p:dataTable>
                     </h:form>

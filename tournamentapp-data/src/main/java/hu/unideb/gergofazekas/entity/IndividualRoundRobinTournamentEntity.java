@@ -6,6 +6,7 @@
 package hu.unideb.gergofazekas.entity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -23,15 +24,15 @@ public class IndividualRoundRobinTournamentEntity extends RoundRobinTournamentEn
     
     @ManyToMany
     @JoinTable(name = "PERSON_ROUNDROBIN", joinColumns = {
-        @JoinColumn(name = "PERSON_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
-        @JoinColumn(name = "TOURNAMENT_ID", referencedColumnName = "ID")})
+        @JoinColumn(name = "TOURNAMENT_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
+        @JoinColumn(name = "PERSON_ID", referencedColumnName = "ID")})
     private List<PersonEntity> people;
 
     public IndividualRoundRobinTournamentEntity() {
     }
     
-    public IndividualRoundRobinTournamentEntity(String name, int winPoint, int drawPoint, int loosePoint) {
-        super(name, winPoint, drawPoint, loosePoint);
+    public IndividualRoundRobinTournamentEntity(String name, String description, int numberOfCompetitors, Date start, int winPoint, int drawPoint, int loosePoint) {
+        super(name, description, numberOfCompetitors, start, winPoint, drawPoint, loosePoint);
         people = new ArrayList<>();
     }
 

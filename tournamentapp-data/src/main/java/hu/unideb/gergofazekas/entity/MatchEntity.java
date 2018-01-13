@@ -8,7 +8,10 @@ package hu.unideb.gergofazekas.entity;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -18,15 +21,9 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "MATCH")
-public class MatchEntity extends BaseEntity implements Serializable {
-    
-    @Basic(optional = false)
-    @Column(name = "HOME_COMPETITOR")
-    private int homeCompetitorId;
-    
-    @Basic(optional = false)
-    @Column(name = "AWAY_COMPETITOR")
-    private int awayCompetitorId;
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "TYPE")
+public abstract class MatchEntity extends BaseEntity implements Serializable {
     
     @Basic(optional = false)
     @Column(name = "HOME_SCORE")
@@ -42,27 +39,9 @@ public class MatchEntity extends BaseEntity implements Serializable {
     public MatchEntity() {
     }
 
-    public MatchEntity(int homeCompetitorId, int awayCompetitorId, int homeScore, int awayScore) {
-        this.homeCompetitorId = homeCompetitorId;
-        this.awayCompetitorId = awayCompetitorId;
+    public MatchEntity(int homeScore, int awayScore) {
         this.homeScore = homeScore;
         this.awayScore = awayScore;
-    }
-
-    public int getHomeCompetitorId() {
-        return homeCompetitorId;
-    }
-
-    public void setHomeCompetitorId(int homeCompetitorId) {
-        this.homeCompetitorId = homeCompetitorId;
-    }
-
-    public int getAwayCompetitorId() {
-        return awayCompetitorId;
-    }
-
-    public void setAwayCompetitorId(int awayCompetitorId) {
-        this.awayCompetitorId = awayCompetitorId;
     }
 
     public int getHomeScore() {

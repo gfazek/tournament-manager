@@ -5,6 +5,7 @@
  */
 package hu.unideb.gergofazekas.entity;
 
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -31,8 +32,8 @@ public abstract class RoundRobinTournamentEntity extends TournamentEntity {
     public RoundRobinTournamentEntity() {
     }
     
-    public RoundRobinTournamentEntity(String name, int winPoint, int loosePoint, int drawPoint) {
-        super(name);
+    public RoundRobinTournamentEntity(String name, String description, int numberOfCompetitors, Date start, int winPoint, int drawPoint, int loosePoint) {
+        super(name, description, numberOfCompetitors, start);
         this.winPoint = winPoint;
         this.loosePoint = loosePoint;
         this.drawPoint = drawPoint;

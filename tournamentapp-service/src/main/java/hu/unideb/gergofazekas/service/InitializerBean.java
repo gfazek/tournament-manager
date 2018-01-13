@@ -5,6 +5,7 @@
  */
 package hu.unideb.gergofazekas.service;
 
+import hu.unideb.gergofazekas.entity.IndividualMatchEntity;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
 import hu.unideb.gergofazekas.entity.MatchEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
@@ -15,6 +16,7 @@ import hu.unideb.gergofazekas.entity.TournamentEntity;
 import hu.unideb.gergofazekas.utility.CompetitorType;
 import hu.unideb.gergofazekas.utility.Gender;
 import hu.unideb.gergofazekas.utility.Role;
+import hu.unideb.gergofazekas.utility.TournamentStatus;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -69,7 +71,7 @@ public class InitializerBean {
                 .firstName("Jonas").lastName("Peter").gender(Gender.MALE).dob(calendarToDate(1978, 9, 1)).createPerson();
         PersonEntity personEntity3 = new PersonEntity.PersonBuilder().username("zoe45").email("zoe.bennett@example.com").password("pass3")
                 .firstName("Zoe").lastName("Bennett").gender(Gender.FEMALE).dob(calendarToDate(2005, 4, 21)).createPerson();
-        PersonEntity personEntity4 = new PersonEntity.PersonBuilder().username("lottaro").email("lotta.aro@example.com\"").password("pass3")
+        PersonEntity personEntity4 = new PersonEntity.PersonBuilder().username("lottaro").email("lotta.aro@example.com").password("pass3")
                 .firstName("Lotta").lastName("Aro").gender(Gender.FEMALE).dob(calendarToDate(2000, 1, 29)).createPerson();
         PersonEntity personEntity5 = new PersonEntity.PersonBuilder().username("sara1997").email("sara.brun@example.com").password("pass4")
                 .firstName("Sara").lastName("Brun").gender(Gender.FEMALE).dob(calendarToDate(1997, 12, 18)).createPerson();
@@ -88,14 +90,17 @@ public class InitializerBean {
         teamServiceLocal.persistTeam(teamEntity1, personEntity2);
         teamServiceLocal.persistTeam(teamEntity3, personEntity5);
         
-        TournamentEntity tournamentEntity = new IndividualRoundRobinTournamentEntity("Premier League", 3, 1, 0);
-        TournamentEntity teamtournamentEntity = new TeamRoundRobinTournamentEntity("Premier League", 3, 1, 0);
+        TournamentEntity tournamentEntity = new IndividualRoundRobinTournamentEntity("Premier League", "English first class championship", 20, calendarToDate(2018, 2, 1), 3, 1, 0);
+        TournamentEntity teamtournamentEntity = new TeamRoundRobinTournamentEntity("NB1", "Hungarian first class championship", 10, calendarToDate(2018, 1, 19), 3, 1, 0);
+        teamtournamentEntity.setStatus(TournamentStatus.IN_PROGRESS);
         tournamentServiceLocal.persistTournament(tournamentEntity);
         tournamentServiceLocal.persistTournament(teamtournamentEntity);
         
+        tournamentServiceLocal.persistIndividualCompetitor((IndividualRoundRobinTournamentEntity) tournamentEntity, personEntity1);
+        tournamentServiceLocal.persistIndividualCompetitor((IndividualRoundRobinTournamentEntity) tournamentEntity, personEntity2);
         
-        MatchEntity matchEntity = new MatchEntity(1, 2, 3, 2);
-        matchServiceLocal.persistMatch(matchEntity, tournamentEntity);
+        MatchEntity matchEntity = new IndividualMatchEntity(4, 3, personEntity1, personEntity2);
+        matchServiceLocal.persistMatch((IndividualMatchEntity) matchEntity, tournamentEntity);
     }
 
     private Date calendarToDate(int year, int month, int day) {
