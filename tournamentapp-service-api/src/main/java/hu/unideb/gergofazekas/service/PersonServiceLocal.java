@@ -23,5 +23,6 @@ public interface PersonServiceLocal {
     List<PersonEntity> getPeople();
     void deletePerson(Long id);
     void changeUserStatus(Long id);
+    PersonEntity findByUsername(String username);
     
 }

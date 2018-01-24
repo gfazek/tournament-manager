@@ -7,6 +7,7 @@ package hu.unideb.gergofazekas.service;
 
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.RoleEntity;
+import hu.unideb.gergofazekas.service.util.PersonPasswordEncoder;
 import hu.unideb.gergofazekas.utility.Gender;
 import hu.unideb.gergofazekas.utility.Role;
 import java.util.List;
@@ -20,6 +21,8 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  *
@@ -35,6 +38,10 @@ public class PersonBean implements PersonServiceLocal{
     @PersistenceContext
     private EntityManager em;
     
+    private PersonPasswordEncoder encoder = new PersonPasswordEncoder(new BCryptPasswordEncoder());
+    
+    private static PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    
     @Override
     public void persistPerson(PersonEntity person, RoleEntity role) {
         role.getPeople().add(person);
@@ -48,8 +55,8 @@ public class PersonBean implements PersonServiceLocal{
         logger.info("personentity is: " + personEntity);
         logger.info("In persistPerson....");
         logger.info("Role is: " + role.name());
-        //RoleEntity roleEntity = (RoleEntity) em.createNamedQuery("findRoleByName").getSingleResult();
-        RoleEntity roleEntity = em.find(RoleEntity.class, new Long(1));
+        personEntity.setPassword(encoder.encode(personEntity.getPassword()));
+        RoleEntity roleEntity = em.createNamedQuery("Role.findByName", RoleEntity.class).setParameter("rolename", role).getSingleResult();
         logger.info("roleentity is: " + roleEntity);
         roleEntity.getPeople().add(personEntity);
         personEntity.getRoles().add(roleEntity);
@@ -76,5 +83,9 @@ public class PersonBean implements PersonServiceLocal{
         em.merge(personEntity);
     }
     
-    
+    @Override
+    public PersonEntity findByUsername(String username) {
+        return em.createNamedQuery("Person.findByUsername", PersonEntity.class).setParameter("username", username).getSingleResult();
+    }
+        
 }

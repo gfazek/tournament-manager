@@ -26,7 +26,7 @@ import javax.inject.Named;
 public class RegistrationBean {
     
     private static final Logger logger
-            = Logger.getLogger("service.InitializerBean");
+            = Logger.getLogger("bean.RegistrationBean");
     
     private PersonEntity personEntity;
     private String username;

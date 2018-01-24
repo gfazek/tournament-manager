@@ -34,7 +34,7 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "PERSON")
 @NamedQueries({
-    @NamedQuery(name = "Person.findPersonByUsername", query = "SELECT p FROM PersonEntity p WHERE p.username LIKE :username"),
+    @NamedQuery(name = "Person.findByUsername", query = "SELECT p FROM PersonEntity p WHERE p.username LIKE :username"),
     @NamedQuery(name = "Person.findAll", query = "SELECT p FROM PersonEntity p")
 })
 public class PersonEntity extends BaseEntity implements Serializable {

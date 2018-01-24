@@ -26,7 +26,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "ROLE")
 @NamedQueries({
-    @NamedQuery(name = "findRoleByName", query = "SELECT r FROM RoleEntity r WHERE r.id LIKE 1")
+    @NamedQuery(name = "Role.findByName", query = "SELECT r FROM RoleEntity r WHERE r.role LIKE :rolename")
 })
 public class RoleEntity extends BaseEntity implements Serializable {
     

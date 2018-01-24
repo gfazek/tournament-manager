@@ -20,14 +20,16 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
  *
  * @author gfazekas
  */
+@Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
+    
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                    .antMatchers("/adminn/**").hasRole("ADMIN") //Will need to change to admin from adminn
+                    .antMatchers("/admin/**").hasRole("ADMIN")
+                    .antMatchers("/secured/**").hasRole("USER")
                     .anyRequest().permitAll()
                     .and()
                 .formLogin()
@@ -38,17 +40,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("admin").password("password").roles("USER", "ADMIN").build());
-        return manager;
-    }
-
 //    @Bean
-//    public BCryptPasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
+//    public UserDetailsService userDetailsService() {
+//        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+//        manager.createUser(User.withUsername("admin").password("password").roles("USER", "ADMIN").build());
+//        return manager;
 //    }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+    
+    @Bean
+    public CustomUserDetailsService customUserDetailsService() {
+	return new CustomUserDetailsService();
+}
 
     @Override
     public void configure(WebSecurity web) throws Exception {
