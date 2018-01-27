@@ -41,7 +41,7 @@ import javax.transaction.UserTransaction;
 public class InitializerBean {
 
     private static final Logger logger
-            = Logger.getLogger("service.InitializerBean");
+            = Logger.getLogger("hu.unideb.gergofazekas.service.InitializerBean");
     
     @EJB
     private RoleServiceLocal roleServiceLocal;
@@ -60,7 +60,7 @@ public class InitializerBean {
 
     @PostConstruct
     public void init() {
-        
+        logger.log(Level.INFO, "Persisting with initial values starts...");
         RoleEntity userRole = new RoleEntity(Role.USER);
         RoleEntity adminRole = new RoleEntity(Role.ADMIN);
         roleServiceLocal.persistRole(userRole);
@@ -101,6 +101,8 @@ public class InitializerBean {
         
         MatchEntity matchEntity = new IndividualMatchEntity(4, 3, personEntity1, personEntity2);
         matchServiceLocal.persistMatch((IndividualMatchEntity) matchEntity, tournamentEntity);
+        
+        logger.log(Level.INFO, "Persisting with initial values has finished");
     }
 
     private Date calendarToDate(int year, int month, int day) {

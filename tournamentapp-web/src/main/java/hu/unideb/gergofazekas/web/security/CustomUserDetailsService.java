@@ -31,16 +31,14 @@ import org.springframework.stereotype.Service;
 public class CustomUserDetailsService implements UserDetailsService {
     
     private static final Logger logger
-            = Logger.getLogger("service.PersonBean");
+            = Logger.getLogger("hu.unideb.gergofazekas.web.security.CustomUserDetailsService");
     
     @EJB(mappedName = "java:global/Tournament_Manager_Application_EAR_Module/tournamentapp-service-1.0-SNAPSHOT/PersonBean")
     private PersonServiceLocal personServiceLocal;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        logger.log(Level.INFO, "PersonServiceLocal is: {0}", personServiceLocal);
         PersonEntity person = personServiceLocal.findByUsername(username);
-        
         if (person == null) {
             throw  new UsernameNotFoundException("User details not found with this username: " + username);
         }

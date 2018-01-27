@@ -27,7 +27,7 @@ import javax.inject.Named;
 public class TournamentConverter implements Converter{
 
     private static final Logger logger
-            = Logger.getLogger("util.TournamentConverter");
+            = Logger.getLogger("hu.unideb.gergofazekas.web.util.TournamentConverter");
     
     @EJB
     private TournamentServiceLocal tournamentServiceLocal;

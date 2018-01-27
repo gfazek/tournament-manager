@@ -49,7 +49,6 @@ public class RegistrationBean {
     }
     
     public String createPerson() {
-        logger.info("In createPerson");
         personServiceLocal.persistPerson(personEntity, Role.USER);
         return "index";
     }

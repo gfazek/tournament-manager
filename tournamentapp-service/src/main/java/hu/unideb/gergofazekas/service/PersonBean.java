@@ -33,7 +33,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class PersonBean implements PersonServiceLocal{
 
     private static final Logger logger
-            = Logger.getLogger("service.PersonBean");
+            = Logger.getLogger("hu.unideb.gergofazekas.service.PersonBean");
     
     @PersistenceContext
     private EntityManager em;
@@ -52,12 +52,9 @@ public class PersonBean implements PersonServiceLocal{
 
     @Override
     public void persistPerson(PersonEntity personEntity, Role role) {
-        logger.info("personentity is: " + personEntity);
-        logger.info("In persistPerson....");
-        logger.info("Role is: " + role.name());
+        logger.log(Level.INFO, "Persist person: {0}", personEntity);
         personEntity.setPassword(encoder.encode(personEntity.getPassword()));
         RoleEntity roleEntity = em.createNamedQuery("Role.findByName", RoleEntity.class).setParameter("rolename", role).getSingleResult();
-        logger.info("roleentity is: " + roleEntity);
         roleEntity.getPeople().add(personEntity);
         personEntity.getRoles().add(roleEntity);
         em.merge(roleEntity);
@@ -72,13 +69,14 @@ public class PersonBean implements PersonServiceLocal{
     @Override
     public void deletePerson(Long id) {
         PersonEntity personEntity = em.find(PersonEntity.class, id);
-        logger.log(Level.INFO, ">>>>>>>>>>" + personEntity.toString());
+        logger.log(Level.INFO, "Delete person: {0}", personEntity);
         em.remove(personEntity);
     }
 
     @Override
     public void changeUserStatus(Long id) {
         PersonEntity personEntity = em.find(PersonEntity.class, id);
+        logger.log(Level.INFO, "Changes Person status: {0}", personEntity);
         personEntity.setEnabled(!personEntity.isEnabled());
         em.merge(personEntity);
     }

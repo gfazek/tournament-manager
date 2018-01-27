@@ -26,7 +26,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "ROLE")
 @NamedQueries({
-    @NamedQuery(name = "Role.findByName", query = "SELECT r FROM RoleEntity r WHERE r.role LIKE :rolename")
+    @NamedQuery(name = "Role.findByName", query = "SELECT r FROM RoleEntity r WHERE r.role = :rolename")
 })
 public class RoleEntity extends BaseEntity implements Serializable {
     
@@ -62,5 +62,12 @@ public class RoleEntity extends BaseEntity implements Serializable {
     public void setPeople(List<PersonEntity> people) {
         this.people = people;
     }
+
+    @Override
+    public String toString() {
+        return "RoleEntity{" + "role=" + role.name();
+    }
+    
+    
     
 }

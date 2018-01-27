@@ -21,6 +21,8 @@ and open the template in the editor.
                 <h4 class="custom-card-header">Login</h4>
                 <div class="card-body">
                     <h4 class="card-title">If you don't have an account, <a href="/registration.xhtml">click here</a> to register.</h4>
+                    <h:outputText rendered="#{param.error != null}" value="Username or password is incorrect" styleClass="text-danger"/>
+                    <h:outputText rendered="#{param.logout != null}" value="You have been logged out successfully!" styleClass="text-info"/>
                     <form id="loginForm" class="form-signin" method="post" action="/tournamentapp/login">
                         <div class="form-group" >
                             <label for="username">Username</label>

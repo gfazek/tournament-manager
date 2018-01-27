@@ -52,7 +52,6 @@ public class TournamentRegistrationBean {
             tournamentEntity = new IndividualRoundRobinTournamentEntity(tournamentVo.getName(), tournamentVo.getDescription(), tournamentVo.getNumberOfCompetitors(), tournamentVo.getStart(), 
                     tournamentVo.getWinPoint(), tournamentVo.getDrawPoint(), tournamentVo.getLoosePoint());
         }
-        logger.log(Level.INFO, ">>>>>>>>>" + tournamentEntity.toString());
         tournamentServiceLocal.persistTournament(tournamentEntity);
         return "index";
     }
