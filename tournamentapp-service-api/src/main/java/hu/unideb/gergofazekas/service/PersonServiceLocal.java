@@ -24,5 +24,6 @@ public interface PersonServiceLocal {
     void deletePerson(Long id);
     void changeUserStatus(Long id);
     PersonEntity findByUsername(String username);
+    void updatePerson(PersonEntity personEntity);
     
 }

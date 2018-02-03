@@ -12,7 +12,6 @@ import hu.unideb.gergofazekas.utility.Gender;
 import hu.unideb.gergofazekas.utility.Role;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -21,6 +20,8 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -31,9 +32,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Stateless
 @Named
 public class PersonBean implements PersonServiceLocal{
-
-    private static final Logger logger
-            = Logger.getLogger("hu.unideb.gergofazekas.service.PersonBean");
+   
+    private static final Logger logger = LogManager.getLogger(PersonBean.class);
     
     @PersistenceContext
     private EntityManager em;
@@ -52,7 +52,7 @@ public class PersonBean implements PersonServiceLocal{
 
     @Override
     public void persistPerson(PersonEntity personEntity, Role role) {
-        logger.log(Level.INFO, "Persist person: {0}", personEntity);
+        logger.debug("Persist person: {}", personEntity);
         personEntity.setPassword(encoder.encode(personEntity.getPassword()));
         RoleEntity roleEntity = em.createNamedQuery("Role.findByName", RoleEntity.class).setParameter("rolename", role).getSingleResult();
         roleEntity.getPeople().add(personEntity);
@@ -69,14 +69,14 @@ public class PersonBean implements PersonServiceLocal{
     @Override
     public void deletePerson(Long id) {
         PersonEntity personEntity = em.find(PersonEntity.class, id);
-        logger.log(Level.INFO, "Delete person: {0}", personEntity);
+        logger.debug("Deleting person: {}", personEntity);
         em.remove(personEntity);
     }
 
     @Override
     public void changeUserStatus(Long id) {
         PersonEntity personEntity = em.find(PersonEntity.class, id);
-        logger.log(Level.INFO, "Changes Person status: {0}", personEntity);
+        logger.debug("Changing Person's status: {}", personEntity);
         personEntity.setEnabled(!personEntity.isEnabled());
         em.merge(personEntity);
     }
@@ -84,6 +84,12 @@ public class PersonBean implements PersonServiceLocal{
     @Override
     public PersonEntity findByUsername(String username) {
         return em.createNamedQuery("Person.findByUsername", PersonEntity.class).setParameter("username", username).getSingleResult();
+    }
+
+    @Override
+    public void updatePerson(PersonEntity personEntity) {
+        logger.debug("Updating person: {}", personEntity);
+        em.merge(personEntity);
     }
         
 }

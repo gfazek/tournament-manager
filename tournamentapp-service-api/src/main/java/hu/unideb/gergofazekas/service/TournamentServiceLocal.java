@@ -23,4 +23,7 @@ public interface TournamentServiceLocal {
     List<TournamentEntity> getTournaments();
     List<TournamentEntity> getOpens();
     TournamentEntity findTournament(Long id);
+    void persistEntry(Long tournamentId, String username);
+    List<PersonEntity> getIndividualCompetitors(Long id);
+    
 }

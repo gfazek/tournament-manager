@@ -13,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
  *
@@ -20,6 +22,9 @@ import javax.persistence.ManyToMany;
  */
 @Entity
 @DiscriminatorValue(value = "IndividualRoundRobin")
+@NamedQueries({
+    @NamedQuery(name = "IndividualRoundRobinTournament.findCompetitors", query = "SELECT t.people FROM IndividualRoundRobinTournamentEntity t WHERE t.id = :id"),
+})
 public class IndividualRoundRobinTournamentEntity extends RoundRobinTournamentEntity {
     
     @ManyToMany

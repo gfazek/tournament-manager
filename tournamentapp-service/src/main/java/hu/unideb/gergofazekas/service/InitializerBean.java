@@ -13,6 +13,7 @@ import hu.unideb.gergofazekas.entity.RoleEntity;
 import hu.unideb.gergofazekas.entity.TeamEntity;
 import hu.unideb.gergofazekas.entity.TeamRoundRobinTournamentEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
+import hu.unideb.gergofazekas.service.util.PersonPasswordEncoder;
 import hu.unideb.gergofazekas.utility.CompetitorType;
 import hu.unideb.gergofazekas.utility.Gender;
 import hu.unideb.gergofazekas.utility.Role;
@@ -22,7 +23,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -31,6 +31,10 @@ import javax.ejb.Startup;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.UserTransaction;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  *
@@ -40,8 +44,9 @@ import javax.transaction.UserTransaction;
 @Singleton
 public class InitializerBean {
 
-    private static final Logger logger
-            = Logger.getLogger("hu.unideb.gergofazekas.service.InitializerBean");
+    private static final Logger logger = LogManager.getLogger(InitializerBean.class);
+    
+    private PersonPasswordEncoder encoder = new PersonPasswordEncoder(new BCryptPasswordEncoder());
     
     @EJB
     private RoleServiceLocal roleServiceLocal;
@@ -60,20 +65,20 @@ public class InitializerBean {
 
     @PostConstruct
     public void init() {
-        logger.log(Level.INFO, "Persisting with initial values starts...");
+        logger.info("Persisting intial object to the database");
         RoleEntity userRole = new RoleEntity(Role.USER);
         RoleEntity adminRole = new RoleEntity(Role.ADMIN);
         roleServiceLocal.persistRole(userRole);
         roleServiceLocal.persistRole(adminRole);
-        PersonEntity personEntity1 = new PersonEntity.PersonBuilder().username("geri").email("romain.hoogmoed@example.com").password("pass")
+        PersonEntity personEntity1 = new PersonEntity.PersonBuilder().username("geri").email("romain.hoogmoed@example.com").password(encoder.encode("pass"))
                 .firstName("Romain").lastName("Hoogmoed").gender(Gender.MALE).dob(calendarToDate(1981, 5, 9)).createPerson();
-        PersonEntity personEntity2 = new PersonEntity.PersonBuilder().username("jonas").email("jonas.peter@example.com").password("pass2")
+        PersonEntity personEntity2 = new PersonEntity.PersonBuilder().username("jonas").email("jonas.peter@example.com").password(encoder.encode("pass2"))
                 .firstName("Jonas").lastName("Peter").gender(Gender.MALE).dob(calendarToDate(1978, 9, 1)).createPerson();
-        PersonEntity personEntity3 = new PersonEntity.PersonBuilder().username("zoe45").email("zoe.bennett@example.com").password("pass3")
+        PersonEntity personEntity3 = new PersonEntity.PersonBuilder().username("zoe45").email("zoe.bennett@example.com").password(encoder.encode("pass3"))
                 .firstName("Zoe").lastName("Bennett").gender(Gender.FEMALE).dob(calendarToDate(2005, 4, 21)).createPerson();
-        PersonEntity personEntity4 = new PersonEntity.PersonBuilder().username("lottaro").email("lotta.aro@example.com").password("pass3")
+        PersonEntity personEntity4 = new PersonEntity.PersonBuilder().username("lottaro").email("lotta.aro@example.com").password(encoder.encode("pass4"))
                 .firstName("Lotta").lastName("Aro").gender(Gender.FEMALE).dob(calendarToDate(2000, 1, 29)).createPerson();
-        PersonEntity personEntity5 = new PersonEntity.PersonBuilder().username("sara1997").email("sara.brun@example.com").password("pass4")
+        PersonEntity personEntity5 = new PersonEntity.PersonBuilder().username("sara1997").email("sara.brun@example.com").password(encoder.encode("pass5"))
                 .firstName("Sara").lastName("Brun").gender(Gender.FEMALE).dob(calendarToDate(1997, 12, 18)).createPerson();
         
         personServiceLocal.persistPerson(personEntity1, userRole);
@@ -101,8 +106,6 @@ public class InitializerBean {
         
         MatchEntity matchEntity = new IndividualMatchEntity(4, 3, personEntity1, personEntity2);
         matchServiceLocal.persistMatch((IndividualMatchEntity) matchEntity, tournamentEntity);
-        
-        logger.log(Level.INFO, "Persisting with initial values has finished");
     }
 
     private Date calendarToDate(int year, int month, int day) {

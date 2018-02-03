@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:dt="http://java.sun.com/jsf/composite/components"
+                xmlns:p="http://primefaces.org/ui"
+                template="../template.xhtml">
+
+    <ui:define name="customHead">
+        <title>Profile</title>
+    </ui:define>
+    <ui:define name="customContent">
+        <div class="container">
+            <div class="custom-card">
+                <h4 class="custom-card-header">Profile</h4>
+                <div class="card-body">
+                    <h4 class="card-title">Editing profile</h4>
+                    <p class="card-text">You can update your profile</p>
+                    <h:form id="registrationForm">
+                        <div class="form-row">
+                            <div class="form-group col-sm-6">
+                                <h:outputLabel for="username" value="Username" styleClass="col-form-label"/>
+                                <h:inputText id="username" value="#{profileBean.personEntity.username}" readonly="true" required="true" styleClass="form-control"/>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <h:outputLabel for="email" value="Email address" styleClass="col-form-label"/>
+                                <h:inputText id="email" value="#{profileBean.personEntity.email}" required="true" styleClass="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-sm-6">
+                                <h:outputLabel for="fname" value="First Name" styleClass="col-form-label"/>
+                                <h:inputText id="fname" value="#{profileBean.personEntity.firstName}" required="true" styleClass="form-control"/>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <h:outputLabel for="lname" value="Last Name" styleClass="col-form-label"/>
+                                <h:inputText id="lname" value="#{profileBean.personEntity.lastName}" required="true" styleClass="form-control"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <h:outputLabel for="pw" value="Password" styleClass="col-form-label"/>
+                                <h:inputSecret id="pw" value="#{profileBean.personEntity.password}" required="true" styleClass="form-control"/>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <h:outputLabel for="pwConfirm" value="Password again" styleClass="col-form-label"/>
+                                <h:inputSecret id="pwConfirm" required="true" styleClass="form-control"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <h:outputLabel for="gender" value="Gender" styleClass="col-form-label"/>
+                                <h:selectOneRadio id="gender" value="#{profileBean.personEntity.gender}" required="true">
+                                    <f:selectItems value="#{profileBean.genders}" var="gender" itemValue="#{gender}" itemLabel="#{gender.name()}" />
+                                </h:selectOneRadio>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <h:outputLabel for="dob" value="Date of birth" styleClass="col-form-label"/>
+                                <h:inputText id="dob" value="#{profileBean.personEntity.dob}" required="true" styleClass="form-control">
+                                    <f:convertDateTime pattern="yyyy-MM-dd"/>
+                                </h:inputText>
+                            </div>
+                        </div>
+                        <div class="row justify-content-end">
+                            <div class="col-4">
+                                <h:commandButton id="submit" styleClass="btn btn-primary" value="SUBMIT" action="#{profileBean.updateProfile()}"/>
+                            </div>
+                        </div>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

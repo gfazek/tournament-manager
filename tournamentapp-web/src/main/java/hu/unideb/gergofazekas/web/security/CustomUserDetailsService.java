@@ -12,9 +12,10 @@ import hu.unideb.gergofazekas.utility.Role;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.naming.InitialContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -30,8 +31,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
     
-    private static final Logger logger
-            = Logger.getLogger("hu.unideb.gergofazekas.web.security.CustomUserDetailsService");
+    private static final Logger logger = LogManager.getLogger(CustomUserDetailsService.class);
     
     @EJB(mappedName = "java:global/Tournament_Manager_Application_EAR_Module/tournamentapp-service-1.0-SNAPSHOT/PersonBean")
     private PersonServiceLocal personServiceLocal;
