@@ -5,6 +5,7 @@
  */
 package hu.unideb.gergofazekas.service.util;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
@@ -13,12 +14,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 public class PersonPasswordEncoder {
     
-    private static PasswordEncoder passwordEncoder;
-    
+    private final PasswordEncoder passwordEncoder;
+            
     public PersonPasswordEncoder(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
-            
+    
     public String encode(String pwd) {
         return passwordEncoder.encode(pwd);
     }

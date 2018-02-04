@@ -39,11 +39,13 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         PersonEntity person = personServiceLocal.findByUsername(username);
+        logger.debug("Person to authenticate: {}", person);
         if (person == null) {
             throw  new UsernameNotFoundException("User details not found with this username: " + username);
         }
         List<SimpleGrantedAuthority> authorities = getAuthorities(person.getRoles());
         User user = new User(person.getUsername(), person.getPassword(), person.isEnabled(), true, true, true, authorities);
+        logger.debug("Spring's user is: {}", user);
         return user;
     }
     

@@ -46,8 +46,6 @@ public class InitializerBean {
 
     private static final Logger logger = LogManager.getLogger(InitializerBean.class);
     
-    private PersonPasswordEncoder encoder = new PersonPasswordEncoder(new BCryptPasswordEncoder());
-    
     @EJB
     private RoleServiceLocal roleServiceLocal;
     
@@ -70,29 +68,29 @@ public class InitializerBean {
         RoleEntity adminRole = new RoleEntity(Role.ADMIN);
         roleServiceLocal.persistRole(userRole);
         roleServiceLocal.persistRole(adminRole);
-        PersonEntity personEntity1 = new PersonEntity.PersonBuilder().username("geri").email("romain.hoogmoed@example.com").password(encoder.encode("pass"))
+        PersonEntity personEntity1 = new PersonEntity.PersonBuilder().username("geri").email("romain.hoogmoed@example.com").password("pass")
                 .firstName("Romain").lastName("Hoogmoed").gender(Gender.MALE).dob(calendarToDate(1981, 5, 9)).createPerson();
-        PersonEntity personEntity2 = new PersonEntity.PersonBuilder().username("jonas").email("jonas.peter@example.com").password(encoder.encode("pass2"))
+        PersonEntity personEntity2 = new PersonEntity.PersonBuilder().username("jonas").email("jonas.peter@example.com").password("pass2")
                 .firstName("Jonas").lastName("Peter").gender(Gender.MALE).dob(calendarToDate(1978, 9, 1)).createPerson();
-        PersonEntity personEntity3 = new PersonEntity.PersonBuilder().username("zoe45").email("zoe.bennett@example.com").password(encoder.encode("pass3"))
+        PersonEntity personEntity3 = new PersonEntity.PersonBuilder().username("zoe45").email("zoe.bennett@example.com").password("pass3")
                 .firstName("Zoe").lastName("Bennett").gender(Gender.FEMALE).dob(calendarToDate(2005, 4, 21)).createPerson();
-        PersonEntity personEntity4 = new PersonEntity.PersonBuilder().username("lottaro").email("lotta.aro@example.com").password(encoder.encode("pass4"))
+        PersonEntity personEntity4 = new PersonEntity.PersonBuilder().username("lottaro").email("lotta.aro@example.com").password("pass4")
                 .firstName("Lotta").lastName("Aro").gender(Gender.FEMALE).dob(calendarToDate(2000, 1, 29)).createPerson();
-        PersonEntity personEntity5 = new PersonEntity.PersonBuilder().username("sara1997").email("sara.brun@example.com").password(encoder.encode("pass5"))
+        PersonEntity personEntity5 = new PersonEntity.PersonBuilder().username("sara1997").email("sara.brun@example.com").password("pass5")
                 .firstName("Sara").lastName("Brun").gender(Gender.FEMALE).dob(calendarToDate(1997, 12, 18)).createPerson();
         
-        personServiceLocal.persistPerson(personEntity1, userRole);
-        personServiceLocal.persistPerson(personEntity2, userRole);
-        personServiceLocal.persistPerson(personEntity3, userRole);
-        personServiceLocal.persistPerson(personEntity4, userRole);
-        personServiceLocal.persistPerson(personEntity5, userRole);
+        personServiceLocal.persistPerson(personEntity1, Role.ADMIN);
+        personServiceLocal.persistPerson(personEntity2, Role.USER);
+        personServiceLocal.persistPerson(personEntity3, Role.USER);
+        personServiceLocal.persistPerson(personEntity4, Role.USER);
+        personServiceLocal.persistPerson(personEntity5, Role.USER);
         
         TeamEntity teamEntity1 = new TeamEntity("Manchester City");
         TeamEntity teamEntity2 = new TeamEntity("FC Barcelona");
         TeamEntity teamEntity3 = new TeamEntity("Paris Saint Germain");
         
         teamServiceLocal.persistTeam(teamEntity1, personEntity1);
-        teamServiceLocal.persistTeam(teamEntity1, personEntity2);
+        teamServiceLocal.persistTeam(teamEntity2, personEntity2);
         teamServiceLocal.persistTeam(teamEntity3, personEntity5);
         
         TournamentEntity tournamentEntity = new IndividualRoundRobinTournamentEntity("Premier League", "English first class championship", 20, calendarToDate(2018, 2, 1), 3, 1, 0);

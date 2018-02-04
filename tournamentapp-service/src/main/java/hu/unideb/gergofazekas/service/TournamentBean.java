@@ -44,8 +44,8 @@ public class TournamentBean implements TournamentServiceLocal {
         logger.debug("Persisting individual competitor: tournament: {} | person: {}", tournament, personEntity);
         tournament.getPeople().add(personEntity);
         personEntity.getRoundRobinTournaments().add(tournament);
-        em.merge(tournament);
-        em.merge(personEntity);
+//        em.merge(tournament);
+//        em.merge(personEntity);
     }
 
     @Override

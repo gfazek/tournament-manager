@@ -38,27 +38,16 @@ public class PersonBean implements PersonServiceLocal{
     @PersistenceContext
     private EntityManager em;
     
-    private PersonPasswordEncoder encoder = new PersonPasswordEncoder(new BCryptPasswordEncoder());
-    
-    private static PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    
-    @Override
-    public void persistPerson(PersonEntity person, RoleEntity role) {
-        role.getPeople().add(person);
-        person.getRoles().add(role);
-        em.merge(role);
-        em.persist(person);
-    }
+    private static final PersonPasswordEncoder encoder = new PersonPasswordEncoder(new BCryptPasswordEncoder());
 
     @Override
     public void persistPerson(PersonEntity personEntity, Role role) {
-        logger.debug("Persist person: {}", personEntity);
+        logger.debug("Persisting person: {}", personEntity);
         personEntity.setPassword(encoder.encode(personEntity.getPassword()));
         RoleEntity roleEntity = em.createNamedQuery("Role.findByName", RoleEntity.class).setParameter("rolename", role).getSingleResult();
-        roleEntity.getPeople().add(personEntity);
         personEntity.getRoles().add(roleEntity);
-        em.merge(roleEntity);
         em.persist(personEntity);
+        roleEntity.getPeople().add(personEntity);
     }
     
     @Override
@@ -78,7 +67,7 @@ public class PersonBean implements PersonServiceLocal{
         PersonEntity personEntity = em.find(PersonEntity.class, id);
         logger.debug("Changing Person's status: {}", personEntity);
         personEntity.setEnabled(!personEntity.isEnabled());
-        em.merge(personEntity);
+//        em.merge(personEntity);
     }
     
     @Override
@@ -89,7 +78,7 @@ public class PersonBean implements PersonServiceLocal{
     @Override
     public void updatePerson(PersonEntity personEntity) {
         logger.debug("Updating person: {}", personEntity);
-        em.merge(personEntity);
+//        em.merge(personEntity);
     }
         
 }
