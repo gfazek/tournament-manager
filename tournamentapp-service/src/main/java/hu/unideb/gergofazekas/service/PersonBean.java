@@ -31,13 +31,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 @Stateless
 @Named
-public class PersonBean implements PersonServiceLocal{
-   
+public class PersonBean implements PersonServiceLocal {
+
     private static final Logger logger = LogManager.getLogger(PersonBean.class);
-    
+
     @PersistenceContext
     private EntityManager em;
-    
+
     private static final PersonPasswordEncoder encoder = new PersonPasswordEncoder(new BCryptPasswordEncoder());
 
     @Override
@@ -46,10 +46,17 @@ public class PersonBean implements PersonServiceLocal{
         personEntity.setPassword(encoder.encode(personEntity.getPassword()));
         RoleEntity roleEntity = em.createNamedQuery("Role.findByName", RoleEntity.class).setParameter("rolename", role).getSingleResult();
         personEntity.getRoles().add(roleEntity);
-        em.persist(personEntity);
+        if (role == Role.USER) {
+            em.persist(personEntity);
+        } else if (role == Role.ADMIN) {
+            RoleEntity userRole = em.createNamedQuery("Role.findByName", RoleEntity.class).setParameter("rolename", Role.USER).getSingleResult();
+            personEntity.getRoles().add(userRole);
+            em.persist(personEntity);
+            userRole.getPeople().add(personEntity);
+        }
         roleEntity.getPeople().add(personEntity);
     }
-    
+
     @Override
     public List<PersonEntity> getPeople() {
         return em.createNamedQuery("Person.findAll", PersonEntity.class).getResultList();
@@ -69,7 +76,7 @@ public class PersonBean implements PersonServiceLocal{
         personEntity.setEnabled(!personEntity.isEnabled());
 //        em.merge(personEntity);
     }
-    
+
     @Override
     public PersonEntity findByUsername(String username) {
         return em.createNamedQuery("Person.findByUsername", PersonEntity.class).setParameter("username", username).getSingleResult();
@@ -80,5 +87,5 @@ public class PersonBean implements PersonServiceLocal{
         logger.debug("Updating person: {}", personEntity);
 //        em.merge(personEntity);
     }
-        
+
 }
