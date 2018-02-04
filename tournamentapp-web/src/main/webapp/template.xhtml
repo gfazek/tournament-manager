@@ -36,9 +36,12 @@ and open the template in the editor.
                             <h:link styleClass="nav-item nav-link #{request.requestURI.contains('registration') ? 'active' : ''}" value="Registration" outcome="/registration" />
                             <h:link styleClass="nav-item nav-link #{request.requestURI.contains('login') ? 'active' : ''}" value="Login" outcome="/login" />
                         </sec:authorize>
+                        <sec:authorize access="hasRole('ROLE_ADMIN')">
+                            <h:link styleClass="nav-item nav-link #{request.requestURI.contains('admin') ? 'active' : ''}" value="Admin" outcome="/admin/index" />
+                        </sec:authorize>
                         <sec:authorize access="isAuthenticated()">
-                            <h:link styleClass="nav-item nav-link" value="Tournaments" outcome="/secured/tournaments" />
-                            <h:link styleClass="nav-item nav-link" value="Profile" outcome="/secured/profile" />
+                            <h:link styleClass="nav-item nav-link #{request.requestURI.contains('secured/tournaments') ? 'active' : ''}" value="Tournaments" outcome="/secured/tournaments" />
+                            <h:link styleClass="nav-item nav-link #{request.requestURI.contains('secured/profile') ? 'active' : ''}" value="Profile" outcome="/secured/profile" />
                             <h:outputLink styleClass="nav-item nav-link" value="#{request.contextPath}/logout">Logout</h:outputLink>
                         </sec:authorize>
                         <!--<a class="nav-item nav-link disabled" href="#">Disabled</a>-->
