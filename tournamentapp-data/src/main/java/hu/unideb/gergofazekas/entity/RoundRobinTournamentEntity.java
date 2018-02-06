@@ -62,5 +62,10 @@ public abstract class RoundRobinTournamentEntity extends TournamentEntity {
     public void setDrawPoint(int drawPoint) {
         this.drawPoint = drawPoint;
     }
+
+    @Override
+    public String toString() {
+        return "RoundRobinTournamentEntity{" + "winPoint=" + winPoint + ", loosePoint=" + loosePoint + ", drawPoint=" + drawPoint + '}';
+    }
     
 }

@@ -31,6 +31,12 @@ public class IndividualMatchEntity extends MatchEntity {
         this.homeCompetitor = homeCompetitor;
         this.awayCompetitor = awayCompetitor;
     }
+    
+    public IndividualMatchEntity(PersonEntity homeCompetitor, PersonEntity awayCompetitor) {
+        
+        this.homeCompetitor = homeCompetitor;
+        this.awayCompetitor = awayCompetitor;
+    }
 
     public PersonEntity getHomeCompetitor() {
         return homeCompetitor;

@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
+import java.util.stream.Stream;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.view.ViewScoped;
@@ -57,18 +58,28 @@ public class TournamentDetailBean implements Serializable {
     }
     
     public boolean showEntry() {
+        logger.debug("TournamentEntity: {}", tournamentEntity);
         if (tournamentEntity.getStatus() != TournamentStatus.OPEN) {
             return false;
-        } 
+        }
         if (tournamentEntity instanceof IndividualRoundRobinTournamentEntity) {
             IndividualRoundRobinTournamentEntity tmp = (IndividualRoundRobinTournamentEntity) tournamentEntity;
             List<PersonEntity> competitors = tournamentServiceLocal.getIndividualCompetitors(tournamentEntity.getId());
-            Optional<PersonEntity> competitor = competitors.stream()
-                    .filter(p -> p.getUsername().equals(((UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername()))
-                    .findFirst();
+            logger.debug("CompetitorS: {}", competitors);
+            Stream<PersonEntity> s = competitors.stream()
+                    .filter(p -> p.getUsername().equals(((UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername()));
+            logger.debug("It gets null value?: {}", s);
+            Optional<PersonEntity> competitor = s.findFirst();
             return !competitor.isPresent();
+//            Optional<PersonEntity> competitor = competitors.stream()
+//                    .filter(p -> p.getUsername().equals(((UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername()))
+//                    .findFirst();
+//            return !competitor.isPresent();
         }
         return true;
     }
     
+    public void kickoff() {
+        tournamentServiceLocal.kickoff(tournamentEntity.getId());
+    }
 }

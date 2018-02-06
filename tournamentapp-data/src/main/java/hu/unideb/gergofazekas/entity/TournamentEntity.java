@@ -124,5 +124,10 @@ public abstract class TournamentEntity extends BaseEntity implements Serializabl
     public void setStart(Date start) {
         this.start = start;
     }
+
+    @Override
+    public String toString() {
+        return "TournamentEntity{" + "name=" + name + ", description=" + description + ", status=" + status + ", numberOfCompetitors=" + numberOfCompetitors + ", start=" + start + ", matches=" + matches + '}';
+    }
     
 }

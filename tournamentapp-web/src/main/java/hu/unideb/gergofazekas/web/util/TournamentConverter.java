@@ -43,7 +43,9 @@ public class TournamentConverter implements Converter {
         }
         try {
             Long id = Long.valueOf(value);
-            return tournamentServiceLocal.findTournament(id);
+            TournamentEntity tmp = tournamentServiceLocal.findTournament(id);
+            logger.debug("TournamentEntity: {}", tmp);
+            return tmp;
         } catch (NumberFormatException e) {
             throw new ConverterException("The value is not a valid Tournament ID: " + value, e);
         }

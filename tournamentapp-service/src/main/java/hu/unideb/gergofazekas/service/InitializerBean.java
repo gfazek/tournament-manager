@@ -66,8 +66,10 @@ public class InitializerBean {
         logger.info("Persisting intial object to the database");
         RoleEntity userRole = new RoleEntity(Role.USER);
         RoleEntity adminRole = new RoleEntity(Role.ADMIN);
+        RoleEntity supervisorRole = new RoleEntity(Role.SUPERVISOR);
         roleServiceLocal.persistRole(userRole);
         roleServiceLocal.persistRole(adminRole);
+        roleServiceLocal.persistRole(supervisorRole);
         PersonEntity personEntity1 = new PersonEntity.PersonBuilder().username("geri").email("romain.hoogmoed@example.com").password("pass")
                 .firstName("Romain").lastName("Hoogmoed").gender(Gender.MALE).dob(calendarToDate(1981, 5, 9)).createPerson();
         PersonEntity personEntity2 = new PersonEntity.PersonBuilder().username("jonas").email("jonas.peter@example.com").password("pass2")
@@ -80,7 +82,7 @@ public class InitializerBean {
                 .firstName("Sara").lastName("Brun").gender(Gender.FEMALE).dob(calendarToDate(1997, 12, 18)).createPerson();
         
         personServiceLocal.persistPerson(personEntity1, Role.ADMIN);
-        personServiceLocal.persistPerson(personEntity2, Role.USER);
+        personServiceLocal.persistPerson(personEntity2, Role.SUPERVISOR);
         personServiceLocal.persistPerson(personEntity3, Role.USER);
         personServiceLocal.persistPerson(personEntity4, Role.USER);
         personServiceLocal.persistPerson(personEntity5, Role.USER);
@@ -95,15 +97,24 @@ public class InitializerBean {
         
         TournamentEntity tournamentEntity = new IndividualRoundRobinTournamentEntity("Premier League", "English first class championship", 20, calendarToDate(2018, 2, 1), 3, 1, 0);
         TournamentEntity teamtournamentEntity = new TeamRoundRobinTournamentEntity("NB1", "Hungarian first class championship", 10, calendarToDate(2018, 1, 19), 3, 1, 0);
+        tournamentEntity.setStatus(TournamentStatus.IN_PROGRESS);
         teamtournamentEntity.setStatus(TournamentStatus.IN_PROGRESS);
         tournamentServiceLocal.persistTournament(tournamentEntity);
         tournamentServiceLocal.persistTournament(teamtournamentEntity);
+        
+        /* **************************** */
+        IndividualRoundRobinTournamentEntity tmp = new IndividualRoundRobinTournamentEntity("PL", "English first class championship", 20, calendarToDate(2018, 2, 1), 3, 1, 0);
+        logger.debug("tmp competitor: {}", tmp);
+        tournamentServiceLocal.persistTournament(tmp);
+        logger.debug("tmp competitor after persisting: {}", tmp);
+        /* **************************** */ 
         
         tournamentServiceLocal.persistIndividualCompetitor((IndividualRoundRobinTournamentEntity) tournamentEntity, personEntity1);
         tournamentServiceLocal.persistIndividualCompetitor((IndividualRoundRobinTournamentEntity) tournamentEntity, personEntity2);
         
         MatchEntity matchEntity = new IndividualMatchEntity(4, 3, personEntity1, personEntity2);
         matchServiceLocal.persistMatch((IndividualMatchEntity) matchEntity, tournamentEntity);
+        
     }
 
     private Date calendarToDate(int year, int month, int day) {

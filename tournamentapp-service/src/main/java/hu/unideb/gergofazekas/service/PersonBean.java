@@ -48,11 +48,19 @@ public class PersonBean implements PersonServiceLocal {
         personEntity.getRoles().add(roleEntity);
         if (role == Role.USER) {
             em.persist(personEntity);
-        } else if (role == Role.ADMIN) {
+        } else if (role == Role.SUPERVISOR) {
             RoleEntity userRole = em.createNamedQuery("Role.findByName", RoleEntity.class).setParameter("rolename", Role.USER).getSingleResult();
             personEntity.getRoles().add(userRole);
             em.persist(personEntity);
             userRole.getPeople().add(personEntity);
+        } else if (role == Role.ADMIN) {
+            RoleEntity userRole = em.createNamedQuery("Role.findByName", RoleEntity.class).setParameter("rolename", Role.USER).getSingleResult();
+            RoleEntity supervisorRole = em.createNamedQuery("Role.findByName", RoleEntity.class).setParameter("rolename", Role.SUPERVISOR).getSingleResult();
+            personEntity.getRoles().add(userRole);
+            personEntity.getRoles().add(supervisorRole);
+            em.persist(personEntity);
+            userRole.getPeople().add(personEntity);
+            supervisorRole.getPeople().add(personEntity);
         }
         roleEntity.getPeople().add(personEntity);
     }

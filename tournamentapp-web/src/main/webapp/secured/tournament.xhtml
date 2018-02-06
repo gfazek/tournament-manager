@@ -12,7 +12,8 @@ and open the template in the editor.
                 xmlns:dt="http://java.sun.com/jsf/composite/components"
                 xmlns:p="http://primefaces.org/ui"
                 template="../template.xhtml"
-                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:sec="http://www.springframework.org/security/tags">
 
     <ui:define name="customHead">
         <title>Tournament Details</title>
@@ -65,10 +66,15 @@ and open the template in the editor.
                                 <h:outputText id="tournamentDescription" value="#{tournamentDetailBean.tournamentEntity.description}" />
                             </div>
                         </div>
-                        <div class="row justify-content-end">
-                            <div class="col-4">
-                                <h:commandButton id="submit" rendered="#{tournamentDetailBean.showEntry()}" styleClass="btn btn-lg btn-primary" value="ENTRY" actionListener="#{tournamentDetailBean.submitEntry()}"/>
+                        <div class="row justify-content-around"> 
+                            <div class="col-md-2">
+                                <h:commandButton id="submit" rendered="#{tournamentDetailBean.showEntry()}" styleClass="btn btn-lg btn-success" value="ENTRY" actionListener="#{tournamentDetailBean.submitEntry()}"/>
                             </div>
+                            <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
+                                <div class="col-md-2">
+                                    <h:commandButton id="kickoff" styleClass="btn btn-lg btn-primary" value="KICK OFF" actionListener="#{tournamentDetailBean.kickoff()}"/>
+                                </div>
+                            </sec:authorize>
                         </div>
                     </div>
                 </div>

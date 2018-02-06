@@ -55,6 +55,9 @@ public class CustomUserDetailsService implements UserDetailsService {
             if (role.getRole() == Role.USER) {
                 auths.add(new SimpleGrantedAuthority("ROLE_USER"));
             } 
+            if (role.getRole() == Role.SUPERVISOR) {
+                auths.add(new SimpleGrantedAuthority("ROLE_SUPERVISOR"));
+            }
             if (role.getRole() == Role.ADMIN) {
                 auths.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
             }

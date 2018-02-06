@@ -34,6 +34,7 @@ public class IndividualRoundRobinTournamentEntity extends RoundRobinTournamentEn
     private List<PersonEntity> people;
 
     public IndividualRoundRobinTournamentEntity() {
+        this.people = new ArrayList<>();
     }
     
     public IndividualRoundRobinTournamentEntity(String name, String description, int numberOfCompetitors, Date start, int winPoint, int drawPoint, int loosePoint) {
@@ -42,11 +43,17 @@ public class IndividualRoundRobinTournamentEntity extends RoundRobinTournamentEn
     }
 
     public List<PersonEntity> getPeople() {
-        return people;
+        return this.people;
     }
 
     public void setPeople(List<PersonEntity> people) {
         this.people = people;
     }
+
+    @Override
+    public String toString() {
+        return "IndividualRoundRobinTournamentEntity{"  + "name=" + getName() + ", description=" + getDescription() + ", status=" + getStatus() + ", numberOfCompetitors=" + getNumberOfCompetitors() + ", start=" + getStart() + ", matches=" + getMatches() + ", winPoint=" + getWinPoint() + ", loosePoint=" + getLoosePoint() + ", drawPoint=" + getDrawPoint() + ", people=" + people + '}';
+    }
+    
     
 }

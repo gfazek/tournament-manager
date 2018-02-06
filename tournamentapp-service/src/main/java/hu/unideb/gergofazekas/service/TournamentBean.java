@@ -5,9 +5,12 @@
  */
 package hu.unideb.gergofazekas.service;
 
+import hu.unideb.gergofazekas.entity.IndividualMatchEntity;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
+import hu.unideb.gergofazekas.entity.MatchEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
+import hu.unideb.gergofazekas.utility.TournamentStatus;
 import java.util.List;
 import java.util.logging.Level;
 import javax.ejb.EJB;
@@ -26,10 +29,13 @@ import org.apache.logging.log4j.Logger;
 @Named
 public class TournamentBean implements TournamentServiceLocal {
 
-       private static final Logger logger = LogManager.getLogger(InitializerBean.class);
+       private static final Logger logger = LogManager.getLogger(TournamentBean.class);
     
     @EJB
     private PersonServiceLocal personServiceLocal;
+    
+    @EJB
+    private MatchServiceLocal matchServiceLocal;
     
     @PersistenceContext
     private EntityManager em;
@@ -61,6 +67,10 @@ public class TournamentBean implements TournamentServiceLocal {
     @Override
     public TournamentEntity findTournament(Long id) {
         TournamentEntity tournamentEntity = em.find(TournamentEntity.class, id);
+        logger.debug("TournamentEntity: {}", tournamentEntity);
+        IndividualRoundRobinTournamentEntity irrt = (IndividualRoundRobinTournamentEntity) tournamentEntity;
+        logger.debug("IndividualRoundRobinTournamentEntity: {}", irrt);
+        irrt.getPeople().size();
         return tournamentEntity;
     }
 
@@ -84,7 +94,23 @@ public class TournamentBean implements TournamentServiceLocal {
         logger.debug("Individual Competitors: tournamentid: {} | competitors: {}", id, competitors);
         return competitors;
     }
-    
-    
+
+    @Override
+    public void kickoff(Long id) {
+        TournamentEntity tournamentEntity = findTournament(id);
+        logger.debug("Kicking off: {}", tournamentEntity);
+        tournamentEntity.setStatus(TournamentStatus.IN_PROGRESS);
+        if (tournamentEntity instanceof IndividualRoundRobinTournamentEntity) {
+            IndividualRoundRobinTournamentEntity irrt = (IndividualRoundRobinTournamentEntity) tournamentEntity;
+            List<PersonEntity> competitors = irrt.getPeople();
+            logger.debug("Instantiating matches for competitors: {}", competitors);
+            for (PersonEntity p1 : competitors) {
+                List<PersonEntity> tmp = competitors.subList(competitors.indexOf(p1), competitors.size() - 1);
+                for (PersonEntity p2 : tmp) {
+                    matchServiceLocal.persistMatch(new IndividualMatchEntity(p1, p2), tournamentEntity);
+                } 
+            }
+        }
+    }
     
 }

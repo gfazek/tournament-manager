@@ -25,11 +25,11 @@ import javax.persistence.Table;
 @DiscriminatorColumn(name = "TYPE")
 public abstract class MatchEntity extends BaseEntity implements Serializable {
     
-    @Basic(optional = false)
+//    @Basic(optional = false)
     @Column(name = "HOME_SCORE")
     private int homeScore;
     
-    @Basic(optional = false)
+//    @Basic(optional = false)
     @Column(name = "AWAY_SCORE")
     private int awayScore;
     
