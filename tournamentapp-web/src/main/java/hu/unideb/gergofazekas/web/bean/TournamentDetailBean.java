@@ -64,7 +64,8 @@ public class TournamentDetailBean implements Serializable {
         }
         if (tournamentEntity instanceof IndividualRoundRobinTournamentEntity) {
             IndividualRoundRobinTournamentEntity tmp = (IndividualRoundRobinTournamentEntity) tournamentEntity;
-            List<PersonEntity> competitors = tournamentServiceLocal.getIndividualCompetitors(tournamentEntity.getId());
+//            List<PersonEntity> competitors = tournamentServiceLocal.getIndividualCompetitors(tournamentEntity.getId());
+              List<PersonEntity> competitors = tmp.getPeople();
             logger.debug("CompetitorS: {}", competitors);
             Stream<PersonEntity> s = competitors.stream()
                     .filter(p -> p.getUsername().equals(((UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername()));

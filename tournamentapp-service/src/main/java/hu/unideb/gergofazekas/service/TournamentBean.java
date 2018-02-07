@@ -105,8 +105,11 @@ public class TournamentBean implements TournamentServiceLocal {
             List<PersonEntity> competitors = irrt.getPeople();
             logger.debug("Instantiating matches for competitors: {}", competitors);
             for (PersonEntity p1 : competitors) {
-                List<PersonEntity> tmp = competitors.subList(competitors.indexOf(p1), competitors.size() - 1);
+                logger.debug("p1: {}", p1);
+                List<PersonEntity> tmp = competitors.subList(competitors.indexOf(p1) + 1, competitors.size());
+                logger.debug("tmp: {}", tmp);
                 for (PersonEntity p2 : tmp) {
+                    logger.debug("p2: {}", p2);
                     matchServiceLocal.persistMatch(new IndividualMatchEntity(p1, p2), tournamentEntity);
                 } 
             }
