@@ -29,17 +29,17 @@ import org.apache.logging.log4j.Logger;
 @Named
 public class TournamentBean implements TournamentServiceLocal {
 
-       private static final Logger logger = LogManager.getLogger(TournamentBean.class);
-    
+    private static final Logger logger = LogManager.getLogger(TournamentBean.class);
+
     @EJB
     private PersonServiceLocal personServiceLocal;
-    
+
     @EJB
     private MatchServiceLocal matchServiceLocal;
-    
+
     @PersistenceContext
     private EntityManager em;
-    
+
     @Override
     public void persistTournament(TournamentEntity tournamentEntity) {
         em.persist(tournamentEntity);
@@ -58,7 +58,7 @@ public class TournamentBean implements TournamentServiceLocal {
     public List<TournamentEntity> getTournaments() {
         return em.createNamedQuery("Tournament.findAll", TournamentEntity.class).getResultList();
     }
-    
+
     @Override
     public List<TournamentEntity> getOpens() {
         return em.createNamedQuery("Tournament.findOpens", TournamentEntity.class).getResultList();
@@ -68,9 +68,11 @@ public class TournamentBean implements TournamentServiceLocal {
     public TournamentEntity findTournament(Long id) {
         TournamentEntity tournamentEntity = em.find(TournamentEntity.class, id);
         logger.debug("TournamentEntity: {}", tournamentEntity);
-        IndividualRoundRobinTournamentEntity irrt = (IndividualRoundRobinTournamentEntity) tournamentEntity;
-        logger.debug("IndividualRoundRobinTournamentEntity: {}", irrt);
-        irrt.getPeople().size();
+        if (tournamentEntity instanceof IndividualRoundRobinTournamentEntity) {
+            IndividualRoundRobinTournamentEntity irrt = (IndividualRoundRobinTournamentEntity) tournamentEntity;
+            logger.debug("IndividualRoundRobinTournamentEntity: {}", irrt);
+            irrt.getPeople().size();
+        }
         return tournamentEntity;
     }
 
@@ -82,7 +84,7 @@ public class TournamentBean implements TournamentServiceLocal {
         if (tournamentEntity instanceof IndividualRoundRobinTournamentEntity) {
             IndividualRoundRobinTournamentEntity tmp = (IndividualRoundRobinTournamentEntity) tournamentEntity;
             tmp.getPeople().add(personEntity);
-            personEntity.getRoundRobinTournaments().add((IndividualRoundRobinTournamentEntity)tournamentEntity);
+            personEntity.getRoundRobinTournaments().add((IndividualRoundRobinTournamentEntity) tournamentEntity);
         }
 //        em.merge(tournamentEntity);
 //        em.merge(personEntity);
@@ -111,9 +113,9 @@ public class TournamentBean implements TournamentServiceLocal {
                 for (PersonEntity p2 : tmp) {
                     logger.debug("p2: {}", p2);
                     matchServiceLocal.persistMatch(new IndividualMatchEntity(p1, p2), tournamentEntity);
-                } 
+                }
             }
         }
     }
-    
+
 }

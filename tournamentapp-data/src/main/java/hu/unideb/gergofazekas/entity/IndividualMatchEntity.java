@@ -53,5 +53,10 @@ public class IndividualMatchEntity extends MatchEntity {
     public void setAwayCompetitor(PersonEntity awayCompetitor) {
         this.awayCompetitor = awayCompetitor;
     }
+
+    @Override
+    public String toString() {
+        return "IndividualMatchEntity{" + "homeScore=" + getHomeScore() + ", awayScore=" + getAwayScore() + ", homeCompetitor=" + homeCompetitor + ", awayCompetitor=" + awayCompetitor + '}';
+    }
     
 }

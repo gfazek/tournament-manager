@@ -67,5 +67,10 @@ public abstract class MatchEntity extends BaseEntity implements Serializable {
     public void setTournament(TournamentEntity tournament) {
         this.tournament = tournament;
     }
+
+    @Override
+    public String toString() {
+        return "MatchEntity{" + "homeScore=" + homeScore + ", awayScore=" + awayScore + ", tournament=" + tournament + '}';
+    }
     
 }
