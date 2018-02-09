@@ -34,7 +34,7 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "PERSON")
 @NamedQueries({
-    @NamedQuery(name = "Person.findPersonByUsername", query = "SELECT p FROM PersonEntity p WHERE p.username LIKE :username"),
+    @NamedQuery(name = "Person.findByUsername", query = "SELECT p FROM PersonEntity p WHERE p.username LIKE :username"),
     @NamedQuery(name = "Person.findAll", query = "SELECT p FROM PersonEntity p")
 })
 public class PersonEntity extends BaseEntity implements Serializable {
@@ -258,6 +258,11 @@ public class PersonEntity extends BaseEntity implements Serializable {
 
     public void setAwayMatches(List<IndividualMatchEntity> awayMatches) {
         this.awayMatches = awayMatches;
+    }
+
+    @Override
+    public String toString() {
+        return "PersonEntity{" + "username=" + username + ", email=" + email + ", password=" + password + ", enabled=" + enabled + ", firstName=" + firstName + ", lastName=" + lastName + ", gender=" + gender + ", dob=" + dob + '}';
     }
     
 }

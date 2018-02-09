@@ -8,7 +8,6 @@ package hu.unideb.gergofazekas.web.util;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
 import hu.unideb.gergofazekas.service.TournamentServiceLocal;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.component.UIComponent;
@@ -17,6 +16,8 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
 import javax.inject.Named;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -24,10 +25,9 @@ import javax.inject.Named;
  */
 @Named
 @RequestScoped
-public class TournamentConverter implements Converter{
-
-    private static final Logger logger
-            = Logger.getLogger("util.TournamentConverter");
+public class TournamentConverter implements Converter {
+    
+    private static final Logger logger = LogManager.getLogger(TournamentConverter.class);
     
     @EJB
     private TournamentServiceLocal tournamentServiceLocal;
@@ -37,14 +37,15 @@ public class TournamentConverter implements Converter{
     
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
-        logger.log(Level.INFO, "TournamentConverter getAsObject called with String value: called with {0}: ", value);
+        logger.debug("TournamentConverter getAsObject called with String value: called with {}: ", value);
         if (value == null || value.isEmpty()) {
             return null;
         }
         try {
             Long id = Long.valueOf(value);
-            logger.log(Level.INFO, "TournamentServiceLocal is {0}: ", tournamentServiceLocal);
-            return tournamentServiceLocal.findTournament(id);
+            TournamentEntity tmp = tournamentServiceLocal.findTournament(id);
+            logger.debug("TournamentEntity: {}", tmp);
+            return tmp;
         } catch (NumberFormatException e) {
             throw new ConverterException("The value is not a valid Tournament ID: " + value, e);
         }
@@ -52,7 +53,7 @@ public class TournamentConverter implements Converter{
 
     @Override
     public String getAsString(FacesContext context, UIComponent component, Object value) {
-        logger.log(Level.INFO, "TournamentConverter getAsSttring called with Object value: {0}", value);
+        logger.debug("TournamentConverter getAsSttring called with Object value: {}", value);
         if (value == null) {
             return "";
         }

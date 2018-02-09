@@ -27,14 +27,13 @@ public class MatchBean implements MatchServiceLocal {
     
     @Override
     public void persistMatch(IndividualMatchEntity individualMatchEntity, TournamentEntity tournamentEntity) {
-        tournamentEntity.getMatches().add(individualMatchEntity);
         individualMatchEntity.setTournament(tournamentEntity);
+        em.persist(individualMatchEntity);
         PersonEntity homePerson = individualMatchEntity.getHomeCompetitor();
         PersonEntity awayPerson = individualMatchEntity.getAwayCompetitor();
+        tournamentEntity.getMatches().add(individualMatchEntity);
         homePerson.getHomeMatches().add(individualMatchEntity);
         awayPerson.getAwayMatches().add(individualMatchEntity);
-        em.merge(tournamentEntity);
-        em.persist(individualMatchEntity);
     }
     
     

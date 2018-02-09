@@ -9,7 +9,9 @@ and open the template in the editor.
     ]>
     <html xmlns="http://www.w3.org/1999/xhtml"
           xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-          xmlns:h="http://xmlns.jcp.org/jsf/html">
+          xmlns:h="http://xmlns.jcp.org/jsf/html"
+          xmlns:sec="http://www.springframework.org/security/tags">
+
 
         <h:head>
             <meta charset="utf-8"></meta>
@@ -20,7 +22,7 @@ and open the template in the editor.
         </h:head>
         <h:body>
             <nav class="navbar navbar-expand-md navbar-dark navbar-bg mb-3">
-                <a class="navbar-brand" href="index.xhtml">
+                <a class="navbar-brand" href="#{request.contextPath}/index.xhtml">
                     <h:graphicImage library="images" name="tm-logo.png" height="30" width="30" style="d-inline-block align-top" alt="TM logo"/>
                     Tournament Manager
                 </a>
@@ -29,9 +31,20 @@ and open the template in the editor.
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav">
-                        <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
-                        <a class="nav-item nav-link" href="#">Registration</a>
-                        <a class="nav-item nav-link disabled" href="#">Disabled</a>
+                        <h:link styleClass="nav-item nav-link #{request.requestURI eq '/tournamentapp/' || request.requestURI eq '/tournamentapp/index.xhtml' ? 'active' : ''}" value="Home" outcome="/index" />
+                        <sec:authorize access="isAnonymous()">
+                            <h:link styleClass="nav-item nav-link #{request.requestURI.contains('registration') ? 'active' : ''}" value="Registration" outcome="/registration" />
+                            <h:link styleClass="nav-item nav-link #{request.requestURI.contains('login') ? 'active' : ''}" value="Login" outcome="/login" />
+                        </sec:authorize>
+                        <sec:authorize access="hasRole('ROLE_ADMIN')">
+                            <h:link styleClass="nav-item nav-link #{request.requestURI.contains('admin') ? 'active' : ''}" value="Admin" outcome="/admin/index" />
+                        </sec:authorize>
+                        <sec:authorize access="isAuthenticated()">
+                            <h:link styleClass="nav-item nav-link #{request.requestURI.contains('secured/tournaments') ? 'active' : ''}" value="Tournaments" outcome="/secured/tournaments" />
+                            <h:link styleClass="nav-item nav-link #{request.requestURI.contains('secured/profile') ? 'active' : ''}" value="Profile" outcome="/secured/profile" />
+                            <h:outputLink styleClass="nav-item nav-link" value="#{request.contextPath}/logout">Logout</h:outputLink>
+                        </sec:authorize>
+                        <!--<a class="nav-item nav-link disabled" href="#">Disabled</a>-->
                     </div>
                 </div>
             </nav>

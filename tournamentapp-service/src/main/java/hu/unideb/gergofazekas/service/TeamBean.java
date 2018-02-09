@@ -26,9 +26,9 @@ public class TeamBean implements TeamServiceLocal {
 
     @Override
     public void persistTeam(TeamEntity team, PersonEntity person) {
-        person.getTeams().add(team);
-        em.merge(person);
+//        em.merge(person);
         team.getPlayers().add(person);
         em.persist(team);
+        person.getTeams().add(team);
     }
 }

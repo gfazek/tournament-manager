@@ -31,6 +31,12 @@ public class IndividualMatchEntity extends MatchEntity {
         this.homeCompetitor = homeCompetitor;
         this.awayCompetitor = awayCompetitor;
     }
+    
+    public IndividualMatchEntity(PersonEntity homeCompetitor, PersonEntity awayCompetitor) {
+        
+        this.homeCompetitor = homeCompetitor;
+        this.awayCompetitor = awayCompetitor;
+    }
 
     public PersonEntity getHomeCompetitor() {
         return homeCompetitor;
@@ -46,6 +52,11 @@ public class IndividualMatchEntity extends MatchEntity {
 
     public void setAwayCompetitor(PersonEntity awayCompetitor) {
         this.awayCompetitor = awayCompetitor;
+    }
+
+    @Override
+    public String toString() {
+        return "IndividualMatchEntity{" + "homeScore=" + getHomeScore() + ", awayScore=" + getAwayScore() + ", homeCompetitor=" + homeCompetitor + ", awayCompetitor=" + awayCompetitor + '}';
     }
     
 }

@@ -10,7 +10,8 @@ and open the template in the editor.
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:dt="http://java.sun.com/jsf/composite/components"
-                template="template.xhtml">
+                template="template.xhtml"
+                xmlns:sec="http://www.springframework.org/security/tags">
 
     <ui:define name="customHead">
         <title>Homepage</title>
@@ -20,10 +21,12 @@ and open the template in the editor.
             <h1 class="display-3">Have you ever thought about creating and managing your own tournaments?</h1>
             <p class="lead">This is the application you're looking for. </p>
             <hr class="my-4"/>
+            <sec:authorize access="isAnonymous()"> 
                 <p>Feel free to register or if you've already had an account log in.</p>
                 <p class="lead">
                     <a class="btn btn-primary btn-lg" href="registration.xhtml" role="button">Register</a>
                 </p>
+            </sec:authorize>
         </div>
     </ui:define>
 </ui:composition>

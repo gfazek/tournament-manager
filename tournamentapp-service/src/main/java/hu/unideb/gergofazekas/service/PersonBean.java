@@ -7,11 +7,11 @@ package hu.unideb.gergofazekas.service;
 
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.RoleEntity;
+import hu.unideb.gergofazekas.service.util.PersonPasswordEncoder;
 import hu.unideb.gergofazekas.utility.Gender;
 import hu.unideb.gergofazekas.utility.Role;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -20,6 +20,10 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  *
@@ -27,36 +31,40 @@ import javax.persistence.criteria.Root;
  */
 @Stateless
 @Named
-public class PersonBean implements PersonServiceLocal{
+public class PersonBean implements PersonServiceLocal {
 
-    private static final Logger logger
-            = Logger.getLogger("service.PersonBean");
-    
+    private static final Logger logger = LogManager.getLogger(PersonBean.class);
+
     @PersistenceContext
     private EntityManager em;
-    
-    @Override
-    public void persistPerson(PersonEntity person, RoleEntity role) {
-        role.getPeople().add(person);
-        person.getRoles().add(role);
-        em.merge(role);
-        em.persist(person);
-    }
+
+    private static final PersonPasswordEncoder encoder = new PersonPasswordEncoder(new BCryptPasswordEncoder());
 
     @Override
     public void persistPerson(PersonEntity personEntity, Role role) {
-        logger.info("personentity is: " + personEntity);
-        logger.info("In persistPerson....");
-        logger.info("Role is: " + role.name());
-        //RoleEntity roleEntity = (RoleEntity) em.createNamedQuery("findRoleByName").getSingleResult();
-        RoleEntity roleEntity = em.find(RoleEntity.class, new Long(1));
-        logger.info("roleentity is: " + roleEntity);
-        roleEntity.getPeople().add(personEntity);
+        logger.debug("Persisting person: {}", personEntity);
+        personEntity.setPassword(encoder.encode(personEntity.getPassword()));
+        RoleEntity roleEntity = em.createNamedQuery("Role.findByName", RoleEntity.class).setParameter("rolename", role).getSingleResult();
         personEntity.getRoles().add(roleEntity);
-        em.merge(roleEntity);
-        em.persist(personEntity);
+        if (role == Role.USER) {
+            em.persist(personEntity);
+        } else if (role == Role.SUPERVISOR) {
+            RoleEntity userRole = em.createNamedQuery("Role.findByName", RoleEntity.class).setParameter("rolename", Role.USER).getSingleResult();
+            personEntity.getRoles().add(userRole);
+            em.persist(personEntity);
+            userRole.getPeople().add(personEntity);
+        } else if (role == Role.ADMIN) {
+            RoleEntity userRole = em.createNamedQuery("Role.findByName", RoleEntity.class).setParameter("rolename", Role.USER).getSingleResult();
+            RoleEntity supervisorRole = em.createNamedQuery("Role.findByName", RoleEntity.class).setParameter("rolename", Role.SUPERVISOR).getSingleResult();
+            personEntity.getRoles().add(userRole);
+            personEntity.getRoles().add(supervisorRole);
+            em.persist(personEntity);
+            userRole.getPeople().add(personEntity);
+            supervisorRole.getPeople().add(personEntity);
+        }
+        roleEntity.getPeople().add(personEntity);
     }
-    
+
     @Override
     public List<PersonEntity> getPeople() {
         return em.createNamedQuery("Person.findAll", PersonEntity.class).getResultList();
@@ -65,16 +73,27 @@ public class PersonBean implements PersonServiceLocal{
     @Override
     public void deletePerson(Long id) {
         PersonEntity personEntity = em.find(PersonEntity.class, id);
-        logger.log(Level.INFO, ">>>>>>>>>>" + personEntity.toString());
+        logger.debug("Deleting person: {}", personEntity);
         em.remove(personEntity);
     }
 
     @Override
     public void changeUserStatus(Long id) {
         PersonEntity personEntity = em.find(PersonEntity.class, id);
+        logger.debug("Changing Person's status: {}", personEntity);
         personEntity.setEnabled(!personEntity.isEnabled());
-        em.merge(personEntity);
+//        em.merge(personEntity);
     }
-    
-    
+
+    @Override
+    public PersonEntity findByUsername(String username) {
+        return em.createNamedQuery("Person.findByUsername", PersonEntity.class).setParameter("username", username).getSingleResult();
+    }
+
+    @Override
+    public void updatePerson(PersonEntity personEntity) {
+        logger.debug("Updating person: {}", personEntity);
+//        em.merge(personEntity);
+    }
+
 }

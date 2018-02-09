@@ -42,7 +42,8 @@ and open the template in the editor.
     background-color: #fff;
     background-clip: border-box;
     border: 3px solid #20b2aa;
-    border-radius: .50rem
+    border-radius: .50rem;
+    margin-bottom: 1rem
 }
 
 .custom-card-header {

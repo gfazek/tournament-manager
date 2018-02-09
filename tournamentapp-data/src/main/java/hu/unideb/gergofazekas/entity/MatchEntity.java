@@ -25,11 +25,11 @@ import javax.persistence.Table;
 @DiscriminatorColumn(name = "TYPE")
 public abstract class MatchEntity extends BaseEntity implements Serializable {
     
-    @Basic(optional = false)
+//    @Basic(optional = false)
     @Column(name = "HOME_SCORE")
     private int homeScore;
     
-    @Basic(optional = false)
+//    @Basic(optional = false)
     @Column(name = "AWAY_SCORE")
     private int awayScore;
     
@@ -66,6 +66,11 @@ public abstract class MatchEntity extends BaseEntity implements Serializable {
 
     public void setTournament(TournamentEntity tournament) {
         this.tournament = tournament;
+    }
+
+    @Override
+    public String toString() {
+        return "MatchEntity{" + "homeScore=" + homeScore + ", awayScore=" + awayScore + ", tournament=" + tournament + '}';
     }
     
 }

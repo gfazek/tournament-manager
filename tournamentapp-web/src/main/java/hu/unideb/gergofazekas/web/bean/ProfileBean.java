@@ -17,6 +17,8 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  *
@@ -24,33 +26,28 @@ import org.apache.logging.log4j.Logger;
  */
 @Named
 @RequestScoped
-public class RegistrationBean {
+public class ProfileBean {
     
-    private static final Logger logger = LogManager.getLogger(RegistrationBean.class);
+    private static final Logger logger = LogManager.getLogger(ProfileBean.class);
     
     private PersonEntity personEntity;
-    private String username;
-    private String password;
-    private String email;
-    private String firstName;
-    private String lastName;
     private Gender[] genders;
-    private Date dob;
     
     @EJB
     private PersonServiceLocal personServiceLocal;
 
-    public RegistrationBean() {
+    public ProfileBean() {
     }
     
     @PostConstruct
     public void init() {
-        personEntity = new PersonEntity();
+        String username = ((UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        personEntity = personServiceLocal.findByUsername(username);
     }
     
-    public String createPerson() {
-        personServiceLocal.persistPerson(personEntity, Role.USER);
-        return "index";
+    public String updateProfile() {
+        personServiceLocal.updatePerson(personEntity);
+        return "profile";
     }
     
     public Gender[] getGenders() {

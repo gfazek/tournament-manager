@@ -20,14 +20,16 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
  *
  * @author gfazekas
  */
+@Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
+    
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                    .antMatchers("/adminn/**").hasRole("ADMIN") //Will need to change to admin from adminn
+                    .antMatchers("/admin/**").hasRole("ADMIN")
+                    .antMatchers("/secured/**").hasRole("USER")
                     .anyRequest().permitAll()
                     .and()
                 .formLogin()
@@ -39,20 +41,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("admin").password("password").roles("USER", "ADMIN").build());
-        return manager;
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
-
-//    @Bean
-//    public BCryptPasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
+    
+    @Bean
+    public CustomUserDetailsService customUserDetailsService() {
+	return new CustomUserDetailsService();
+}
 
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/resources/**");
+//        web.debug(true);
     }
     
 }

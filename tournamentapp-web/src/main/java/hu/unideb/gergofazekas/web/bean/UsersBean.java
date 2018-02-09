@@ -10,12 +10,13 @@ import hu.unideb.gergofazekas.service.PersonServiceLocal;
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -26,8 +27,7 @@ import javax.inject.Named;
 @ViewScoped
 public class UsersBean implements Serializable {
 
-    private static final Logger logger
-            = Logger.getLogger("web.bean.UsersBean");
+    private static final Logger logger = LogManager.getLogger(UsersBean.class);
     
     private List<PersonEntity> users;
     private List<PersonEntity> filteredUsers;

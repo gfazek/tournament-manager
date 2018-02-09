@@ -12,11 +12,12 @@ import hu.unideb.gergofazekas.service.TournamentServiceLocal;
 import hu.unideb.gergofazekas.web.utility.CompetitorType;
 import hu.unideb.gergofazekas.web.utility.TournamentType;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -25,9 +26,8 @@ import javax.inject.Named;
 @Named
 @RequestScoped
 public class TournamentRegistrationBean {
-
-    private static final Logger logger
-            = Logger.getLogger("bean.TournamentRegistrationBean");
+    
+    private static final Logger logger = LogManager.getLogger(TournamentRegistrationBean.class);
     
     private TournamentEntity tournamentEntity;
     private CompetitorType[] competitorTypes;
@@ -52,7 +52,6 @@ public class TournamentRegistrationBean {
             tournamentEntity = new IndividualRoundRobinTournamentEntity(tournamentVo.getName(), tournamentVo.getDescription(), tournamentVo.getNumberOfCompetitors(), tournamentVo.getStart(), 
                     tournamentVo.getWinPoint(), tournamentVo.getDrawPoint(), tournamentVo.getLoosePoint());
         }
-        logger.log(Level.INFO, ">>>>>>>>>" + tournamentEntity.toString());
         tournamentServiceLocal.persistTournament(tournamentEntity);
         return "index";
     }

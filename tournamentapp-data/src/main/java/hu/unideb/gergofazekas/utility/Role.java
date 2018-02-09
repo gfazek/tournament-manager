@@ -10,5 +10,5 @@ package hu.unideb.gergofazekas.utility;
  * @author gfazekas
  */
 public enum Role {
-    USER, ADMIN
+    USER, SUPERVISOR, ADMIN 
 }

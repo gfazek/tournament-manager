@@ -12,7 +12,8 @@ and open the template in the editor.
                 xmlns:dt="http://java.sun.com/jsf/composite/components"
                 xmlns:p="http://primefaces.org/ui"
                 template="../template.xhtml"
-                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:sec="http://www.springframework.org/security/tags">
 
     <ui:define name="customHead">
         <title>Tournament Details</title>
@@ -24,8 +25,8 @@ and open the template in the editor.
                          required="true" requiredMessage="Bad request, please use a link from within the system." />
         </f:metadata>
         <h:messages />
-        <h:form rendered="#{not empty tournamentDetailBean.tournamentEntity}">
-            <div class="container">
+        <div class="container">
+            <h:form rendered="#{not empty tournamentDetailBean.tournamentEntity}">
                 <div class="custom-card">
                     <h4 class="custom-card-header">#{tournamentDetailBean.tournamentEntity.name}</h4>
                     <div class="card-body">
@@ -65,14 +66,64 @@ and open the template in the editor.
                                 <h:outputText id="tournamentDescription" value="#{tournamentDetailBean.tournamentEntity.description}" />
                             </div>
                         </div>
-                        <div class="row justify-content-end">
-                            <div class="col-4">
-                                <h:commandButton id="submit" rendered="#{tournamentDetailBean.tournamentEntity.status eq 'OPEN'}" styleClass="btn btn-lg btn-primary" value="ENTRY" action="#{registrationBean.createPerson()}"/>
+                        <div class="row justify-content-around"> 
+                            <div class="col-md-2">
+                                <h:commandButton id="submit" rendered="#{tournamentDetailBean.showEntry()}" styleClass="btn btn-lg btn-success" value="ENTRY" actionListener="#{tournamentDetailBean.submitEntry()}"/>
                             </div>
+                            <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
+                                <div class="col-md-2">
+                                    <h:commandButton id="kickoff" styleClass="btn btn-lg btn-primary" value="KICK OFF" actionListener="#{tournamentDetailBean.kickoff()}"/>
+                                </div>
+                            </sec:authorize>
                         </div>
                     </div>
                 </div>
-            </div>
-        </h:form>
+            </h:form>
+            <h:form rendered="#{not empty tournamentDetailBean.tournamentEntity and 
+                                (tournamentDetailBean.tournamentEntity.status eq 'IN_PROGRESS' or tournamentDetailBean.tournamentEntity.status eq 'CLOSED')}">
+                <div class="custom-card">
+                    <h4 class="custom-card-header">Standings</h4>
+                    <div class="card-body">
+                        <p:repeat value="#{tournamentDetailBean.tournamentEntity.matches}" var="match">
+                            <p:outputPanel>
+                                <h:panelGrid columns="3" cellpadding="5">
+                                    <h:outputText value="#{match.homeScore}"/>
+                                    <h:outputText value=" - "/>
+                                    <h:outputText value="#{match.awayScore}"/>
+                                </h:panelGrid>
+                            </p:outputPanel>
+                        </p:repeat>
+                    </div>
+                </div>
+            </h:form>
+            <h:form rendered="#{not empty tournamentDetailBean.tournamentEntity and 
+                                (tournamentDetailBean.tournamentEntity.status eq 'IN_PROGRESS' or tournamentDetailBean.tournamentEntity.status eq 'CLOSED')}">
+                <div class="custom-card">
+                    <h4 class="custom-card-header">Matches</h4>
+                    <div class="card-body">
+
+                        <p:panelGrid style="margin-top:20px; width: 100%">
+                            <f:facet name="header">
+                                <p:row>
+                                    <p:column colspan="2">Competitors</p:column>
+                                    <p:column colspan="2">Result</p:column>
+                                </p:row>
+                            </f:facet>
+                            <p:repeat value="#{tournamentDetailBean.matches}" var="match">
+                                <p:row>
+                                    <p:column colspan="3" style="font-weight: bold; text-align: center">#{match.homeCompetitor.username}</p:column>
+                                    <p:column colspan="1" style="font-weight: bold; text-align: center">#{match.homeScore}</p:column>
+                                </p:row>
+                                <p:row> 
+                                    <p:column colspan="3" style="font-weight: bold; text-align: center; border-bottom-width: 3px;">#{match.awayCompetitor.username}</p:column>
+                                    <p:column colspan="1" style="font-weight: bold; text-align: center; border-bottom-width: 3px;">#{match.awayScore}</p:column>
+                                </p:row>
+                            </p:repeat>
+                        </p:panelGrid>
+
+                    </div>
+                </div>
+            </h:form>
+        </div>
     </ui:define>
 </ui:composition>

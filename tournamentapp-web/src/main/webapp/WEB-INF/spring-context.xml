@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+          http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.3.xsd
+">
+    
+<!--    <bean id="personServiceLocal"
+          class="org.springframework.ejb.access.LocalStatelessSessionProxyFactoryBean">
+        <property name="jndiName" value="java:global/Tournament_Manager_Application_EAR_Module/Tournament_Manager_Application_Service_Module/PersonBean"/>
+        <property name="businessInterface" value="hu.unideb.gergofazekas.service.PersonServiceLocal" />
+    </bean>
+
+    <bean id="customUserDetailsService" class="hu.unideb.gergofazekas.web.security.CustomUserDetailsService">
+        <property name="personServiceLocal" ref="personServiceLocal"/>
+    </bean>-->
+    
+<!--    <jee:local-slsb id="personServiceLocal" jndi-name="java:global/Tournament_Manager_Application_EAR_Module/Tournament_Manager_Application_Service_Module/PersonBean"
+                    business-interface="hu.unideb.gergofazekas.service.PersonServiceLocal"/>
+
+    <bean id="customuserDetailsService" class="hu.unideb.gergofazekas.web.security.CustomUserDetailsService">
+        <property name="personServiceLocal" ref="personServiceLocal"/>
+    </bean>-->
+    
+    <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor">
+        <property name="alwaysUseJndiLookup" value="true" />
+    </bean>
+
+</beans>
