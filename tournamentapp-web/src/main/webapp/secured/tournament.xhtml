@@ -101,15 +101,26 @@ and open the template in the editor.
                 <div class="custom-card">
                     <h4 class="custom-card-header">Matches</h4>
                     <div class="card-body">
-                        <p:repeat value="#{tournamentDetailBean.tournamentEntity.matches}" var="match">
-                            <p:outputPanel>
-                                <h:panelGrid columns="3" cellpadding="5">
-                                    <h:outputText value="#{match.homeScore}"/>
-                                    <h:outputText value=" - "/>
-                                    <h:outputText value="#{match.awayScore}"/>
-                                </h:panelGrid>
-                            </p:outputPanel>
-                        </p:repeat>
+
+                        <p:panelGrid style="margin-top:20px; width: 100%">
+                            <f:facet name="header">
+                                <p:row>
+                                    <p:column colspan="2">Competitors</p:column>
+                                    <p:column colspan="2">Result</p:column>
+                                </p:row>
+                            </f:facet>
+                            <p:repeat value="#{tournamentDetailBean.matches}" var="match">
+                                <p:row>
+                                    <p:column colspan="3" style="font-weight: bold; text-align: center">#{match.homeCompetitor.username}</p:column>
+                                    <p:column colspan="1" style="font-weight: bold; text-align: center">#{match.homeScore}</p:column>
+                                </p:row>
+                                <p:row> 
+                                    <p:column colspan="3" style="font-weight: bold; text-align: center; border-bottom-width: 3px;">#{match.awayCompetitor.username}</p:column>
+                                    <p:column colspan="1" style="font-weight: bold; text-align: center; border-bottom-width: 3px;">#{match.awayScore}</p:column>
+                                </p:row>
+                            </p:repeat>
+                        </p:panelGrid>
+
                     </div>
                 </div>
             </h:form>

@@ -5,7 +5,9 @@
  */
 package hu.unideb.gergofazekas.web.bean;
 
+import hu.unideb.gergofazekas.entity.IndividualMatchEntity;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
+import hu.unideb.gergofazekas.entity.MatchEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
 import hu.unideb.gergofazekas.service.TournamentServiceLocal;
@@ -14,6 +16,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
@@ -32,14 +35,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Named
 @ViewScoped
 public class TournamentDetailBean implements Serializable {
-    
+
     private static final Logger logger = LogManager.getLogger(TournamentDetailBean.class);
 
     private TournamentEntity tournamentEntity;
-    
+    private List<IndividualMatchEntity> matches;
+
     @EJB
     private TournamentServiceLocal tournamentServiceLocal;
-    
+
     public TournamentDetailBean() {
     }
 
@@ -50,13 +54,13 @@ public class TournamentDetailBean implements Serializable {
     public void setTournamentEntity(TournamentEntity tournamentEntity) {
         this.tournamentEntity = tournamentEntity;
     }
-    
+
     public String submitEntry() {
-        String username = ((UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        String username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         tournamentServiceLocal.persistEntry(tournamentEntity.getId(), username);
         return "index";
     }
-    
+
     public boolean showEntry() {
         logger.debug("TournamentEntity: {}", tournamentEntity);
         if (tournamentEntity.getStatus() != TournamentStatus.OPEN) {
@@ -64,11 +68,10 @@ public class TournamentDetailBean implements Serializable {
         }
         if (tournamentEntity instanceof IndividualRoundRobinTournamentEntity) {
             IndividualRoundRobinTournamentEntity tmp = (IndividualRoundRobinTournamentEntity) tournamentEntity;
-//            List<PersonEntity> competitors = tournamentServiceLocal.getIndividualCompetitors(tournamentEntity.getId());
-              List<PersonEntity> competitors = tmp.getPeople();
+            List<PersonEntity> competitors = tmp.getPeople();
             logger.debug("CompetitorS: {}", competitors);
             Stream<PersonEntity> s = competitors.stream()
-                    .filter(p -> p.getUsername().equals(((UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername()));
+                    .filter(p -> p.getUsername().equals(((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername()));
             logger.debug("It gets null value?: {}", s);
             Optional<PersonEntity> competitor = s.findFirst();
             return !competitor.isPresent();
@@ -79,8 +82,28 @@ public class TournamentDetailBean implements Serializable {
         }
         return true;
     }
-    
+
     public void kickoff() {
         tournamentServiceLocal.kickoff(tournamentEntity.getId());
     }
+
+    public TournamentServiceLocal getTournamentServiceLocal() {
+        return tournamentServiceLocal;
+    }
+
+    public void setTournamentServiceLocal(TournamentServiceLocal tournamentServiceLocal) {
+        this.tournamentServiceLocal = tournamentServiceLocal;
+    }
+
+    public List<IndividualMatchEntity> getMatches() {
+        return tournamentEntity.getMatches()
+                .stream()
+                .map(e -> (IndividualMatchEntity) e)
+                .collect(Collectors.toList());
+    }
+
+    public void setMatches(List<IndividualMatchEntity> matches) {
+        this.matches = matches;
+    }
+    
 }

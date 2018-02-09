@@ -111,9 +111,14 @@ public class InitializerBean {
         
         tournamentServiceLocal.persistIndividualCompetitor((IndividualRoundRobinTournamentEntity) tournamentEntity, personEntity1);
         tournamentServiceLocal.persistIndividualCompetitor((IndividualRoundRobinTournamentEntity) tournamentEntity, personEntity2);
+        tournamentServiceLocal.persistIndividualCompetitor((IndividualRoundRobinTournamentEntity) tournamentEntity, personEntity4);
         
-        MatchEntity matchEntity = new IndividualMatchEntity(4, 3, personEntity1, personEntity2);
-        matchServiceLocal.persistMatch((IndividualMatchEntity) matchEntity, tournamentEntity);
+        MatchEntity matchEntity1 = new IndividualMatchEntity(4, 3, personEntity1, personEntity2);
+        MatchEntity matchEntity2 = new IndividualMatchEntity(0, 2, personEntity1, personEntity4);
+        MatchEntity matchEntity3 = new IndividualMatchEntity(0, 2, personEntity2, personEntity4);
+        matchServiceLocal.persistMatch((IndividualMatchEntity) matchEntity1, tournamentEntity);
+        matchServiceLocal.persistMatch((IndividualMatchEntity) matchEntity2, tournamentEntity);
+        matchServiceLocal.persistMatch((IndividualMatchEntity) matchEntity3, tournamentEntity);
         
     }
 
