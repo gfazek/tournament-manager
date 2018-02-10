@@ -13,6 +13,9 @@
         <class>hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity</class>
         <class>hu.unideb.gergofazekas.entity.TeamRoundRobinTournamentEntity</class>
         <class>hu.unideb.gergofazekas.entity.IndividualMatchEntity</class>
+        <class>hu.unideb.gergofazekas.entity.StandingEntity</class>
+        <class>hu.unideb.gergofazekas.entity.RoundRobinStandingEntity</class>
+        <class>hu.unideb.gergofazekas.entity.IndividualRoundRobinStandingEntity</class>
         <properties>
             <property name="eclipselink.target-database" value="PostgreSQL"/>
             <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>

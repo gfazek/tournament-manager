@@ -64,6 +64,9 @@ public abstract class TournamentEntity extends BaseEntity implements Serializabl
     
     @OneToMany
     private List<MatchEntity> matches;
+    
+    @OneToMany(mappedBy = "tournamentEntity")
+    private List<StandingEntity> standings;
 
     public TournamentEntity() {
     }
@@ -75,6 +78,7 @@ public abstract class TournamentEntity extends BaseEntity implements Serializabl
         this.numberOfCompetitors = numberOfCompetitors;
         this.start = start;
         this.matches = new ArrayList<>();
+        this.standings = new ArrayList<>();
     }
 
     public String getName() {
@@ -123,6 +127,14 @@ public abstract class TournamentEntity extends BaseEntity implements Serializabl
 
     public void setStart(Date start) {
         this.start = start;
+    }
+
+    public List<StandingEntity> getStandings() {
+        return standings;
+    }
+
+    public void setStandings(List<StandingEntity> standings) {
+        this.standings = standings;
     }
 
     @Override

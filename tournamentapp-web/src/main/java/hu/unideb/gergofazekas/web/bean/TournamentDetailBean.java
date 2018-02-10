@@ -6,6 +6,7 @@
 package hu.unideb.gergofazekas.web.bean;
 
 import hu.unideb.gergofazekas.entity.IndividualMatchEntity;
+import hu.unideb.gergofazekas.entity.IndividualRoundRobinStandingEntity;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
 import hu.unideb.gergofazekas.entity.MatchEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
@@ -40,6 +41,7 @@ public class TournamentDetailBean implements Serializable {
 
     private TournamentEntity tournamentEntity;
     private List<IndividualMatchEntity> matches;
+    private List<IndividualRoundRobinStandingEntity> standings;
 
     @EJB
     private TournamentServiceLocal tournamentServiceLocal;
@@ -104,6 +106,17 @@ public class TournamentDetailBean implements Serializable {
 
     public void setMatches(List<IndividualMatchEntity> matches) {
         this.matches = matches;
+    }
+    
+     public List<IndividualRoundRobinStandingEntity> getStandings() {
+        return tournamentEntity.getStandings()
+                .stream()
+                .map(e -> (IndividualRoundRobinStandingEntity) e)
+                .collect(Collectors.toList());
+    }
+
+    public void setStandings(List<IndividualRoundRobinStandingEntity> standings) {
+        this.standings = standings;
     }
     
 }

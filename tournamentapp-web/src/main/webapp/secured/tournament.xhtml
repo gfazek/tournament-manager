@@ -84,15 +84,30 @@ and open the template in the editor.
                 <div class="custom-card">
                     <h4 class="custom-card-header">Standings</h4>
                     <div class="card-body">
-                        <p:repeat value="#{tournamentDetailBean.tournamentEntity.matches}" var="match">
-                            <p:outputPanel>
-                                <h:panelGrid columns="3" cellpadding="5">
-                                    <h:outputText value="#{match.homeScore}"/>
-                                    <h:outputText value=" - "/>
-                                    <h:outputText value="#{match.awayScore}"/>
-                                </h:panelGrid>
-                            </p:outputPanel>
-                        </p:repeat>
+                        <p:panelGrid style="width: 100%">
+                            <f:facet name="header">
+                                <p:row>
+                                    <p:column>Position</p:column>
+                                    <p:column>Competitor</p:column>
+                                    <p:column>Played</p:column>
+                                    <p:column>Won</p:column>
+                                    <p:column>Drawn</p:column>
+                                    <p:column>Lost</p:column>
+                                    <p:column>Points</p:column>
+                                </p:row>
+                            </f:facet>
+                            <p:repeat value="#{tournamentDetailBean.standings}" var="standing">
+                                <p:row>
+                                    <p:column style="font-weight: bold; text-align: center">Pos.</p:column>
+                                    <p:column style="font-weight: bold; text-align: center">#{standing.personEntity.username}</p:column>
+                                    <p:column style="font-weight: bold; text-align: center">#{standing.played}</p:column>
+                                    <p:column style="font-weight: bold; text-align: center">#{standing.won}</p:column>
+                                    <p:column style="font-weight: bold; text-align: center">#{standing.drawn}</p:column>
+                                    <p:column style="font-weight: bold; text-align: center">#{standing.lost}</p:column>
+                                    <p:column style="font-weight: bold; text-align: center">#{standing.points}</p:column>
+                                </p:row>
+                            </p:repeat>
+                        </p:panelGrid>
                     </div>
                 </div>
             </h:form>
@@ -101,8 +116,7 @@ and open the template in the editor.
                 <div class="custom-card">
                     <h4 class="custom-card-header">Matches</h4>
                     <div class="card-body">
-
-                        <p:panelGrid style="margin-top:20px; width: 100%">
+                        <p:panelGrid style="width: 100%">
                             <f:facet name="header">
                                 <p:row>
                                     <p:column colspan="2">Competitors</p:column>
@@ -120,7 +134,6 @@ and open the template in the editor.
                                 </p:row>
                             </p:repeat>
                         </p:panelGrid>
-
                     </div>
                 </div>
             </h:form>

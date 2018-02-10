@@ -60,6 +60,9 @@ public class InitializerBean {
     
     @EJB
     private MatchServiceLocal matchServiceLocal;
+    
+    @EJB
+    private StandingServiceLocal standingServiceLocal;
 
     @PostConstruct
     public void init() {
@@ -112,6 +115,10 @@ public class InitializerBean {
         tournamentServiceLocal.persistIndividualCompetitor((IndividualRoundRobinTournamentEntity) tournamentEntity, personEntity1);
         tournamentServiceLocal.persistIndividualCompetitor((IndividualRoundRobinTournamentEntity) tournamentEntity, personEntity2);
         tournamentServiceLocal.persistIndividualCompetitor((IndividualRoundRobinTournamentEntity) tournamentEntity, personEntity4);
+        
+        standingServiceLocal.persistStanding(tournamentEntity, personEntity1);
+        standingServiceLocal.persistStanding(tournamentEntity, personEntity2);
+        standingServiceLocal.persistStanding(tournamentEntity, personEntity4);
         
         MatchEntity matchEntity1 = new IndividualMatchEntity(4, 3, personEntity1, personEntity2);
         MatchEntity matchEntity2 = new IndividualMatchEntity(0, 2, personEntity1, personEntity4);

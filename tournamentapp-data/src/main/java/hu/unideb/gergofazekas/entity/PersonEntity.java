@@ -34,7 +34,8 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "PERSON")
 @NamedQueries({
-    @NamedQuery(name = "Person.findByUsername", query = "SELECT p FROM PersonEntity p WHERE p.username LIKE :username"),
+    @NamedQuery(name = "Person.findByUsername", query = "SELECT p FROM PersonEntity p WHERE p.username LIKE :username")
+    ,
     @NamedQuery(name = "Person.findAll", query = "SELECT p FROM PersonEntity p")
 })
 public class PersonEntity extends BaseEntity implements Serializable {
@@ -65,11 +66,14 @@ public class PersonEntity extends BaseEntity implements Serializable {
     @Temporal(TemporalType.DATE)
     @Column(name = "DATE_OF_BIRTH")
     private Date dob;
-    
+
     @OneToMany(mappedBy = "homeCompetitor")
     private List<IndividualMatchEntity> homeMatches;
     @OneToMany(mappedBy = "awayCompetitor")
     private List<IndividualMatchEntity> awayMatches;
+
+    @OneToMany(mappedBy = "person")
+    private List<IndividualRoundRobinStandingEntity> standings;
 
     @JoinTable(name = "PERSON_ROLE", joinColumns = {
         @JoinColumn(name = "PERSON_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
@@ -83,10 +87,9 @@ public class PersonEntity extends BaseEntity implements Serializable {
     @ManyToMany
     @JoinColumn(name = "TEAM_ID")
     private List<TeamEntity> teams;
-    
+
     @ManyToMany(mappedBy = "people")
     private List<IndividualRoundRobinTournamentEntity> roundRobinTournaments;
-    
 
     public PersonEntity() {
         this.roles = new ArrayList<>();
@@ -103,6 +106,7 @@ public class PersonEntity extends BaseEntity implements Serializable {
         this.roles = new ArrayList<>();
         this.teams = new ArrayList<>();
         this.roundRobinTournaments = new ArrayList<>();
+        this.standings = new ArrayList<>();
     }
 
     public static class PersonBuilder {
@@ -149,7 +153,7 @@ public class PersonEntity extends BaseEntity implements Serializable {
             this.nestedDob = dob;
             return this;
         }
-        
+
         public PersonEntity createPerson() {
             return new PersonEntity(nestedUsername, nestedEmail, nestedPassword, nestedFirstName, nestedLastName, nestedGender, nestedDob);
         }
@@ -260,9 +264,17 @@ public class PersonEntity extends BaseEntity implements Serializable {
         this.awayMatches = awayMatches;
     }
 
+    public List<IndividualRoundRobinStandingEntity> getStandings() {
+        return standings;
+    }
+
+    public void setStandings(List<IndividualRoundRobinStandingEntity> standings) {
+        this.standings = standings;
+    }
+
     @Override
     public String toString() {
         return "PersonEntity{" + "username=" + username + ", email=" + email + ", password=" + password + ", enabled=" + enabled + ", firstName=" + firstName + ", lastName=" + lastName + ", gender=" + gender + ", dob=" + dob + '}';
     }
-    
+
 }
