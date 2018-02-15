@@ -11,6 +11,7 @@ and open the template in the editor.
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:dt="http://java.sun.com/jsf/composite/components"
                 template="../template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
                 xmlns:sec="http://www.springframework.org/security/tags">
 
     <ui:define name="customHead">
@@ -21,10 +22,13 @@ and open the template in the editor.
             <h1 class="display-3">Administration interface</h1>
             <p class="lead"></p>
             <hr class="my-4"/>
-                <p></p>
-                <p class="lead">
-                    <!--<a class="btn btn-primary btn-lg" href="#" role="button">Register</a>-->
-                </p>
+            <div class="row justify-content-center">
+                <div class="btn-group btn-group-lg" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-secondary">Left</button>
+                    <button type="button" class="btn btn-secondary">Middle</button>
+                    <button type="button" class="btn btn-secondary">Right</button>
+                </div>
+            </div>
         </div>
     </ui:define>
 </ui:composition>

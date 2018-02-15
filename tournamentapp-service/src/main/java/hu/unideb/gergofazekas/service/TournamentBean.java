@@ -36,6 +36,9 @@ public class TournamentBean implements TournamentServiceLocal {
 
     @EJB
     private MatchServiceLocal matchServiceLocal;
+    
+    @EJB
+    private StandingServiceLocal standingServiceLocal;
 
     @PersistenceContext
     private EntityManager em;
@@ -50,8 +53,6 @@ public class TournamentBean implements TournamentServiceLocal {
         logger.debug("Persisting individual competitor: tournament: {} | person: {}", tournament, personEntity);
         tournament.getPeople().add(personEntity);
         personEntity.getRoundRobinTournaments().add(tournament);
-//        em.merge(tournament);
-//        em.merge(personEntity);
     }
 
     @Override
@@ -86,8 +87,6 @@ public class TournamentBean implements TournamentServiceLocal {
             tmp.getPeople().add(personEntity);
             personEntity.getRoundRobinTournaments().add((IndividualRoundRobinTournamentEntity) tournamentEntity);
         }
-//        em.merge(tournamentEntity);
-//        em.merge(personEntity);
     }
 
     @Override
@@ -108,11 +107,12 @@ public class TournamentBean implements TournamentServiceLocal {
             logger.debug("Instantiating matches for competitors: {}", competitors);
             for (PersonEntity p1 : competitors) {
                 logger.debug("p1: {}", p1);
+                standingServiceLocal.persistIndividualRoundRobinStanding(irrt, p1);
                 List<PersonEntity> tmp = competitors.subList(competitors.indexOf(p1) + 1, competitors.size());
                 logger.debug("tmp: {}", tmp);
                 for (PersonEntity p2 : tmp) {
                     logger.debug("p2: {}", p2);
-                    matchServiceLocal.persistMatch(new IndividualMatchEntity(p1, p2), tournamentEntity);
+                    matchServiceLocal.persistIndividualMatch(p1, p2, irrt);
                 }
             }
         }

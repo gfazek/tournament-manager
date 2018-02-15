@@ -8,6 +8,8 @@ package hu.unideb.gergofazekas.entity;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
  *
@@ -15,6 +17,9 @@ import javax.persistence.ManyToOne;
  */
 @Entity
 @DiscriminatorValue(value = "IndividualRoundRobin")
+@NamedQueries({
+    @NamedQuery(name = "Standing.findOne", query = "SELECT s FROM IndividualRoundRobinStandingEntity s WHERE s.person.id = :pid AND s.tournamentEntity.id = :tid")
+})
 public class IndividualRoundRobinStandingEntity extends RoundRobinStandingEntity {
     
     @ManyToOne
@@ -40,7 +45,5 @@ public class IndividualRoundRobinStandingEntity extends RoundRobinStandingEntity
     public String toString() {
         return "IndividualRoundRobinStandingEntity{" + "tournamentEntity=" + getTournamentEntity() + ", played=" + getPlayed() + ", won=" + getWon() + ", drawn=" + getDrawn() + ", lost=" + getLost() + ", points=" + getPoints() + ", person=" + person + '}';
     }
-    
-    
     
 }

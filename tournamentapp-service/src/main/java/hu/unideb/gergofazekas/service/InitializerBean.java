@@ -6,10 +6,12 @@
 package hu.unideb.gergofazekas.service;
 
 import hu.unideb.gergofazekas.entity.IndividualMatchEntity;
+import hu.unideb.gergofazekas.entity.IndividualRoundRobinStandingEntity;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
 import hu.unideb.gergofazekas.entity.MatchEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.RoleEntity;
+import hu.unideb.gergofazekas.entity.StandingEntity;
 import hu.unideb.gergofazekas.entity.TeamEntity;
 import hu.unideb.gergofazekas.entity.TeamRoundRobinTournamentEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
@@ -116,16 +118,19 @@ public class InitializerBean {
         tournamentServiceLocal.persistIndividualCompetitor((IndividualRoundRobinTournamentEntity) tournamentEntity, personEntity2);
         tournamentServiceLocal.persistIndividualCompetitor((IndividualRoundRobinTournamentEntity) tournamentEntity, personEntity4);
         
-        standingServiceLocal.persistStanding(tournamentEntity, personEntity1);
-        standingServiceLocal.persistStanding(tournamentEntity, personEntity2);
-        standingServiceLocal.persistStanding(tournamentEntity, personEntity4);
+        IndividualRoundRobinStandingEntity standing1 = new IndividualRoundRobinStandingEntity(personEntity1, 0, 0, 0, 0, 0, tournamentEntity);
+        IndividualRoundRobinStandingEntity standing2 = new IndividualRoundRobinStandingEntity(personEntity2, 0, 0, 0, 0, 0, tournamentEntity);
+        IndividualRoundRobinStandingEntity standing4 = new IndividualRoundRobinStandingEntity(personEntity4, 0, 0, 0, 0, 0, tournamentEntity);
+        standingServiceLocal.persistIndividualRoundRobinStanding(standing1);
+        standingServiceLocal.persistIndividualRoundRobinStanding(standing2);
+        standingServiceLocal.persistIndividualRoundRobinStanding(standing4);
         
         MatchEntity matchEntity1 = new IndividualMatchEntity(4, 3, personEntity1, personEntity2);
         MatchEntity matchEntity2 = new IndividualMatchEntity(0, 2, personEntity1, personEntity4);
         MatchEntity matchEntity3 = new IndividualMatchEntity(0, 2, personEntity2, personEntity4);
-        matchServiceLocal.persistMatch((IndividualMatchEntity) matchEntity1, tournamentEntity);
-        matchServiceLocal.persistMatch((IndividualMatchEntity) matchEntity2, tournamentEntity);
-        matchServiceLocal.persistMatch((IndividualMatchEntity) matchEntity3, tournamentEntity);
+        matchServiceLocal.persistMatch((IndividualMatchEntity) matchEntity1, standing1, standing2, tournamentEntity);
+        matchServiceLocal.persistMatch((IndividualMatchEntity) matchEntity2, standing1, standing4, tournamentEntity);
+        matchServiceLocal.persistMatch((IndividualMatchEntity) matchEntity3, standing2, standing4, tournamentEntity);
         
     }
 

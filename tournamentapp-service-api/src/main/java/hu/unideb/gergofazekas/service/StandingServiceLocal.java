@@ -5,7 +5,10 @@
  */
 package hu.unideb.gergofazekas.service;
 
+import hu.unideb.gergofazekas.entity.IndividualRoundRobinStandingEntity;
+import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
+import hu.unideb.gergofazekas.entity.StandingEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
 import javax.ejb.Local;
 
@@ -16,6 +19,8 @@ import javax.ejb.Local;
 @Local
 public interface StandingServiceLocal {
     
-    void persistStanding(TournamentEntity tournamentEntity, PersonEntity personEntity);
+    void persistIndividualRoundRobinStanding(IndividualRoundRobinStandingEntity irrs);
+    void persistIndividualRoundRobinStanding(IndividualRoundRobinTournamentEntity tournament, PersonEntity person);
+    StandingEntity findOne(Long pid, Long tid);
     
 }
