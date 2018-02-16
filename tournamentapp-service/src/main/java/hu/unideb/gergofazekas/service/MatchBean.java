@@ -71,7 +71,7 @@ public class MatchBean implements MatchServiceLocal {
     }
 
     @Override
-    public void persistIndividualMatch(PersonEntity homeCompetitor, PersonEntity awayCompetitor, IndividualRoundRobinTournamentEntity irrt) {
+    public void persistMatch(PersonEntity homeCompetitor, PersonEntity awayCompetitor, IndividualRoundRobinTournamentEntity irrt) {
         IndividualMatchEntity individualMatchEntity = new IndividualMatchEntity(homeCompetitor, awayCompetitor);
         individualMatchEntity.setTournament(irrt);
         em.persist(individualMatchEntity);

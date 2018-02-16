@@ -114,7 +114,7 @@ and open the template in the editor.
             <h:form rendered="#{not empty tournamentDetailBean.tournamentEntity and 
                                 (tournamentDetailBean.tournamentEntity.status eq 'IN_PROGRESS' or tournamentDetailBean.tournamentEntity.status eq 'CLOSED')}">
                 <div class="custom-card">
-                    <h4 class="custom-card-header">Matches</h4>
+                    <h4 class="custom-card-header">Finished Matches</h4>
                     <div class="card-body">
                         <p:panelGrid style="width: 100%">
                             <f:facet name="header">
@@ -126,11 +126,18 @@ and open the template in the editor.
                             <p:repeat value="#{tournamentDetailBean.matches}" var="match">
                                 <p:row>
                                     <p:column colspan="3" style="font-weight: bold; text-align: center">#{match.homeCompetitor.username}</p:column>
-                                    <p:column colspan="1" style="font-weight: bold; text-align: center">#{match.homeScore}</p:column>
+                                    <p:column colspan="1" rendered="#{match.status eq 'FINISHED'}" style="font-weight: bold; text-align: center">#{match.homeScore}</p:column>
+                                    <p:column colspan="2" rowspan="2" rendered="#{match.status eq 'NEW'}" style="font-weight: bold; text-align: center; border-bottom-width: 3px;">NEW</p:column>
+                                    <p:column colspan="2" rowspan="2" rendered="#{match.status eq 'SCHEDULED'}" style="font-weight: bold; text-align: center; border-bottom-width: 3px;">
+                                        <h:outputText value="Will be played at, " />
+                                        <h:outputText value="#{match.time}">
+                                              <f:convertDateTime pattern="yyyy.MM.dd HH:mm" />
+                                        </h:outputText>
+                                    </p:column>
                                 </p:row>
                                 <p:row> 
                                     <p:column colspan="3" style="font-weight: bold; text-align: center; border-bottom-width: 3px;">#{match.awayCompetitor.username}</p:column>
-                                    <p:column colspan="1" style="font-weight: bold; text-align: center; border-bottom-width: 3px;">#{match.awayScore}</p:column>
+                                    <p:column colspan="1" rendered="#{match.status eq 'FINISHED'}" style="font-weight: bold; text-align: center; border-bottom-width: 3px;">#{match.awayScore}</p:column>
                                 </p:row>
                             </p:repeat>
                         </p:panelGrid>

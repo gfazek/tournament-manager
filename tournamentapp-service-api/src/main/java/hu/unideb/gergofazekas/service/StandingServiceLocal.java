@@ -19,8 +19,8 @@ import javax.ejb.Local;
 @Local
 public interface StandingServiceLocal {
     
-    void persistIndividualRoundRobinStanding(IndividualRoundRobinStandingEntity irrs);
-    void persistIndividualRoundRobinStanding(IndividualRoundRobinTournamentEntity tournament, PersonEntity person);
+    void persistStanding(IndividualRoundRobinStandingEntity irrs);
+    void persistStanding(IndividualRoundRobinTournamentEntity tournament, PersonEntity person);
     StandingEntity findOne(Long pid, Long tid);
     
 }

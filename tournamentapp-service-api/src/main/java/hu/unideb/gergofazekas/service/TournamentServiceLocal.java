@@ -19,7 +19,7 @@ import javax.ejb.Local;
 public interface TournamentServiceLocal {
     
     void persistTournament(TournamentEntity tournamentEntity);
-    void persistIndividualCompetitor(IndividualRoundRobinTournamentEntity tournament, PersonEntity personEntity);
+    void persistCompetitor(IndividualRoundRobinTournamentEntity tournament, PersonEntity personEntity);
     List<TournamentEntity> getTournaments();
     List<TournamentEntity> getOpens();
     TournamentEntity findTournament(Long id);

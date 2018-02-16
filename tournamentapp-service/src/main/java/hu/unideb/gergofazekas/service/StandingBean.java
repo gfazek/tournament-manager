@@ -31,7 +31,7 @@ public class StandingBean implements StandingServiceLocal {
     private EntityManager em;
     
     @Override
-    public void persistIndividualRoundRobinStanding(IndividualRoundRobinStandingEntity standingEntity) {
+    public void persistStanding(IndividualRoundRobinStandingEntity standingEntity) {
         em.persist(standingEntity);
         standingEntity.getPersonEntity().getStandings().add(standingEntity);
         standingEntity.getTournamentEntity().getStandings().add(standingEntity);
@@ -43,7 +43,7 @@ public class StandingBean implements StandingServiceLocal {
     }
 
     @Override
-    public void persistIndividualRoundRobinStanding(IndividualRoundRobinTournamentEntity tournament, PersonEntity person) {
+    public void persistStanding(IndividualRoundRobinTournamentEntity tournament, PersonEntity person) {
         IndividualRoundRobinStandingEntity irrs = new IndividualRoundRobinStandingEntity(person, 0, 0, 0, 0, 0, tournament);
         logger.debug("Persisting Standing: {}", irrs);
         em.persist(irrs);

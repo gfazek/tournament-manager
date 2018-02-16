@@ -49,7 +49,7 @@ public class TournamentBean implements TournamentServiceLocal {
     }
 
     @Override
-    public void persistIndividualCompetitor(IndividualRoundRobinTournamentEntity tournament, PersonEntity personEntity) {
+    public void persistCompetitor(IndividualRoundRobinTournamentEntity tournament, PersonEntity personEntity) {
         logger.debug("Persisting individual competitor: tournament: {} | person: {}", tournament, personEntity);
         tournament.getPeople().add(personEntity);
         personEntity.getRoundRobinTournaments().add(tournament);
@@ -107,12 +107,12 @@ public class TournamentBean implements TournamentServiceLocal {
             logger.debug("Instantiating matches for competitors: {}", competitors);
             for (PersonEntity p1 : competitors) {
                 logger.debug("p1: {}", p1);
-                standingServiceLocal.persistIndividualRoundRobinStanding(irrt, p1);
+                standingServiceLocal.persistStanding(irrt, p1);
                 List<PersonEntity> tmp = competitors.subList(competitors.indexOf(p1) + 1, competitors.size());
                 logger.debug("tmp: {}", tmp);
                 for (PersonEntity p2 : tmp) {
                     logger.debug("p2: {}", p2);
-                    matchServiceLocal.persistIndividualMatch(p1, p2, irrt);
+                    matchServiceLocal.persistMatch(p1, p2, irrt);
                 }
             }
         }
