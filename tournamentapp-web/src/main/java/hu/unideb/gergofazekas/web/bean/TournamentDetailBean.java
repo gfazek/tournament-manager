@@ -11,9 +11,11 @@ import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
 import hu.unideb.gergofazekas.entity.MatchEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
+import hu.unideb.gergofazekas.service.MatchServiceLocal;
 import hu.unideb.gergofazekas.service.TournamentServiceLocal;
 import hu.unideb.gergofazekas.utility.TournamentStatus;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -42,9 +44,14 @@ public class TournamentDetailBean implements Serializable {
     private TournamentEntity tournamentEntity;
     private List<IndividualMatchEntity> matches;
     private List<IndividualRoundRobinStandingEntity> standings;
+    private Date matchTime;
+    private int homeScore, awayScore;
 
     @EJB
     private TournamentServiceLocal tournamentServiceLocal;
+    
+    @EJB
+    private MatchServiceLocal matchServiceLocal;
 
     public TournamentDetailBean() {
     }
@@ -84,6 +91,14 @@ public class TournamentDetailBean implements Serializable {
         }
         return true;
     }
+    
+    public void scheduleMatch(MatchEntity matchEntity) {
+        matchServiceLocal.scheduleMatch(matchEntity, matchTime);
+    }
+    
+    public void registerResult(MatchEntity matchEntity) {
+        matchServiceLocal.registerResult(matchEntity, homeScore, awayScore);
+    }
 
     public void kickoff() {
         tournamentServiceLocal.kickoff(tournamentEntity.getId());
@@ -117,6 +132,38 @@ public class TournamentDetailBean implements Serializable {
 
     public void setStandings(List<IndividualRoundRobinStandingEntity> standings) {
         this.standings = standings;
+    }
+
+    public Date getMatchTime() {
+        return matchTime;
+    }
+
+    public void setMatchTime(Date matchTime) {
+        this.matchTime = matchTime;
+    }
+    
+    public MatchServiceLocal getMatchServiceLocal() {
+        return matchServiceLocal;
+    }
+
+    public void setMatchServiceLocal(MatchServiceLocal matchServiceLocal) {
+        this.matchServiceLocal = matchServiceLocal;
+    }
+
+    public int getHomeScore() {
+        return homeScore;
+    }
+
+    public void setHomeScore(int homeScore) {
+        this.homeScore = homeScore;
+    }
+
+    public int getAwayScore() {
+        return awayScore;
+    }
+
+    public void setAwayScore(int awayScore) {
+        this.awayScore = awayScore;
     }
     
 }

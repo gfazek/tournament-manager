@@ -111,28 +111,60 @@ and open the template in the editor.
                     </div>
                 </div>
             </h:form>
-            <h:form rendered="#{not empty tournamentDetailBean.tournamentEntity and 
-                                (tournamentDetailBean.tournamentEntity.status eq 'IN_PROGRESS' or tournamentDetailBean.tournamentEntity.status eq 'CLOSED')}">
+            <h:form id="matchesForm" rendered="#{not empty tournamentDetailBean.tournamentEntity and 
+                                                 (tournamentDetailBean.tournamentEntity.status eq 'IN_PROGRESS' or tournamentDetailBean.tournamentEntity.status eq 'CLOSED')}">
                 <div class="custom-card">
-                    <h4 class="custom-card-header">Finished Matches</h4>
+                    <h4 class="custom-card-header">Matches</h4>
                     <div class="card-body">
                         <p:panelGrid style="width: 100%">
                             <f:facet name="header">
                                 <p:row>
-                                    <p:column colspan="2">Competitors</p:column>
-                                    <p:column colspan="2">Result</p:column>
+                                    <p:column colspan="2">COMPETITORS</p:column>
+                                    <p:column colspan="2">RESULT/STATUS</p:column>
                                 </p:row>
                             </f:facet>
                             <p:repeat value="#{tournamentDetailBean.matches}" var="match">
                                 <p:row>
                                     <p:column colspan="3" style="font-weight: bold; text-align: center">#{match.homeCompetitor.username}</p:column>
                                     <p:column colspan="1" rendered="#{match.status eq 'FINISHED'}" style="font-weight: bold; text-align: center">#{match.homeScore}</p:column>
-                                    <p:column colspan="2" rowspan="2" rendered="#{match.status eq 'NEW'}" style="font-weight: bold; text-align: center; border-bottom-width: 3px;">NEW</p:column>
+                                    <p:column colspan="2" rowspan="2" rendered="#{match.status eq 'NEW'}" style="font-weight: bold; text-align: center; border-bottom-width: 3px;">
+                                        <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
+                                            <h:outputLink value="javascript:void(0)" onclick="PF('scheduleDlg').show();">Schedule</h:outputLink>
+                                            <p:dialog header="Add schedule" widgetVar="scheduleDlg" resizable="false">
+                                                <h:panelGrid columns="2" cellpadding="5">
+                                                    <p:outputLabel for="startTime" value="Start time: " />
+                                                    <p:calendar id="startTime" value="#{tournamentDetailBean.matchTime}" pattern="MM/dd/yyyy HH:mm" showOn="button" />
+                                                    <f:facet name="footer">
+                                                        <p:commandButton value="Set match time" update="matchesForm" actionListener="#{tournamentDetailBean.scheduleMatch(match)}" oncomplete="PF('scheduleDlg').hide();" />
+                                                    </f:facet>  
+                                                </h:panelGrid>
+                                            </p:dialog>
+                                        </sec:authorize>
+                                        <sec:authorize access="!hasRole('ROLE_SUPERVISOR')">
+                                            NOT SCHEDULED YET
+                                        </sec:authorize>
+                                    </p:column>
                                     <p:column colspan="2" rowspan="2" rendered="#{match.status eq 'SCHEDULED'}" style="font-weight: bold; text-align: center; border-bottom-width: 3px;">
-                                        <h:outputText value="Will be played at, " />
-                                        <h:outputText value="#{match.time}">
-                                              <f:convertDateTime pattern="yyyy.MM.dd HH:mm" />
-                                        </h:outputText>
+                                        <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
+                                            <h:outputLink value="javascript:void(0)" onclick="PF('addResultDlg').show();">Add result</h:outputLink>
+                                            <p:dialog header="Add result" widgetVar="addResultDlg" resizable="false">
+                                                <h:panelGrid columns="2" cellpadding="5">
+                                                    <p:outputLabel for="homeScore" value="#{match.homeCompetitor.username}: " />
+                                                    <p:inputNumber id="homeScore" value="#{tournamentDetailBean.homeScore}" />
+                                                    <p:outputLabel for="awayScore" value="#{match.awayCompetitor.username}: " />
+                                                    <p:inputNumber id="awayScore" value="#{tournamentDetailBean.awayScore}" />
+                                                    <f:facet name="footer">
+                                                        <p:commandButton value="Register result" update="matchesForm" actionListener="#{tournamentDetailBean.registerResult(match)}" oncomplete="PF('addResultDlg').hide();" />
+                                                    </f:facet>  
+                                                </h:panelGrid>
+                                            </p:dialog>
+                                        </sec:authorize>
+                                        <sec:authorize access="!hasRole('ROLE_SUPERVISOR')">
+                                            <h:outputText value="Will be played at, " />
+                                            <h:outputText value="#{match.time}">
+                                                <f:convertDateTime pattern="yyyy.MM.dd HH:mm" />
+                                            </h:outputText>
+                                        </sec:authorize>
                                     </p:column>
                                 </p:row>
                                 <p:row> 

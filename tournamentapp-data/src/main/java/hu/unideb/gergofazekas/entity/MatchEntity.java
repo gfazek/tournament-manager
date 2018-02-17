@@ -45,7 +45,7 @@ public abstract class MatchEntity extends BaseEntity implements Serializable {
     private MatchStatus status;
     
     @Basic(optional = false)
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "TIME")
     private Date time;
     

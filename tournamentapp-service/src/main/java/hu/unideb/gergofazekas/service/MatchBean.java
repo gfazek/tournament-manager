@@ -12,6 +12,8 @@ import hu.unideb.gergofazekas.entity.MatchEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.StandingEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
+import hu.unideb.gergofazekas.utility.MatchStatus;
+import java.util.Date;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Named;
@@ -28,7 +30,7 @@ import org.apache.logging.log4j.Logger;
 @Named
 public class MatchBean implements MatchServiceLocal {
 
-    private static final Logger logger = LogManager.getLogger(PersonBean.class);
+    private static final Logger logger = LogManager.getLogger(MatchBean.class);
 
     @PersistenceContext
     private EntityManager em;
@@ -79,5 +81,27 @@ public class MatchBean implements MatchServiceLocal {
         individualMatchEntity.getHomeCompetitor().getHomeMatches().add(individualMatchEntity);
         individualMatchEntity.getAwayCompetitor().getAwayMatches().add(individualMatchEntity);
     }
+
+    @Override
+    public void scheduleMatch(MatchEntity matchEntity, Date time) {
+        logger.debug("Schedule match: {}", matchEntity);
+        logger.debug("Entitymanager contains match?: {}", em.contains(matchEntity));
+        matchEntity.setTime(time);
+        matchEntity.setStatus(MatchStatus.SCHEDULED);
+        MatchEntity tmp = em.merge(matchEntity);
+        logger.debug("Entitymanager contains match after merge?: {}", em.contains(tmp));
+    }
+
+    @Override
+    public void registerResult(MatchEntity matchEntity, int homeScore, int awayScore) {
+        logger.debug("Register match result for: {}", matchEntity);
+        logger.debug("Entitymanager contains match?: {}", em.contains(matchEntity));
+        matchEntity.setHomeScore(homeScore);
+        matchEntity.setAwayScore(awayScore);
+        MatchEntity tmp = em.merge(matchEntity);
+        logger.debug("Entitymanager contains match after merge?: {}", em.contains(tmp));
+    }
+    
+    
 
 }
