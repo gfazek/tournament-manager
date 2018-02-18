@@ -72,14 +72,14 @@ and open the template in the editor.
                             </div>
                             <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
                                 <div class="col-md-2">
-                                    <h:commandButton id="kickoff" styleClass="btn btn-lg btn-primary" value="KICK OFF" actionListener="#{tournamentDetailBean.kickoff()}"/>
+                                    <h:commandButton id="kickoff" rendered="#{tournamentDetailBean.tournamentEntity.status eq 'OPEN'}" styleClass="btn btn-lg btn-primary" value="KICK OFF" actionListener="#{tournamentDetailBean.kickoff()}"/>
                                 </div>
                             </sec:authorize>
                         </div>
                     </div>
                 </div>
             </h:form>
-            <h:form rendered="#{not empty tournamentDetailBean.tournamentEntity and 
+            <h:form id="standingsForm" rendered="#{not empty tournamentDetailBean.tournamentEntity and 
                                 (tournamentDetailBean.tournamentEntity.status eq 'IN_PROGRESS' or tournamentDetailBean.tournamentEntity.status eq 'CLOSED')}">
                 <div class="custom-card">
                     <h4 class="custom-card-header">Standings</h4>
@@ -154,7 +154,7 @@ and open the template in the editor.
                                                     <p:outputLabel for="awayScore" value="#{match.awayCompetitor.username}: " />
                                                     <p:inputNumber id="awayScore" value="#{tournamentDetailBean.awayScore}" />
                                                     <f:facet name="footer">
-                                                        <p:commandButton value="Register result" update="matchesForm" actionListener="#{tournamentDetailBean.registerResult(match)}" oncomplete="PF('addResultDlg').hide();" />
+                                                        <p:commandButton value="Register result" update="matchesForm standingsForm" actionListener="#{tournamentDetailBean.registerResult(match)}" oncomplete="PF('addResultDlg').hide();" />
                                                     </f:facet>  
                                                 </h:panelGrid>
                                             </p:dialog>

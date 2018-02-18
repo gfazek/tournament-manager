@@ -98,6 +98,7 @@ public class MatchBean implements MatchServiceLocal {
         logger.debug("Entitymanager contains match?: {}", em.contains(matchEntity));
         matchEntity.setHomeScore(homeScore);
         matchEntity.setAwayScore(awayScore);
+        matchEntity.setStatus(MatchStatus.FINISHED);
         MatchEntity tmp = em.merge(matchEntity);
         logger.debug("Entitymanager contains match after merge?: {}", em.contains(tmp));
     }
