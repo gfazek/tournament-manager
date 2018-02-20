@@ -5,8 +5,10 @@
  */
 package hu.unideb.gergofazekas.service;
 
+import hu.unideb.gergofazekas.entity.IndividualMatchEntity;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinStandingEntity;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
+import hu.unideb.gergofazekas.entity.MatchEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.StandingEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
@@ -50,5 +52,32 @@ public class StandingBean implements StandingServiceLocal {
         tournament.getStandings().add(irrs);
         person.getStandings().add(irrs);
     }
-    
+
+    @Override
+    public void updateStandings(IndividualMatchEntity individualMatchEntity) {
+        IndividualRoundRobinStandingEntity homeStanding = (IndividualRoundRobinStandingEntity) findOne(individualMatchEntity.getHomeCompetitor().getId(), individualMatchEntity.getTournament().getId());
+        IndividualRoundRobinStandingEntity awayStanding =  (IndividualRoundRobinStandingEntity) findOne(individualMatchEntity.getAwayCompetitor().getId(), individualMatchEntity.getTournament().getId());
+        IndividualRoundRobinTournamentEntity irrt = (IndividualRoundRobinTournamentEntity) individualMatchEntity.getTournament();
+        homeStanding.setPlayed(homeStanding.getPlayed() + 1);
+        awayStanding.setPlayed(awayStanding.getPlayed() + 1);
+
+        if (individualMatchEntity.getHomeScore() > individualMatchEntity.getAwayScore()) {
+            homeStanding.setWon(homeStanding.getWon() + 1);
+            homeStanding.setPoints(homeStanding.getPoints() + irrt.getWinPoint());
+            awayStanding.setPoints(awayStanding.getPoints() + irrt.getLoosePoint());
+            awayStanding.setLost(awayStanding.getLost() + 1);
+        } else if (individualMatchEntity.getHomeScore() < individualMatchEntity.getAwayScore()) {
+            awayStanding.setWon(awayStanding.getWon() + 1);
+            awayStanding.setPoints(awayStanding.getPoints() + irrt.getWinPoint());
+            homeStanding.setPoints(homeStanding.getPoints() + irrt.getLoosePoint());
+            homeStanding.setLost(homeStanding.getLost()+ 1);
+        } else {
+            homeStanding.setPoints(homeStanding.getPoints() + irrt.getDrawPoint());
+            awayStanding.setPoints(awayStanding.getPoints() + irrt.getDrawPoint());
+            homeStanding.setDrawn(homeStanding.getDrawn()+ 1);
+            awayStanding.setDrawn(awayStanding.getDrawn()+ 1);
+        }
+        
+    }
+        
 }

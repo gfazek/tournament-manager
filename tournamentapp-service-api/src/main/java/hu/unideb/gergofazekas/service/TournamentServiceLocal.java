@@ -26,5 +26,6 @@ public interface TournamentServiceLocal {
     void persistEntry(Long tournamentId, String username);
     List<PersonEntity> getIndividualCompetitors(Long id);
     void kickoff(Long id);
+    void checkStatus(TournamentEntity tournamentEntity);
     
 }

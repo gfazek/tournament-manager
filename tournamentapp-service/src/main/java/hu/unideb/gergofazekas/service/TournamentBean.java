@@ -10,6 +10,7 @@ import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
 import hu.unideb.gergofazekas.entity.MatchEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
+import hu.unideb.gergofazekas.utility.MatchStatus;
 import hu.unideb.gergofazekas.utility.TournamentStatus;
 import java.util.List;
 import java.util.logging.Level;
@@ -116,6 +117,19 @@ public class TournamentBean implements TournamentServiceLocal {
                 }
             }
         }
+    }
+
+    @Override
+    public void checkStatus(TournamentEntity tournamentEntity) {
+        logger.debug("Em contains tournsmententity?: {}", em.contains(tournamentEntity));
+        List<MatchEntity> matches = tournamentEntity.getMatches();
+        for (MatchEntity match : matches) {
+            if (match.getStatus() == MatchStatus.NEW || match.getStatus() == MatchStatus.SCHEDULED) {
+                return;
+            }
+        }
+        tournamentEntity.setStatus(TournamentStatus.CLOSED);
+        em.merge(tournamentEntity);
     }
 
 }

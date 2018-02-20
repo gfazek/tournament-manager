@@ -37,6 +37,9 @@ public class MatchBean implements MatchServiceLocal {
 
     @EJB
     private StandingServiceLocal standingServiceLocal;
+    
+    @EJB
+    private TournamentServiceLocal tournamentServiceLocal;
 
     @Override
     public void persistMatch(IndividualMatchEntity individualMatchEntity, IndividualRoundRobinStandingEntity homeStanding, IndividualRoundRobinStandingEntity awayStanding, TournamentEntity tournamentEntity) {
@@ -100,6 +103,8 @@ public class MatchBean implements MatchServiceLocal {
         matchEntity.setAwayScore(awayScore);
         matchEntity.setStatus(MatchStatus.FINISHED);
         MatchEntity tmp = em.merge(matchEntity);
+        standingServiceLocal.updateStandings((IndividualMatchEntity) matchEntity);
+        tournamentServiceLocal.checkStatus(matchEntity.getTournament());
         logger.debug("Entitymanager contains match after merge?: {}", em.contains(tmp));
     }
     
