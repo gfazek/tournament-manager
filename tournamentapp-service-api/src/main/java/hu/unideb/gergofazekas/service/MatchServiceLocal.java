@@ -26,5 +26,6 @@ public interface MatchServiceLocal {
     void persistMatch(PersonEntity homeCompetitor, PersonEntity awayCompetitor, IndividualRoundRobinTournamentEntity irrt);
     void scheduleMatch(MatchEntity matchEntity, Date time);
     void registerResult(MatchEntity matchEntity, int homeScore, int awayScore);
+    MatchEntity findOne(Long id);
     
 }

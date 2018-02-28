@@ -25,6 +25,9 @@ import javax.persistence.Table;
 @Table(name = "STANDING")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "TYPE")
+@NamedQueries({
+    @NamedQuery(name = "Standing.findByTournament", query = "SELECT s FROM StandingEntity s WHERE s.tournamentEntity.id = :id")
+})
 public abstract class StandingEntity extends BaseEntity implements Serializable {
     
     @ManyToOne

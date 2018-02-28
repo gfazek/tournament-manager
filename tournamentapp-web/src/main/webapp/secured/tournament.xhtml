@@ -19,14 +19,9 @@ and open the template in the editor.
         <title>Tournament Details</title>
     </ui:define>
     <ui:define name="customContent">
-        <f:metadata>
-            <f:viewParam name="id" value="#{tournamentDetailBean.tournamentEntity}" converter="#{tournamentConverter}" 
-                         converterMessage="Unknown tournament, please use a link from within the system." 
-                         required="true" requiredMessage="Bad request, please use a link from within the system." />
-        </f:metadata>
         <h:messages />
         <div class="container">
-            <h:form rendered="#{not empty tournamentDetailBean.tournamentEntity}">
+            <h:form id="detailsform" rendered="#{not empty tournamentDetailBean.tournamentEntity}">
                 <div class="custom-card">
                     <h4 class="custom-card-header">#{tournamentDetailBean.tournamentEntity.name}</h4>
                     <div class="card-body">
@@ -68,23 +63,23 @@ and open the template in the editor.
                         </div>
                         <div class="row justify-content-around"> 
                             <div class="col-md-2">
-                                <h:commandButton id="submit" rendered="#{tournamentDetailBean.showEntry()}" styleClass="btn btn-lg btn-success" value="ENTRY" actionListener="#{tournamentDetailBean.submitEntry()}"/>
+                                <h:commandButton id="submit" rendered="#{tournamentDetailBean.showEntry()}" styleClass="btn btn-lg btn-success" value="ENTRY" action="#{tournamentDetailBean.submitEntry()}" />
                             </div>
                             <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
                                 <div class="col-md-2">
-                                    <h:commandButton id="kickoff" rendered="#{tournamentDetailBean.tournamentEntity.status eq 'OPEN'}" styleClass="btn btn-lg btn-primary" value="KICK OFF" actionListener="#{tournamentDetailBean.kickoff()}"/>
+                                    <h:commandButton id="kickoff" rendered="#{tournamentDetailBean.tournamentEntity.status eq 'OPEN'}" styleClass="btn btn-lg btn-primary" value="KICK OFF" action="#{tournamentDetailBean.kickoff()}"/>
                                 </div>
                             </sec:authorize>
                         </div>
                     </div>
                 </div>
             </h:form>
-            <h:form id="standingsForm" rendered="#{not empty tournamentDetailBean.tournamentEntity and 
-                                (tournamentDetailBean.tournamentEntity.status eq 'IN_PROGRESS' or tournamentDetailBean.tournamentEntity.status eq 'CLOSED')}">
+            <h:form id="standingsform" rendered="#{not empty tournamentDetailBean.tournamentEntity and 
+                                                   (tournamentDetailBean.tournamentEntity.status eq 'IN_PROGRESS' or tournamentDetailBean.tournamentEntity.status eq 'CLOSED')}">
                 <div class="custom-card">
                     <h4 class="custom-card-header">Standings</h4>
                     <div class="card-body">
-                        <p:panelGrid style="width: 100%">
+                        <p:panelGrid style="width: 100%" id="standingsgrid">
                             <f:facet name="header">
                                 <p:row>
                                     <p:column>Position</p:column>
@@ -111,12 +106,12 @@ and open the template in the editor.
                     </div>
                 </div>
             </h:form>
-            <h:form id="matchesForm" rendered="#{not empty tournamentDetailBean.tournamentEntity and 
+            <h:form id="matchesform" rendered="#{not empty tournamentDetailBean.tournamentEntity and 
                                                  (tournamentDetailBean.tournamentEntity.status eq 'IN_PROGRESS' or tournamentDetailBean.tournamentEntity.status eq 'CLOSED')}">
                 <div class="custom-card">
                     <h4 class="custom-card-header">Matches</h4>
                     <div class="card-body">
-                        <p:panelGrid style="width: 100%">
+                        <p:panelGrid style="width: 100%" id="matchesgrid">
                             <f:facet name="header">
                                 <p:row>
                                     <p:column colspan="2">COMPETITORS</p:column>
@@ -129,16 +124,7 @@ and open the template in the editor.
                                     <p:column colspan="1" rendered="#{match.status eq 'FINISHED'}" style="font-weight: bold; text-align: center">#{match.homeScore}</p:column>
                                     <p:column colspan="2" rowspan="2" rendered="#{match.status eq 'NEW'}" style="font-weight: bold; text-align: center; border-bottom-width: 3px;">
                                         <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
-                                            <h:outputLink value="javascript:void(0)" onclick="PF('scheduleDlg').show();">Schedule</h:outputLink>
-                                            <p:dialog header="Add schedule" widgetVar="scheduleDlg" resizable="false">
-                                                <h:panelGrid columns="2" cellpadding="5">
-                                                    <p:outputLabel for="startTime" value="Start time: " />
-                                                    <p:calendar id="startTime" value="#{tournamentDetailBean.matchTime}" pattern="MM/dd/yyyy HH:mm" showOn="button" />
-                                                    <f:facet name="footer">
-                                                        <p:commandButton value="Set match time" update="matchesForm" actionListener="#{tournamentDetailBean.scheduleMatch(match)}" oncomplete="PF('scheduleDlg').hide();" />
-                                                    </f:facet>  
-                                                </h:panelGrid>
-                                            </p:dialog>
+                                            <p:commandButton update=":scheduleform:schedulepanel" oncomplete="PF('scheduledlgwdg').show()" value="Schedule" action="#{tournamentDetailBean.setSelectedMatch(match)}"/>
                                         </sec:authorize>
                                         <sec:authorize access="!hasRole('ROLE_SUPERVISOR')">
                                             NOT SCHEDULED YET
@@ -146,18 +132,7 @@ and open the template in the editor.
                                     </p:column>
                                     <p:column colspan="2" rowspan="2" rendered="#{match.status eq 'SCHEDULED'}" style="font-weight: bold; text-align: center; border-bottom-width: 3px;">
                                         <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
-                                            <h:outputLink value="javascript:void(0)" onclick="PF('addResultDlg').show();">Add result</h:outputLink>
-                                            <p:dialog header="Add result" widgetVar="addResultDlg" resizable="false">
-                                                <h:panelGrid columns="2" cellpadding="5">
-                                                    <p:outputLabel for="homeScore" value="#{match.homeCompetitor.username}: " />
-                                                    <p:inputNumber id="homeScore" value="#{tournamentDetailBean.homeScore}" />
-                                                    <p:outputLabel for="awayScore" value="#{match.awayCompetitor.username}: " />
-                                                    <p:inputNumber id="awayScore" value="#{tournamentDetailBean.awayScore}" />
-                                                    <f:facet name="footer">
-                                                        <p:commandButton value="Register result" update="matchesForm standingsForm" actionListener="#{tournamentDetailBean.registerResult(match)}" oncomplete="PF('addResultDlg').hide();" />
-                                                    </f:facet>  
-                                                </h:panelGrid>
-                                            </p:dialog>
+                                            <p:commandButton update=":resultform:resultpanel" oncomplete="PF('resultdlgwdg').show()" value="Add result" action="#{tournamentDetailBean.setSelectedMatch(match)}"/>
                                         </sec:authorize>
                                         <sec:authorize access="!hasRole('ROLE_SUPERVISOR')">
                                             <h:outputText value="Will be played at, " />
@@ -176,6 +151,32 @@ and open the template in the editor.
                     </div>
                 </div>
             </h:form>
+
+            <p:dialog header="Add result" widgetVar="resultdlgwdg" resizable="false" id="resultdlg">
+                <h:form id="resultform">
+                    <h:panelGrid columns="2" cellpadding="5" id="resultpanel">
+                        <p:outputLabel for="homeScore" value="#{tournamentDetailBean.selectedMatch.homeCompetitor.username}: " />
+                        <p:inputNumber id="homeScore" value="#{tournamentDetailBean.homeScore}" />
+                        <p:outputLabel for="awayScore" value="#{tournamentDetailBean.selectedMatch.awayCompetitor.username}: " />
+                        <p:inputNumber id="awayScore" value="#{tournamentDetailBean.awayScore}" />
+                        <f:facet name="footer">
+                            <p:commandButton update=":matchesform:matchesgrid :standingsform:standingsgrid :detailsform" value="Register result" action="#{tournamentDetailBean.registerResult}" oncomplete="PF('resultdlgwdg').hide();" />
+                        </f:facet>  
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>
+            <p:dialog header="Add schedule" widgetVar="scheduledlgwdg" resizable="false" id="scheduledlg">
+                <h:form id="scheduleform">
+                    <h:panelGrid columns="2" cellpadding="5" id="schedulepanel">
+                        <p:outputLabel for="startTime" value="Start time: " />
+                        <p:calendar id="startTime" value="#{tournamentDetailBean.matchTime}" pattern="MM/dd/yyyy HH:mm" showOn="button" />
+                        <f:facet name="footer">
+                            <p:commandButton update=":matchesform:matchesgrid" value="Set match time" action="#{tournamentDetailBean.scheduleMatch}" oncomplete="PF('scheduledlgwdg').hide();" />
+                        </f:facet>  
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>
+            <p:messages />
         </div>
     </ui:define>
 </ui:composition>

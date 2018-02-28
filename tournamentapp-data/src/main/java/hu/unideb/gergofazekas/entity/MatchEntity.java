@@ -44,7 +44,6 @@ public abstract class MatchEntity extends BaseEntity implements Serializable {
     @Column(name = "STATUS")
     private MatchStatus status;
     
-    @Basic(optional = false)
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "TIME")
     private Date time;
@@ -53,6 +52,7 @@ public abstract class MatchEntity extends BaseEntity implements Serializable {
     private TournamentEntity tournament;
 
     public MatchEntity() {
+        this.status = MatchStatus.NEW;
     }
 
     public MatchEntity(int homeScore, int awayScore) {

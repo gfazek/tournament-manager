@@ -10,24 +10,30 @@ import hu.unideb.gergofazekas.entity.IndividualRoundRobinStandingEntity;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
 import hu.unideb.gergofazekas.entity.MatchEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
+import hu.unideb.gergofazekas.entity.StandingEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
 import hu.unideb.gergofazekas.service.MatchServiceLocal;
+import hu.unideb.gergofazekas.service.StandingServiceLocal;
 import hu.unideb.gergofazekas.service.TournamentServiceLocal;
 import hu.unideb.gergofazekas.utility.TournamentStatus;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.primefaces.component.outputlabel.OutputLabel;
+import org.primefaces.context.RequestContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -44,16 +50,29 @@ public class TournamentDetailBean implements Serializable {
     private TournamentEntity tournamentEntity;
     private List<IndividualMatchEntity> matches;
     private List<IndividualRoundRobinStandingEntity> standings;
+    private IndividualMatchEntity selectedMatch;
     private Date matchTime;
-    private int homeScore, awayScore;
+    private Double homeScore, awayScore;
 
     @EJB
     private TournamentServiceLocal tournamentServiceLocal;
-    
+
     @EJB
     private MatchServiceLocal matchServiceLocal;
 
+    @EJB
+    private StandingServiceLocal standingServiceLocal;
+
     public TournamentDetailBean() {
+    }
+
+    @PostConstruct
+    public void init() {
+        Map<String, String> parameterMap = (Map<String, String>) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        tournamentEntity = tournamentServiceLocal.findTournament(Long.parseLong(parameterMap.get("id")));
+        standings = standingServiceLocal.findByTournament(tournamentEntity.getId()).stream()
+                .map(e -> (IndividualRoundRobinStandingEntity) e)
+                .collect(Collectors.toList());
     }
 
     public TournamentEntity getTournamentEntity() {
@@ -67,7 +86,7 @@ public class TournamentDetailBean implements Serializable {
     public String submitEntry() {
         String username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         tournamentServiceLocal.persistEntry(tournamentEntity.getId(), username);
-        return "index";
+        return "tournaments?faces-redirect=true&successEntry=true";
     }
 
     public boolean showEntry() {
@@ -91,17 +110,25 @@ public class TournamentDetailBean implements Serializable {
         }
         return true;
     }
-    
-    public void scheduleMatch(MatchEntity matchEntity) {
-        matchServiceLocal.scheduleMatch(matchEntity, matchTime);
-    }
-    
-    public void registerResult(MatchEntity matchEntity) {
-        matchServiceLocal.registerResult(matchEntity, homeScore, awayScore);
+
+    public void scheduleMatch() {
+        matchServiceLocal.scheduleMatch(selectedMatch, matchTime);
     }
 
-    public void kickoff() {
+    public void registerResult() {
+        logger.debug("registerResult() method got invoked.");
+        logger.debug("SelectedMatch is: {}", selectedMatch);
+        matchServiceLocal.registerResult(selectedMatch, homeScore.intValue(), awayScore.intValue());
+        List<StandingEntity> tmp = standingServiceLocal.findByTournament(tournamentEntity.getId());
+        standings = tmp.stream()
+                .map(e -> (IndividualRoundRobinStandingEntity) e)
+                .collect(Collectors.toList());
+        logger.debug("Standins are refreshed: {}", getStandings());
+    }
+
+    public String kickoff() {
         tournamentServiceLocal.kickoff(tournamentEntity.getId());
+        return "tournaments?faces-redirect=true&successKickoff=true";
     }
 
     public TournamentServiceLocal getTournamentServiceLocal() {
@@ -122,12 +149,13 @@ public class TournamentDetailBean implements Serializable {
     public void setMatches(List<IndividualMatchEntity> matches) {
         this.matches = matches;
     }
-    
-     public List<IndividualRoundRobinStandingEntity> getStandings() {
-        return tournamentEntity.getStandings()
-                .stream()
-                .map(e -> (IndividualRoundRobinStandingEntity) e)
-                .collect(Collectors.toList());
+
+    public List<IndividualRoundRobinStandingEntity> getStandings() {
+//        return tournamentEntity.getStandings()
+//                .stream()
+//                .map(e -> (IndividualRoundRobinStandingEntity) e)
+//                .collect(Collectors.toList());
+        return standings;
     }
 
     public void setStandings(List<IndividualRoundRobinStandingEntity> standings) {
@@ -141,7 +169,7 @@ public class TournamentDetailBean implements Serializable {
     public void setMatchTime(Date matchTime) {
         this.matchTime = matchTime;
     }
-    
+
     public MatchServiceLocal getMatchServiceLocal() {
         return matchServiceLocal;
     }
@@ -150,20 +178,28 @@ public class TournamentDetailBean implements Serializable {
         this.matchServiceLocal = matchServiceLocal;
     }
 
-    public int getHomeScore() {
+    public Double getHomeScore() {
         return homeScore;
     }
 
-    public void setHomeScore(int homeScore) {
+    public void setHomeScore(Double homeScore) {
         this.homeScore = homeScore;
     }
 
-    public int getAwayScore() {
+    public Double getAwayScore() {
         return awayScore;
     }
 
-    public void setAwayScore(int awayScore) {
+    public void setAwayScore(Double awayScore) {
         this.awayScore = awayScore;
     }
-    
+
+    public IndividualMatchEntity getSelectedMatch() {
+        return selectedMatch;
+    }
+
+    public void setSelectedMatch(IndividualMatchEntity selectedMatch) {
+        this.selectedMatch = selectedMatch;
+    }
+
 }

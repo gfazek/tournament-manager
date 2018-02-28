@@ -107,7 +107,10 @@ public class MatchBean implements MatchServiceLocal {
         tournamentServiceLocal.checkStatus(matchEntity.getTournament());
         logger.debug("Entitymanager contains match after merge?: {}", em.contains(tmp));
     }
-    
-    
+
+    @Override
+    public MatchEntity findOne(Long id) {
+        return em.find(MatchEntity.class, id);
+    }
 
 }

@@ -33,7 +33,6 @@ public class IndividualMatchEntity extends MatchEntity {
     }
     
     public IndividualMatchEntity(PersonEntity homeCompetitor, PersonEntity awayCompetitor) {
-        
         this.homeCompetitor = homeCompetitor;
         this.awayCompetitor = awayCompetitor;
     }

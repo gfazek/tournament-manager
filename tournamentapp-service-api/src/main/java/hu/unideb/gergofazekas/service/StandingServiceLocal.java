@@ -12,6 +12,7 @@ import hu.unideb.gergofazekas.entity.MatchEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.StandingEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -24,5 +25,6 @@ public interface StandingServiceLocal {
     void persistStanding(IndividualRoundRobinStandingEntity irrs);
     void persistStanding(IndividualRoundRobinTournamentEntity tournament, PersonEntity person);
     StandingEntity findOne(Long pid, Long tid);
+    List<StandingEntity> findByTournament(Long tournamentId);
     void updateStandings(IndividualMatchEntity individualMatchEntity);
 }

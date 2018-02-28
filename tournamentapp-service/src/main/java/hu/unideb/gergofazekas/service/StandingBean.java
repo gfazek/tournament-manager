@@ -12,6 +12,7 @@ import hu.unideb.gergofazekas.entity.MatchEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.StandingEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -79,5 +80,12 @@ public class StandingBean implements StandingServiceLocal {
         }
         
     }
+
+    @Override
+    public List<StandingEntity> findByTournament(Long tournamentId) {
+        return em.createNamedQuery("Standing.findByTournament", StandingEntity.class).setParameter("id", tournamentId).getResultList();
+    }
+    
+    
         
 }
