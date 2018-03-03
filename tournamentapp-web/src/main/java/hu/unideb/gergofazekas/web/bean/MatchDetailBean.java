@@ -40,7 +40,6 @@ public class MatchDetailBean implements Serializable {
     }
     
     public void registerResult() {
-        logger.debug("lkurvaanyad");
         matchServiceLocal.registerResult(matchEntity, 0, 0);
     }
 

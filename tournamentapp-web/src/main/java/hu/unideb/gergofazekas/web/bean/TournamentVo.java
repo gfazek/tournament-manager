@@ -6,7 +6,6 @@
 package hu.unideb.gergofazekas.web.bean;
 
 import hu.unideb.gergofazekas.web.utility.CompetitorType;
-import hu.unideb.gergofazekas.web.utility.TournamentType;
 import java.util.Date;
 
 /**

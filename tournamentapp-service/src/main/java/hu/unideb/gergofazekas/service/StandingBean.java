@@ -8,10 +8,8 @@ package hu.unideb.gergofazekas.service;
 import hu.unideb.gergofazekas.entity.IndividualMatchEntity;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinStandingEntity;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
-import hu.unideb.gergofazekas.entity.MatchEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.StandingEntity;
-import hu.unideb.gergofazekas.entity.TournamentEntity;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Named;
@@ -28,7 +26,7 @@ import org.apache.logging.log4j.Logger;
 @Named
 public class StandingBean implements StandingServiceLocal {
 
-    private static final Logger logger = LogManager.getLogger(TournamentBean.class);
+    private static final Logger logger = LogManager.getLogger(StandingBean.class);
     
     @PersistenceContext
     private EntityManager em;

@@ -5,15 +5,16 @@
  */
 package hu.unideb.gergofazekas.service;
 
-import hu.unideb.gergofazekas.entity.IndividualMatchEntity;
+import hu.unideb.gergofazekas.entity.IndividualEliminationTournamentEntity;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
 import hu.unideb.gergofazekas.entity.MatchEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
+import hu.unideb.gergofazekas.utility.CompetitorType;
 import hu.unideb.gergofazekas.utility.MatchStatus;
 import hu.unideb.gergofazekas.utility.TournamentStatus;
+import hu.unideb.gergofazekas.utility.TournamentType;
 import java.util.List;
-import java.util.logging.Level;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Named;
@@ -37,7 +38,7 @@ public class TournamentBean implements TournamentServiceLocal {
 
     @EJB
     private MatchServiceLocal matchServiceLocal;
-    
+
     @EJB
     private StandingServiceLocal standingServiceLocal;
 
@@ -70,7 +71,8 @@ public class TournamentBean implements TournamentServiceLocal {
     public TournamentEntity findTournament(Long id) {
         TournamentEntity tournamentEntity = em.find(TournamentEntity.class, id);
         logger.debug("TournamentEntity: {}", tournamentEntity);
-        if (tournamentEntity instanceof IndividualRoundRobinTournamentEntity) {
+//        if (tournamentEntity instanceof IndividualRoundRobinTournamentEntity) {
+        if (isIndividualRoundRobin(tournamentEntity)) {
             IndividualRoundRobinTournamentEntity irrt = (IndividualRoundRobinTournamentEntity) tournamentEntity;
             logger.debug("IndividualRoundRobinTournamentEntity: {}", irrt);
             irrt.getPeople().size();
@@ -83,10 +85,13 @@ public class TournamentBean implements TournamentServiceLocal {
         logger.debug("Persisting entry: tournamentid: {} | usernsme: {}", tournamentId, username);
         TournamentEntity tournamentEntity = findTournament(tournamentId);
         PersonEntity personEntity = personServiceLocal.findByUsername(username);
-        if (tournamentEntity instanceof IndividualRoundRobinTournamentEntity) {
+        if (isIndividualRoundRobin(tournamentEntity)) {
             IndividualRoundRobinTournamentEntity tmp = (IndividualRoundRobinTournamentEntity) tournamentEntity;
             tmp.getPeople().add(personEntity);
             personEntity.getRoundRobinTournaments().add((IndividualRoundRobinTournamentEntity) tournamentEntity);
+        } else if (isIndividualElimination(tournamentEntity)) {
+            IndividualEliminationTournamentEntity iet  = (IndividualEliminationTournamentEntity) tournamentEntity;
+            iet.getPeople().add(personEntity);
         }
     }
 
@@ -102,7 +107,7 @@ public class TournamentBean implements TournamentServiceLocal {
         TournamentEntity tournamentEntity = findTournament(id);
         logger.debug("Kicking off: {}", tournamentEntity);
         tournamentEntity.setStatus(TournamentStatus.IN_PROGRESS);
-        if (tournamentEntity instanceof IndividualRoundRobinTournamentEntity) {
+        if (isIndividualRoundRobin(tournamentEntity)) {
             IndividualRoundRobinTournamentEntity irrt = (IndividualRoundRobinTournamentEntity) tournamentEntity;
             List<PersonEntity> competitors = irrt.getPeople();
             logger.debug("Instantiating matches for competitors: {}", competitors);
@@ -130,6 +135,16 @@ public class TournamentBean implements TournamentServiceLocal {
         }
         tournamentEntity.setStatus(TournamentStatus.CLOSED);
         em.merge(tournamentEntity);
+    }
+    
+    private boolean isIndividualRoundRobin(TournamentEntity tournamentEntity) {
+        return tournamentEntity.getType() == TournamentType.ROUNDROBIN 
+                && tournamentEntity.getCompetitorType() == CompetitorType.PLAYER;
+    }
+    
+    private boolean isIndividualElimination(TournamentEntity tournamentEntity) {
+        return tournamentEntity.getType() == TournamentType.ELIMINATION 
+                && tournamentEntity.getCompetitorType() == CompetitorType.PLAYER;
     }
 
 }

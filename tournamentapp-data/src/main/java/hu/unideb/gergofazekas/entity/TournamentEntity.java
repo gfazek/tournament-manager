@@ -94,8 +94,6 @@ public abstract class TournamentEntity extends BaseEntity implements Serializabl
         this.standings = new ArrayList<>();
     }
     
-    
-
     public String getName() {
         return name;
     }

@@ -10,7 +10,6 @@ import hu.unideb.gergofazekas.entity.IndividualRoundRobinStandingEntity;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
 import hu.unideb.gergofazekas.entity.MatchEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
-import hu.unideb.gergofazekas.entity.StandingEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
 import hu.unideb.gergofazekas.utility.MatchStatus;
 import java.util.Date;

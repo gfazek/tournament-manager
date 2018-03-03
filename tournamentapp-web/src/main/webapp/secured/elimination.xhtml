@@ -47,10 +47,10 @@ and open the template in the editor.
                                 <h:outputText id="tournamentStatus" value="#{eliminationDetailBean.tournamentEntity.status}" />
                             </div>
                             <div class="col-md-3">
-                                <h:outputLabel for="tournamentNo" value="Given number of competitors" styleClass="font-weight-bold" />
+                                <h:outputLabel for="tournamentNo" value="Given number of competitors/Registered competitors" styleClass="font-weight-bold" />
                             </div>
                             <div class="col-md-3">
-                                <h:outputText id="tournamentNo" value="#{eliminationDetailBean.tournamentEntity.numberOfCompetitors}" />
+                                <h:outputText id="tournamentNo" value="#{eliminationDetailBean.tournamentEntity.numberOfCompetitors}/#{eliminationDetailBean.registeredCompetitors}" />
                             </div>
                         </div>
                         <div class="row">

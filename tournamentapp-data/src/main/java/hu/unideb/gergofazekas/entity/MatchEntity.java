@@ -28,7 +28,7 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "MATCH")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "TYPE")
+@DiscriminatorColumn(name = "DTYPE")
 public abstract class MatchEntity extends BaseEntity implements Serializable {
     
 //    @Basic(optional = false)

@@ -10,6 +10,7 @@ import hu.unideb.gergofazekas.entity.EliminationTournamentEntity;
 import hu.unideb.gergofazekas.entity.IndividualEliminationTournamentEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.service.TournamentServiceLocal;
+import hu.unideb.gergofazekas.utility.CompetitorType;
 import hu.unideb.gergofazekas.utility.TournamentStatus;
 import java.io.Serializable;
 import java.util.Date;
@@ -34,13 +35,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Named
 @ViewScoped
 public class EliminationDetailBean implements Serializable {
-    
+
     private static final Logger logger = LogManager.getLogger(EliminationDetailBean.class);
 
     private EliminationTournamentEntity tournamentEntity;
     private EliminationMatchEntity selectedMatch;
     private Double homeScore, awayScore;
     private Date matchTime;
+    private int registeredCompetitors;
 
     @EJB
     private TournamentServiceLocal tournamentServiceLocal;
@@ -52,8 +54,9 @@ public class EliminationDetailBean implements Serializable {
     public void init() {
         Map<String, String> parameterMap = (Map<String, String>) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         tournamentEntity = (EliminationTournamentEntity) tournamentServiceLocal.findTournament(Long.parseLong(parameterMap.get("id")));
+        registeredCompetitors = fetchRegisteredCompetitors();
     }
-    
+
     public boolean showEntry() {
         if (tournamentEntity.getStatus() != TournamentStatus.OPEN) {
             return false;
@@ -65,22 +68,30 @@ public class EliminationDetailBean implements Serializable {
         Optional<PersonEntity> competitor = s.findFirst();
         return !competitor.isPresent();
     }
-    
+
     public String submitEntry() {
         String username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         tournamentServiceLocal.persistEntry(tournamentEntity.getId(), username);
         return "tournaments?faces-redirect=true&successEntry=true";
     }
-    
+
     public String kickoff() {
         tournamentServiceLocal.kickoff(tournamentEntity.getId());
         return "tournaments?faces-redirect=true&successKickoff=true";
     }
-    
+
     public void registerResult() {
     }
-    
+
     public void scheduleMatch() {
+    }
+
+    public int fetchRegisteredCompetitors() {
+        if (tournamentEntity.getCompetitorType() == CompetitorType.PLAYER) {
+            IndividualEliminationTournamentEntity tmp = (IndividualEliminationTournamentEntity) tournamentEntity;
+            return tmp.getPeople().size();
+        }
+        return -1;
     }
 
     public EliminationTournamentEntity getTournamentEntity() {
@@ -122,8 +133,14 @@ public class EliminationDetailBean implements Serializable {
     public void setMatchTime(Date matchTime) {
         this.matchTime = matchTime;
     }
+
+    public void setRegisteredCompetitors(int registeredCompetitors) {
+        this.registeredCompetitors = registeredCompetitors;
+    }
     
-    
+    public int getRegisteredCompetitors() {
+        return registeredCompetitors;
+    }
 
     public TournamentServiceLocal getTournamentServiceLocal() {
         return tournamentServiceLocal;

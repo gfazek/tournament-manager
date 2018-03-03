@@ -5,15 +5,13 @@
  */
 package hu.unideb.gergofazekas.web.bean;
 
-import hu.unideb.gergofazekas.entity.EliminationTournamentEntity;
-import hu.unideb.gergofazekas.entity.RoundRobinTournamentEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
 import hu.unideb.gergofazekas.service.TournamentServiceLocal;
+import hu.unideb.gergofazekas.utility.TournamentType;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
@@ -35,9 +33,9 @@ public class OpenTournamentsBean implements Serializable {
     }
     
     public String navigateToDetailPage(TournamentEntity tournamentEntity) {
-        if (tournamentEntity instanceof RoundRobinTournamentEntity) {
+        if (tournamentEntity.getType() == TournamentType.ROUNDROBIN) {
             return "roundrobin";
-        } else if (tournamentEntity instanceof EliminationTournamentEntity) {
+        } else if (tournamentEntity.getType() == TournamentType.ELIMINATION) {
             return "elimination";
         }
         return null;
