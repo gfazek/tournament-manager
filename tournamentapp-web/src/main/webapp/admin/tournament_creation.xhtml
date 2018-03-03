@@ -36,7 +36,7 @@ and open the template in the editor.
                             <div class="form-row">
                                 <div class="form-group col-sm-6">
                                     <h:outputLabel for="tournamentname" value="Tournament Name" styleClass="col-form-label"/>
-                                    <h:inputText id="tournamentname" value="#{tournamentRegistrationBean.tournamentVo.name}" required="true" styleClass="form-control"/>
+                                    <h:inputText id="tournamentname" value="#{tournamentRegistrationBean.tournamentVo.name}" required="true" requiredMessage="Tournament name is required." styleClass="form-control"/>
                                 </div>
                                 <div class="form-group col-sm-6">
                                     <h:outputLabel for="competitorType" value="Competitor type" styleClass="col-form-label"/>
@@ -48,7 +48,7 @@ and open the template in the editor.
                             <div class="form-row">
                                 <div class="form-group col-sm-6">
                                     <h:outputLabel for="tournamentDescription" value="Tournament Description" styleClass="col-form-label"/>
-                                    <p:inputTextarea id="tournamentDescription" rows="1" cols="90" counter="display" maxlength="100" required="true"
+                                    <p:inputTextarea id="tournamentDescription" rows="1" cols="90" counter="display" maxlength="100" required="true" requiredMessage="Description is required."
                                                      counterTemplate="{0} characters remaining." autoResize="false" value="#{tournamentRegistrationBean.tournamentVo.description}"/>
                                     <h:outputText id="display" />
                                 </div>
@@ -56,7 +56,7 @@ and open the template in the editor.
                             <div class="form-row">
                                 <div class="form-group col-sm-6">
                                     <h:outputLabel for="tournamentStart" value="Start date" styleClass="col-form-label"/>
-                                    <h:inputText id="tournamentStart" value="#{tournamentRegistrationBean.tournamentVo.start}" required="true" styleClass="form-control">
+                                    <h:inputText id="tournamentStart" value="#{tournamentRegistrationBean.tournamentVo.start}" required="true" requiredMessage="Start date is required." styleClass="form-control">
                                         <f:convertDateTime pattern="yyyy-MM-dd"/>
                                     </h:inputText>
                                 </div>
@@ -65,22 +65,22 @@ and open the template in the editor.
                             <h5>Round Robin Parameters</h5>
                             <div class="form-row">
                                 <h:outputLabel for="numberOfCompetitorsRRoundRobin" value="Number of Competitors" styleClass="col-form-label"/>
-                                <h:inputText id="numberOfCompetitorsRoundRobin" value="#{tournamentRegistrationBean.tournamentVo.numberOfCompetitors}" styleClass="form-control">
+                                <h:inputText id="numberOfCompetitorsRoundRobin" value="#{tournamentRegistrationBean.tournamentVo.numberOfCompetitors}" required="tue" requiredMessage="Number of competitors is required." styleClass="form-control">
                                     <f:validateLongRange minimum="2" maximum="30" />
                                 </h:inputText>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-sm-4">
                                     <h:outputLabel for="winpoint" value="Win point" styleClass="col-form-label"/>
-                                    <h:inputText id="winpoint" value="#{tournamentRegistrationBean.tournamentVo.winPoint}" required="true" styleClass="form-control"/>
+                                    <h:inputText id="winpoint" value="#{tournamentRegistrationBean.tournamentVo.winPoint}" required="true" requiredMessage="Win point is required." styleClass="form-control"/>
                                 </div>
                                 <div class="form-group col-sm-4">
                                     <h:outputLabel for="drawpoint" value="Draw point" styleClass="col-form-label"/>
-                                    <h:inputText id="drawpoint" value="#{tournamentRegistrationBean.tournamentVo.drawPoint}" required="true" styleClass="form-control"/>
+                                    <h:inputText id="drawpoint" value="#{tournamentRegistrationBean.tournamentVo.drawPoint}" required="true" requiredMessage="Draw point is required."  styleClass="form-control"/>
                                 </div>
                                 <div class="form-group col-sm-4">
                                     <h:outputLabel for="loosepoint" value="Loose point" styleClass="col-form-label"/>
-                                    <h:inputText id="loosepoint" value="#{tournamentRegistrationBean.tournamentVo.loosePoint}" required="true" styleClass="form-control"/>
+                                    <h:inputText id="loosepoint" value="#{tournamentRegistrationBean.tournamentVo.loosePoint}" required="true" requiredMessage="Loose point is required." styleClass="form-control"/>
                                 </div>
                             </div>
                             <div class="row justify-content-end">
@@ -95,7 +95,7 @@ and open the template in the editor.
                             <div class="form-row">
                                 <div class="form-group col-sm-6">
                                     <h:outputLabel for="tournamentname" value="Tournament Name" styleClass="col-form-label"/>
-                                    <h:inputText id="tournamentname" value="#{tournamentRegistrationBean.tournamentVo.name}" required="true" styleClass="form-control"/>
+                                    <h:inputText id="tournamentname" value="#{tournamentRegistrationBean.tournamentVo.name}" required="true" requiredMessage="Tournament name is required." styleClass="form-control"/>
                                 </div>
                                 <div class="form-group col-sm-6">
                                     <h:outputLabel for="competitorType" value="Competitor type" styleClass="col-form-label"/>
@@ -107,7 +107,7 @@ and open the template in the editor.
                             <div class="form-row">
                                 <div class="form-group col-sm-6">
                                     <h:outputLabel for="tournamentDescription" value="Tournament Description" styleClass="col-form-label"/>
-                                    <p:inputTextarea id="tournamentDescription" rows="1" cols="90" counter="display" maxlength="100" required="true"
+                                    <p:inputTextarea id="tournamentDescription" rows="1" cols="90" counter="display" maxlength="100" required="true" requiredMessage="Description is required."
                                                      counterTemplate="{0} characters remaining." autoResize="false" value="#{tournamentRegistrationBean.tournamentVo.description}"/>
                                     <h:outputText id="display" />
                                 </div>
@@ -115,7 +115,7 @@ and open the template in the editor.
                             <div class="form-row">
                                 <div class="form-group col-sm-6">
                                     <h:outputLabel for="tournamentStart" value="Start date" styleClass="col-form-label"/>
-                                    <h:inputText id="tournamentStart" value="#{tournamentRegistrationBean.tournamentVo.start}" required="true" styleClass="form-control">
+                                    <h:inputText id="tournamentStart" value="#{tournamentRegistrationBean.tournamentVo.start}" required="true" requiredMessage="Start date is required." styleClass="form-control">
                                         <f:convertDateTime pattern="yyyy-MM-dd"/>
                                     </h:inputText>
                                 </div>

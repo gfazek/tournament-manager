@@ -5,6 +5,7 @@
  */
 package hu.unideb.gergofazekas.service;
 
+import hu.unideb.gergofazekas.entity.IndividualEliminationTournamentEntity;
 import hu.unideb.gergofazekas.entity.IndividualMatchEntity;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinStandingEntity;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
@@ -93,14 +94,14 @@ public class InitializerBean {
         teamServiceLocal.persistTeam(teamEntity3, personEntity5);
 
         TournamentEntity tournamentEntity = new IndividualRoundRobinTournamentEntity(3, 0, 1, "Premier League", "English first class championship", 20, calendarToDate(2018, 2, 1));
-        TournamentEntity teamtournamentEntity = new TeamRoundRobinTournamentEntity(3, 0, 1, "NB1", "Hungarian first class championship", 10, calendarToDate(2018, 1, 19));
+        TournamentEntity teamtournamentEntity = new TeamRoundRobinTournamentEntity(3, 0, 1, "NB1", "Hungarian first class football championship", 10, calendarToDate(2018, 1, 19));
         tournamentEntity.setStatus(TournamentStatus.IN_PROGRESS);
         teamtournamentEntity.setStatus(TournamentStatus.IN_PROGRESS);
         tournamentServiceLocal.persistTournament(tournamentEntity);
         tournamentServiceLocal.persistTournament(teamtournamentEntity);
 
         /* **************************** */
-        IndividualRoundRobinTournamentEntity tmp = new IndividualRoundRobinTournamentEntity(3, 0, 1, "PL", "English first class championship", 20, calendarToDate(2018, 2, 1));
+        IndividualEliminationTournamentEntity tmp = new IndividualEliminationTournamentEntity(2l, "UK OPEN", "Darts championship", 4, calendarToDate(2018, 2, 1));
         logger.debug("tmp competitor: {}", tmp);
         tournamentServiceLocal.persistTournament(tmp);
         logger.debug("tmp competitor after persisting: {}", tmp);

@@ -9,6 +9,7 @@ import hu.unideb.gergofazekas.entity.EliminationMatchEntity;
 import hu.unideb.gergofazekas.entity.EliminationTournamentEntity;
 import hu.unideb.gergofazekas.entity.IndividualEliminationTournamentEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
+import hu.unideb.gergofazekas.service.PersonServiceLocal;
 import hu.unideb.gergofazekas.service.TournamentServiceLocal;
 import hu.unideb.gergofazekas.utility.CompetitorType;
 import hu.unideb.gergofazekas.utility.TournamentStatus;
@@ -46,6 +47,9 @@ public class EliminationDetailBean implements Serializable {
 
     @EJB
     private TournamentServiceLocal tournamentServiceLocal;
+    
+    @EJB
+    private PersonServiceLocal personServiceLocal;
 
     public EliminationDetailBean() {
     }
@@ -68,11 +72,29 @@ public class EliminationDetailBean implements Serializable {
         Optional<PersonEntity> competitor = s.findFirst();
         return !competitor.isPresent();
     }
+    
+    public boolean showDeleteEntry() {
+        if (tournamentEntity.getCompetitorType() == CompetitorType.PLAYER) {
+            IndividualEliminationTournamentEntity tmp = (IndividualEliminationTournamentEntity) tournamentEntity;
+            for (PersonEntity personEntity : tmp.getPeople()) {
+                if (personEntity.getUsername().equals(((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     public String submitEntry() {
         String username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         tournamentServiceLocal.persistEntry(tournamentEntity.getId(), username);
         return "tournaments?faces-redirect=true&successEntry=true";
+    }
+    
+    public String deleteEntry() {
+         String username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        tournamentServiceLocal.deleteEntry(tournamentEntity.getId(), username);
+        return "tournaments?faces-redirect=true&deleteEntry=true";
     }
 
     public String kickoff() {

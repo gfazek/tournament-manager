@@ -47,7 +47,7 @@ and open the template in the editor.
                                 <h:outputText id="tournamentStatus" value="#{eliminationDetailBean.tournamentEntity.status}" />
                             </div>
                             <div class="col-md-3">
-                                <h:outputLabel for="tournamentNo" value="Given number of competitors/Registered competitors" styleClass="font-weight-bold" />
+                                <h:outputLabel for="tournamentNo" value="Competitors (Required/Registered)" styleClass="font-weight-bold" />
                             </div>
                             <div class="col-md-3">
                                 <h:outputText id="tournamentNo" value="#{eliminationDetailBean.tournamentEntity.numberOfCompetitors}/#{eliminationDetailBean.registeredCompetitors}" />
@@ -64,6 +64,9 @@ and open the template in the editor.
                         <div class="row justify-content-around"> 
                             <div class="col-md-2">
                                 <h:commandButton id="submit" rendered="#{eliminationDetailBean.showEntry()}" styleClass="btn btn-lg btn-success" value="ENTRY" action="#{eliminationDetailBean.submitEntry()}" />
+                            </div>
+                            <div class="col-md-2">
+                                <h:commandButton id="deleteEntry" rendered="#{eliminationDetailBean.showDeleteEntry()}" styleClass="btn btn-lg btn-danger" value="DELETE ENTRY" action="#{eliminationDetailBean.deleteEntry()}" />
                             </div>
                             <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
                                 <div class="col-md-2">

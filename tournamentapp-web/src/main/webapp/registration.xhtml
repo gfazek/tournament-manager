@@ -29,21 +29,21 @@ and open the template in the editor.
                                 <div class="form-row">
                                     <div class="form-group col-sm-6">
                                         <h:outputLabel for="username" value="Username" styleClass="col-form-label"/>
-                                        <h:inputText id="username" value="#{registrationBean.personEntity.username}" required="true" styleClass="form-control"/>
+                                        <h:inputText id="username" value="#{registrationBean.personEntity.username}" required="true" requiredMessage="Username is required." styleClass="form-control"/>
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <h:outputLabel for="email" value="E-mail" styleClass="col-form-label"/>
-                                        <h:inputText id="email" value="#{registrationBean.personEntity.email}" required="true" styleClass="form-control"/>
+                                        <h:inputText id="email" value="#{registrationBean.personEntity.email}" required="true" requiredMessage="Email is required." styleClass="form-control"/>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-sm-6">
                                         <h:outputLabel for="pw" value="Password" styleClass="col-form-label"/>
-                                        <h:inputSecret id="pw" value="#{registrationBean.personEntity.password}" required="true" styleClass="form-control"/>
+                                        <h:inputSecret id="pw" value="#{registrationBean.personEntity.password}" required="true" requiredMessage="Password is required." styleClass="form-control"/>
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <h:outputLabel for="pwConfirm" value="Password again" styleClass="col-form-label"/>
-                                        <h:inputSecret id="pwConfirm" required="true" styleClass="form-control"/>
+                                        <h:inputSecret id="pwConfirm" required="true" requiredMessage="Password confirmation is required." styleClass="form-control"/>
                                     </div>
                                 </div>
                                 <hr/>
@@ -51,23 +51,23 @@ and open the template in the editor.
                                 <div class="form-row">
                                     <div class="form-group col-sm-6">
                                         <h:outputLabel for="fname" value="First Name" styleClass="col-form-label"/>
-                                        <h:inputText id="fname" value="#{registrationBean.personEntity.firstName}" required="true" styleClass="form-control"/>
+                                        <h:inputText id="fname" value="#{registrationBean.personEntity.firstName}" required="true" requiredMessage="Fistname is required." styleClass="form-control"/>
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <h:outputLabel for="lname" value="Last Name" styleClass="col-form-label"/>
-                                        <h:inputText id="lname" value="#{registrationBean.personEntity.lastName}" required="true" styleClass="form-control"/>
+                                        <h:inputText id="lname" value="#{registrationBean.personEntity.lastName}" required="true" requiredMessage="LastName is required." styleClass="form-control"/>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-sm-6">
                                         <h:outputLabel for="gender" value="Gender" styleClass="col-form-label"/>
-                                        <h:selectOneRadio id="gender" value="#{registrationBean.personEntity.gender}" required="true">
+                                        <h:selectOneRadio id="gender" value="#{registrationBean.personEntity.gender}" required="true" requiredMessage="Gender is required.">
                                             <f:selectItems value="#{registrationBean.genders}" var="gender" itemValue="#{gender}" itemLabel="#{gender.name()}" />
                                         </h:selectOneRadio>
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <h:outputLabel for="dob" value="Date of birth" styleClass="col-form-label"/>
-                                        <h:inputText id="dob" value="#{registrationBean.personEntity.dob}" required="true" styleClass="form-control">
+                                        <h:inputText id="dob" value="#{registrationBean.personEntity.dob}" required="true" requiredMessage="Date of birth is required." styleClass="form-control">
                                             <f:convertDateTime pattern="yyyy-MM-dd"/>
                                         </h:inputText>
                                     </div>

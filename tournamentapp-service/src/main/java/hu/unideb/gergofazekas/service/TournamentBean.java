@@ -136,6 +136,20 @@ public class TournamentBean implements TournamentServiceLocal {
         tournamentEntity.setStatus(TournamentStatus.CLOSED);
         em.merge(tournamentEntity);
     }
+
+    @Override
+    public void deleteEntry(Long tournamentId, String username) {
+        TournamentEntity tournamentEntity = findTournament(tournamentId);
+        PersonEntity personEntity = personServiceLocal.findByUsername(username);
+        if (isIndividualRoundRobin(tournamentEntity)) {
+            IndividualRoundRobinTournamentEntity tmp = (IndividualRoundRobinTournamentEntity) tournamentEntity;
+            tmp.getPeople().remove(personEntity);
+            personEntity.getRoundRobinTournaments().remove((IndividualRoundRobinTournamentEntity) tournamentEntity);
+        } else if (isIndividualElimination(tournamentEntity)) {
+            IndividualEliminationTournamentEntity iet  = (IndividualEliminationTournamentEntity) tournamentEntity;
+            iet.getPeople().remove(personEntity);
+        }
+    }
     
     private boolean isIndividualRoundRobin(TournamentEntity tournamentEntity) {
         return tournamentEntity.getType() == TournamentType.ROUNDROBIN 
