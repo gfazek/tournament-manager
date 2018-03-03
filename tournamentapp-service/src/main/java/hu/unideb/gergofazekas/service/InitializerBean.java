@@ -11,37 +11,24 @@ import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
 import hu.unideb.gergofazekas.entity.MatchEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.RoleEntity;
-import hu.unideb.gergofazekas.entity.StandingEntity;
 import hu.unideb.gergofazekas.entity.TeamEntity;
 import hu.unideb.gergofazekas.entity.TeamRoundRobinTournamentEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
-import hu.unideb.gergofazekas.service.util.PersonPasswordEncoder;
-import hu.unideb.gergofazekas.utility.CompetitorType;
 import hu.unideb.gergofazekas.utility.Gender;
 import hu.unideb.gergofazekas.utility.MatchStatus;
 import hu.unideb.gergofazekas.utility.Role;
 import hu.unideb.gergofazekas.utility.TournamentStatus;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import java.util.logging.Level;
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.UserTransaction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  *
@@ -105,15 +92,15 @@ public class InitializerBean {
         teamServiceLocal.persistTeam(teamEntity2, personEntity2);
         teamServiceLocal.persistTeam(teamEntity3, personEntity5);
 
-        TournamentEntity tournamentEntity = new IndividualRoundRobinTournamentEntity("Premier League", "English first class championship", 20, calendarToDate(2018, 2, 1), 3, 1, 0);
-        TournamentEntity teamtournamentEntity = new TeamRoundRobinTournamentEntity("NB1", "Hungarian first class championship", 10, calendarToDate(2018, 1, 19), 3, 1, 0);
+        TournamentEntity tournamentEntity = new IndividualRoundRobinTournamentEntity(3, 0, 1, "Premier League", "English first class championship", 20, calendarToDate(2018, 2, 1));
+        TournamentEntity teamtournamentEntity = new TeamRoundRobinTournamentEntity(3, 0, 1, "NB1", "Hungarian first class championship", 10, calendarToDate(2018, 1, 19));
         tournamentEntity.setStatus(TournamentStatus.IN_PROGRESS);
         teamtournamentEntity.setStatus(TournamentStatus.IN_PROGRESS);
         tournamentServiceLocal.persistTournament(tournamentEntity);
         tournamentServiceLocal.persistTournament(teamtournamentEntity);
 
         /* **************************** */
-        IndividualRoundRobinTournamentEntity tmp = new IndividualRoundRobinTournamentEntity("PL", "English first class championship", 20, calendarToDate(2018, 2, 1), 3, 1, 0);
+        IndividualRoundRobinTournamentEntity tmp = new IndividualRoundRobinTournamentEntity(3, 0, 1, "PL", "English first class championship", 20, calendarToDate(2018, 2, 1));
         logger.debug("tmp competitor: {}", tmp);
         tournamentServiceLocal.persistTournament(tmp);
         logger.debug("tmp competitor after persisting: {}", tmp);

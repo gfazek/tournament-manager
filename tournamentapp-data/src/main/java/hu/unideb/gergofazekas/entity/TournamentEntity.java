@@ -7,6 +7,7 @@ package hu.unideb.gergofazekas.entity;
 
 import hu.unideb.gergofazekas.utility.CompetitorType;
 import hu.unideb.gergofazekas.utility.TournamentStatus;
+import hu.unideb.gergofazekas.utility.TournamentType;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,7 +34,7 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "TOURNAMENT")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "TYPE")
+@DiscriminatorColumn(name = "DTYPE")
 @NamedQueries({
     @NamedQuery(name = "Tournament.findAll", query = "SELECT t FROM TournamentEntity t"),
     @NamedQuery(name = "Tournament.findOpens", query = "SELECT t FROM TournamentEntity t WHERE t.status = hu.unideb.gergofazekas.utility.TournamentStatus.OPEN")
@@ -54,6 +55,16 @@ public abstract class TournamentEntity extends BaseEntity implements Serializabl
     private TournamentStatus status;
     
     @Basic(optional = false)
+    @Column(name = "COMPETITORTYPE")
+    @Enumerated(EnumType.STRING)
+    private CompetitorType competitorType;
+    
+    @Basic(optional = false)
+    @Column(name = "TYPE")
+    @Enumerated(EnumType.STRING)
+    private TournamentType type;
+    
+    @Basic(optional = false)
     @Column(name = "NOCOMPETITORS")
     private int numberOfCompetitors;
     
@@ -71,15 +82,19 @@ public abstract class TournamentEntity extends BaseEntity implements Serializabl
     public TournamentEntity() {
     }
 
-    public TournamentEntity(String name, String description, int numberOfCompetitors, Date start) {
+    public TournamentEntity(String name, String description, CompetitorType competitorType, TournamentType type, int numberOfCompetitors, Date start) {
         this.name = name;
         this.description = description;
-        this.status = TournamentStatus.OPEN;
+        this.competitorType = competitorType;
+        this.type = type;
         this.numberOfCompetitors = numberOfCompetitors;
         this.start = start;
+        this.status = TournamentStatus.OPEN;
         this.matches = new ArrayList<>();
         this.standings = new ArrayList<>();
     }
+    
+    
 
     public String getName() {
         return name;
@@ -135,6 +150,22 @@ public abstract class TournamentEntity extends BaseEntity implements Serializabl
 
     public void setStandings(List<StandingEntity> standings) {
         this.standings = standings;
+    }
+
+    public CompetitorType getCompetitorType() {
+        return competitorType;
+    }
+
+    public void setCompetitorType(CompetitorType competitorType) {
+        this.competitorType = competitorType;
+    }
+
+    public TournamentType getType() {
+        return type;
+    }
+
+    public void setType(TournamentType type) {
+        this.type = type;
     }
 
     @Override

@@ -8,8 +8,6 @@ package hu.unideb.gergofazekas.web.bean;
 import hu.unideb.gergofazekas.web.utility.CompetitorType;
 import hu.unideb.gergofazekas.web.utility.TournamentType;
 import java.util.Date;
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Named;
 
 /**
  *
@@ -19,7 +17,6 @@ public class TournamentVo {
     
     private String name;
     private String description;
-    private TournamentType tournamentType;
     private CompetitorType competitorType;
     private Date start;
     private int winPoint;
@@ -41,14 +38,6 @@ public class TournamentVo {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public TournamentType getTournamentType() {
-        return tournamentType;
-    }
-
-    public void setTournamentType(TournamentType tournamentType) {
-        this.tournamentType = tournamentType;
     }
 
     public CompetitorType getCompetitorType() {

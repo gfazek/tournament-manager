@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:dt="http://java.sun.com/jsf/composite/components"
+                xmlns:p="http://primefaces.org/ui"
+                template="../template.xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:sec="http://www.springframework.org/security/tags">
+
+    <ui:define name="customHead">
+        <title>Tournament Details</title>
+    </ui:define>
+    <ui:define name="customContent">
+        <h:messages />
+        <div class="container">
+            <h:form id="detailsform" rendered="#{not empty eliminationDetailBean.tournamentEntity}">
+                <div class="custom-card">
+                    <h4 class="custom-card-header">#{eliminationDetailBean.tournamentEntity.name}</h4>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h:outputLabel for="tournamentName" value="Name" styleClass="font-weight-bold"/>
+                            </div>
+                            <div class="col-md-3">
+                                <h:outputText id="tournamentName" value="#{eliminationDetailBean.tournamentEntity.name}"/>
+                            </div>
+                            <div class="col-md-3">
+                                <h:outputLabel for="tournamentType" value="Type" styleClass="font-weight-bold"/>
+                            </div>
+                            <div class="col-md-3">
+                                <h:outputText id="tournamentType" value="Elimination" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h:outputLabel for="tournamentStatus" value="Status" styleClass="font-weight-bold" />
+                            </div>
+                            <div class="col-md-3">
+                                <h:outputText id="tournamentStatus" value="#{eliminationDetailBean.tournamentEntity.status}" />
+                            </div>
+                            <div class="col-md-3">
+                                <h:outputLabel for="tournamentNo" value="Given number of competitors" styleClass="font-weight-bold" />
+                            </div>
+                            <div class="col-md-3">
+                                <h:outputText id="tournamentNo" value="#{eliminationDetailBean.tournamentEntity.numberOfCompetitors}" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h:outputLabel for="tournamentDescription" value="Description" styleClass="font-weight-bold" />
+                            </div>
+                            <div class="col-md-9">
+                                <h:outputText id="tournamentDescription" value="#{eliminationDetailBean.tournamentEntity.description}" />
+                            </div>
+                        </div>
+                        <div class="row justify-content-around"> 
+                            <div class="col-md-2">
+                                <h:commandButton id="submit" rendered="#{eliminationDetailBean.showEntry()}" styleClass="btn btn-lg btn-success" value="ENTRY" action="#{eliminationDetailBean.submitEntry()}" />
+                            </div>
+                            <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
+                                <div class="col-md-2">
+                                    <h:commandButton id="kickoff" rendered="#{eliminationDetailBean.tournamentEntity.status eq 'OPEN'}" styleClass="btn btn-lg btn-primary" value="KICK OFF" action="#{eliminationDetailBean.kickoff()}"/>
+                                </div>
+                            </sec:authorize>
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+            <h:form id="matchesform" rendered="#{not empty eliminationDetailBean.tournamentEntity and 
+                                                 (eliminationDetailBean.tournamentEntity.status eq 'IN_PROGRESS' or eliminationDetailBean.tournamentEntity.status eq 'CLOSED')}">
+                <div class="custom-card">
+                    <h4 class="custom-card-header">Matches</h4>
+                    <div class="card-body">
+                        <p:panelGrid style="width: 100%" id="matchesgrid">
+                            <f:facet name="header">
+                                <p:row>
+                                    <p:column colspan="2">COMPETITORS</p:column>
+                                    <p:column colspan="2">RESULT/STATUS</p:column>
+                                </p:row>
+                            </f:facet>
+                            <p:repeat value="#{eliminationDetailBean.matches}" var="match">
+                                <p:row>
+                                    <p:column colspan="3" style="font-weight: bold; text-align: center">#{match.homeCompetitor.username}</p:column>
+                                    <p:column colspan="1" rendered="#{match.status eq 'FINISHED'}" style="font-weight: bold; text-align: center">#{match.homeScore}</p:column>
+                                    <p:column colspan="2" rowspan="2" rendered="#{match.status eq 'NEW'}" style="font-weight: bold; text-align: center; border-bottom-width: 3px;">
+                                        <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
+                                            <p:commandButton update=":scheduleform:schedulepanel" oncomplete="PF('scheduledlgwdg').show()" value="Schedule" action="#{eliminationDetailBean.setSelectedMatch(match)}"/>
+                                        </sec:authorize>
+                                        <sec:authorize access="!hasRole('ROLE_SUPERVISOR')">
+                                            NOT SCHEDULED YET
+                                        </sec:authorize>
+                                    </p:column>
+                                    <p:column colspan="2" rowspan="2" rendered="#{match.status eq 'SCHEDULED'}" style="font-weight: bold; text-align: center; border-bottom-width: 3px;">
+                                        <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
+                                            <p:commandButton update=":resultform:resultpanel" oncomplete="PF('resultdlgwdg').show()" value="Add result" action="#{eliminationDetailBean.setSelectedMatch(match)}"/>
+                                        </sec:authorize>
+                                        <sec:authorize access="!hasRole('ROLE_SUPERVISOR')">
+                                            <h:outputText value="Will be played at, " />
+                                            <h:outputText value="#{match.time}">
+                                                <f:convertDateTime pattern="yyyy.MM.dd HH:mm" />
+                                            </h:outputText>
+                                        </sec:authorize>
+                                    </p:column>
+                                </p:row>
+                                <p:row> 
+                                    <p:column colspan="3" style="font-weight: bold; text-align: center; border-bottom-width: 3px;">#{match.awayCompetitor.username}</p:column>
+                                    <p:column colspan="1" rendered="#{match.status eq 'FINISHED'}" style="font-weight: bold; text-align: center; border-bottom-width: 3px;">#{match.awayScore}</p:column>
+                                </p:row>
+                            </p:repeat>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </h:form>
+
+            <p:dialog header="Add result" widgetVar="resultdlgwdg" resizable="false" id="resultdlg">
+                <h:form id="resultform">
+                    <h:panelGrid columns="2" cellpadding="5" id="resultpanel">
+                        <p:outputLabel for="homeScore" value="#{eliminationDetailBean.selectedMatch.homeCompetitor.username}: " />
+                        <p:inputNumber id="homeScore" value="#{eliminationDetailBean.homeScore}" />
+                        <p:outputLabel for="awayScore" value="#{eliminationDetailBean.selectedMatch.awayCompetitor.username}: " />
+                        <p:inputNumber id="awayScore" value="#{eliminationDetailBean.awayScore}" />
+                        <f:facet name="footer">
+                            <p:commandButton update=":matchesform:matchesgrid :detailsform" value="Register result" action="#{eliminationDetailBean.registerResult}" oncomplete="PF('resultdlgwdg').hide();" />
+                        </f:facet>  
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>
+            <p:dialog header="Add schedule" widgetVar="scheduledlgwdg" resizable="false" id="scheduledlg">
+                <h:form id="scheduleform">
+                    <h:panelGrid columns="2" cellpadding="5" id="schedulepanel">
+                        <p:outputLabel for="startTime" value="Start time: " />
+                        <p:calendar id="startTime" value="#{eliminationDetailBean.matchTime}" pattern="MM/dd/yyyy HH:mm" showOn="button" />
+                        <f:facet name="footer">
+                            <p:commandButton update=":matchesform:matchesgrid" value="Set match time" action="#{eliminationDetailBean.scheduleMatch}" oncomplete="PF('scheduledlgwdg').hide();" />
+                        </f:facet>  
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>
+            <p:messages />
+        </div>
+    </ui:define>
+</ui:composition>

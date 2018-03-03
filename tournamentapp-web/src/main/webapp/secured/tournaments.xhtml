@@ -38,7 +38,7 @@ and open the template in the editor.
                                                             </p:outputPanel>
                                                         </f:facet>-->
                             <p:column headerText="Name" filterBy="#{tournament.name}">
-                                <p:link value="#{tournament.name}" outcome="/secured/tournament">
+                                <p:link value="#{tournament.name}" outcome="#{openTournamentsBean.navigateToDetailPage(tournament)}">
                                     <f:param name="id" value="#{tournament.id}" />
                                 </p:link>
                             </p:column>

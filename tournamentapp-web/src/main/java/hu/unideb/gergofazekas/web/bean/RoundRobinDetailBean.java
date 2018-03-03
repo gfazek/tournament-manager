@@ -8,7 +8,6 @@ package hu.unideb.gergofazekas.web.bean;
 import hu.unideb.gergofazekas.entity.IndividualMatchEntity;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinStandingEntity;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
-import hu.unideb.gergofazekas.entity.MatchEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.StandingEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
@@ -21,19 +20,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.primefaces.component.outputlabel.OutputLabel;
-import org.primefaces.context.RequestContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -43,9 +38,9 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 @Named
 @ViewScoped
-public class TournamentDetailBean implements Serializable {
+public class RoundRobinDetailBean implements Serializable {
 
-    private static final Logger logger = LogManager.getLogger(TournamentDetailBean.class);
+    private static final Logger logger = LogManager.getLogger(RoundRobinDetailBean.class);
 
     private TournamentEntity tournamentEntity;
     private List<IndividualMatchEntity> matches;
@@ -63,7 +58,7 @@ public class TournamentDetailBean implements Serializable {
     @EJB
     private StandingServiceLocal standingServiceLocal;
 
-    public TournamentDetailBean() {
+    public RoundRobinDetailBean() {
     }
 
     @PostConstruct
@@ -94,21 +89,14 @@ public class TournamentDetailBean implements Serializable {
         if (tournamentEntity.getStatus() != TournamentStatus.OPEN) {
             return false;
         }
-        if (tournamentEntity instanceof IndividualRoundRobinTournamentEntity) {
-            IndividualRoundRobinTournamentEntity tmp = (IndividualRoundRobinTournamentEntity) tournamentEntity;
-            List<PersonEntity> competitors = tmp.getPeople();
-            logger.debug("CompetitorS: {}", competitors);
-            Stream<PersonEntity> s = competitors.stream()
-                    .filter(p -> p.getUsername().equals(((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername()));
-            logger.debug("It gets null value?: {}", s);
-            Optional<PersonEntity> competitor = s.findFirst();
-            return !competitor.isPresent();
-//            Optional<PersonEntity> competitor = competitors.stream()
-//                    .filter(p -> p.getUsername().equals(((UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername()))
-//                    .findFirst();
-//            return !competitor.isPresent();
-        }
-        return true;
+        IndividualRoundRobinTournamentEntity tmp = (IndividualRoundRobinTournamentEntity) tournamentEntity;
+        List<PersonEntity> competitors = tmp.getPeople();
+        logger.debug("CompetitorS: {}", competitors);
+        Stream<PersonEntity> s = competitors.stream()
+                .filter(p -> p.getUsername().equals(((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername()));
+        logger.debug("It gets null value?: {}", s);
+        Optional<PersonEntity> competitor = s.findFirst();
+        return !competitor.isPresent();
     }
 
     public void scheduleMatch() {
@@ -151,10 +139,6 @@ public class TournamentDetailBean implements Serializable {
     }
 
     public List<IndividualRoundRobinStandingEntity> getStandings() {
-//        return tournamentEntity.getStandings()
-//                .stream()
-//                .map(e -> (IndividualRoundRobinStandingEntity) e)
-//                .collect(Collectors.toList());
         return standings;
     }
 

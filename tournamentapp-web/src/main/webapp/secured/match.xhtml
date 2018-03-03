@@ -73,7 +73,7 @@ and open the template in the editor.
                         <p:outputLabel for="homeScore" value="#{matchDetailBean.matchEntity.homeCompetitor.username}: " />
                         <p:inputNumber id="homeScore" value="#{matchDetailBean.homeScore}" />
                         <p:outputLabel for="awayScore" value="#{matchDetailBean.matchEntity.awayCompetitor.username}: " />
-                        <p:inputNumber id="awayScore" value="#{tournamentDetailBean.awayScore}" />
+                        <p:inputNumber id="awayScore" value="#{roundRobinDetailBean.awayScore}" />
                         <f:facet name="footer">
                             <p:commandButton update=":detailsform" value="Register result" action="#{matchDetailBean.registerResult}" oncomplete="PF('resultdlgwdg').hide();" />
                         </f:facet>  

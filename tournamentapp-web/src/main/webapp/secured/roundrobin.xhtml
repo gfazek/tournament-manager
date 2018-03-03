@@ -21,22 +21,22 @@ and open the template in the editor.
     <ui:define name="customContent">
         <h:messages />
         <div class="container">
-            <h:form id="detailsform" rendered="#{not empty tournamentDetailBean.tournamentEntity}">
+            <h:form id="detailsform" rendered="#{not empty roundRobinDetailBean.tournamentEntity}">
                 <div class="custom-card">
-                    <h4 class="custom-card-header">#{tournamentDetailBean.tournamentEntity.name}</h4>
+                    <h4 class="custom-card-header">#{roundRobinDetailBean.tournamentEntity.name}</h4>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-3">
                                 <h:outputLabel for="tournamentName" value="Name" styleClass="font-weight-bold"/>
                             </div>
                             <div class="col-md-3">
-                                <h:outputText id="tournamentName" value="#{tournamentDetailBean.tournamentEntity.name}"/>
+                                <h:outputText id="tournamentName" value="#{roundRobinDetailBean.tournamentEntity.name}"/>
                             </div>
                             <div class="col-md-3">
                                 <h:outputLabel for="tournamentType" value="Type" styleClass="font-weight-bold"/>
                             </div>
                             <div class="col-md-3">
-                                <h:outputText id="tournamentType" value="{TYPE}" />
+                                <h:outputText id="tournamentType" value="Round Robin" />
                             </div>
                         </div>
                         <div class="row">
@@ -44,13 +44,13 @@ and open the template in the editor.
                                 <h:outputLabel for="tournamentStatus" value="Status" styleClass="font-weight-bold" />
                             </div>
                             <div class="col-md-3">
-                                <h:outputText id="tournamentStatus" value="#{tournamentDetailBean.tournamentEntity.status}" />
+                                <h:outputText id="tournamentStatus" value="#{roundRobinDetailBean.tournamentEntity.status}" />
                             </div>
                             <div class="col-md-3">
                                 <h:outputLabel for="tournamentNo" value="Given number of competitors" styleClass="font-weight-bold" />
                             </div>
                             <div class="col-md-3">
-                                <h:outputText id="tournamentNo" value="#{tournamentDetailBean.tournamentEntity.numberOfCompetitors}" />
+                                <h:outputText id="tournamentNo" value="#{roundRobinDetailBean.tournamentEntity.numberOfCompetitors}" />
                             </div>
                         </div>
                         <div class="row">
@@ -58,24 +58,24 @@ and open the template in the editor.
                                 <h:outputLabel for="tournamentDescription" value="Description" styleClass="font-weight-bold" />
                             </div>
                             <div class="col-md-9">
-                                <h:outputText id="tournamentDescription" value="#{tournamentDetailBean.tournamentEntity.description}" />
+                                <h:outputText id="tournamentDescription" value="#{roundRobinDetailBean.tournamentEntity.description}" />
                             </div>
                         </div>
                         <div class="row justify-content-around"> 
                             <div class="col-md-2">
-                                <h:commandButton id="submit" rendered="#{tournamentDetailBean.showEntry()}" styleClass="btn btn-lg btn-success" value="ENTRY" action="#{tournamentDetailBean.submitEntry()}" />
+                                <h:commandButton id="submit" rendered="#{roundRobinDetailBean.showEntry()}" styleClass="btn btn-lg btn-success" value="ENTRY" action="#{roundRobinDetailBean.submitEntry()}" />
                             </div>
                             <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
                                 <div class="col-md-2">
-                                    <h:commandButton id="kickoff" rendered="#{tournamentDetailBean.tournamentEntity.status eq 'OPEN'}" styleClass="btn btn-lg btn-primary" value="KICK OFF" action="#{tournamentDetailBean.kickoff()}"/>
+                                    <h:commandButton id="kickoff" rendered="#{roundRobinDetailBean.tournamentEntity.status eq 'OPEN'}" styleClass="btn btn-lg btn-primary" value="KICK OFF" action="#{roundRobinDetailBean.kickoff()}"/>
                                 </div>
                             </sec:authorize>
                         </div>
                     </div>
                 </div>
             </h:form>
-            <h:form id="standingsform" rendered="#{not empty tournamentDetailBean.tournamentEntity and 
-                                                   (tournamentDetailBean.tournamentEntity.status eq 'IN_PROGRESS' or tournamentDetailBean.tournamentEntity.status eq 'CLOSED')}">
+            <h:form id="standingsform" rendered="#{not empty roundRobinDetailBean.tournamentEntity and 
+                                                   (roundRobinDetailBean.tournamentEntity.status eq 'IN_PROGRESS' or roundRobinDetailBean.tournamentEntity.status eq 'CLOSED')}">
                 <div class="custom-card">
                     <h4 class="custom-card-header">Standings</h4>
                     <div class="card-body">
@@ -91,7 +91,7 @@ and open the template in the editor.
                                     <p:column>Points</p:column>
                                 </p:row>
                             </f:facet>
-                            <p:repeat value="#{tournamentDetailBean.standings}" var="standing">
+                            <p:repeat value="#{roundRobinDetailBean.standings}" var="standing">
                                 <p:row>
                                     <p:column style="font-weight: bold; text-align: center">Pos.</p:column>
                                     <p:column style="font-weight: bold; text-align: center">#{standing.personEntity.username}</p:column>
@@ -106,8 +106,8 @@ and open the template in the editor.
                     </div>
                 </div>
             </h:form>
-            <h:form id="matchesform" rendered="#{not empty tournamentDetailBean.tournamentEntity and 
-                                                 (tournamentDetailBean.tournamentEntity.status eq 'IN_PROGRESS' or tournamentDetailBean.tournamentEntity.status eq 'CLOSED')}">
+            <h:form id="matchesform" rendered="#{not empty roundRobinDetailBean.tournamentEntity and 
+                                                 (roundRobinDetailBean.tournamentEntity.status eq 'IN_PROGRESS' or roundRobinDetailBean.tournamentEntity.status eq 'CLOSED')}">
                 <div class="custom-card">
                     <h4 class="custom-card-header">Matches</h4>
                     <div class="card-body">
@@ -118,13 +118,13 @@ and open the template in the editor.
                                     <p:column colspan="2">RESULT/STATUS</p:column>
                                 </p:row>
                             </f:facet>
-                            <p:repeat value="#{tournamentDetailBean.matches}" var="match">
+                            <p:repeat value="#{roundRobinDetailBean.matches}" var="match">
                                 <p:row>
                                     <p:column colspan="3" style="font-weight: bold; text-align: center">#{match.homeCompetitor.username}</p:column>
                                     <p:column colspan="1" rendered="#{match.status eq 'FINISHED'}" style="font-weight: bold; text-align: center">#{match.homeScore}</p:column>
                                     <p:column colspan="2" rowspan="2" rendered="#{match.status eq 'NEW'}" style="font-weight: bold; text-align: center; border-bottom-width: 3px;">
                                         <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
-                                            <p:commandButton update=":scheduleform:schedulepanel" oncomplete="PF('scheduledlgwdg').show()" value="Schedule" action="#{tournamentDetailBean.setSelectedMatch(match)}"/>
+                                            <p:commandButton update=":scheduleform:schedulepanel" oncomplete="PF('scheduledlgwdg').show()" value="Schedule" action="#{roundRobinDetailBean.setSelectedMatch(match)}"/>
                                         </sec:authorize>
                                         <sec:authorize access="!hasRole('ROLE_SUPERVISOR')">
                                             NOT SCHEDULED YET
@@ -132,7 +132,7 @@ and open the template in the editor.
                                     </p:column>
                                     <p:column colspan="2" rowspan="2" rendered="#{match.status eq 'SCHEDULED'}" style="font-weight: bold; text-align: center; border-bottom-width: 3px;">
                                         <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
-                                            <p:commandButton update=":resultform:resultpanel" oncomplete="PF('resultdlgwdg').show()" value="Add result" action="#{tournamentDetailBean.setSelectedMatch(match)}"/>
+                                            <p:commandButton update=":resultform:resultpanel" oncomplete="PF('resultdlgwdg').show()" value="Add result" action="#{roundRobinDetailBean.setSelectedMatch(match)}"/>
                                         </sec:authorize>
                                         <sec:authorize access="!hasRole('ROLE_SUPERVISOR')">
                                             <h:outputText value="Will be played at, " />
@@ -155,12 +155,12 @@ and open the template in the editor.
             <p:dialog header="Add result" widgetVar="resultdlgwdg" resizable="false" id="resultdlg">
                 <h:form id="resultform">
                     <h:panelGrid columns="2" cellpadding="5" id="resultpanel">
-                        <p:outputLabel for="homeScore" value="#{tournamentDetailBean.selectedMatch.homeCompetitor.username}: " />
-                        <p:inputNumber id="homeScore" value="#{tournamentDetailBean.homeScore}" />
-                        <p:outputLabel for="awayScore" value="#{tournamentDetailBean.selectedMatch.awayCompetitor.username}: " />
-                        <p:inputNumber id="awayScore" value="#{tournamentDetailBean.awayScore}" />
+                        <p:outputLabel for="homeScore" value="#{roundRobinDetailBean.selectedMatch.homeCompetitor.username}: " />
+                        <p:inputNumber id="homeScore" value="#{roundRobinDetailBean.homeScore}" />
+                        <p:outputLabel for="awayScore" value="#{roundRobinDetailBean.selectedMatch.awayCompetitor.username}: " />
+                        <p:inputNumber id="awayScore" value="#{roundRobinDetailBean.awayScore}" />
                         <f:facet name="footer">
-                            <p:commandButton update=":matchesform:matchesgrid :standingsform:standingsgrid :detailsform" value="Register result" action="#{tournamentDetailBean.registerResult}" oncomplete="PF('resultdlgwdg').hide();" />
+                            <p:commandButton update=":matchesform:matchesgrid :standingsform:standingsgrid :detailsform" value="Register result" action="#{roundRobinDetailBean.registerResult}" oncomplete="PF('resultdlgwdg').hide();" />
                         </f:facet>  
                     </h:panelGrid>
                 </h:form>
@@ -169,9 +169,9 @@ and open the template in the editor.
                 <h:form id="scheduleform">
                     <h:panelGrid columns="2" cellpadding="5" id="schedulepanel">
                         <p:outputLabel for="startTime" value="Start time: " />
-                        <p:calendar id="startTime" value="#{tournamentDetailBean.matchTime}" pattern="MM/dd/yyyy HH:mm" showOn="button" />
+                        <p:calendar id="startTime" value="#{roundRobinDetailBean.matchTime}" pattern="MM/dd/yyyy HH:mm" showOn="button" />
                         <f:facet name="footer">
-                            <p:commandButton update=":matchesform:matchesgrid" value="Set match time" action="#{tournamentDetailBean.scheduleMatch}" oncomplete="PF('scheduledlgwdg').hide();" />
+                            <p:commandButton update=":matchesform:matchesgrid" value="Set match time" action="#{roundRobinDetailBean.scheduleMatch}" oncomplete="PF('scheduledlgwdg').hide();" />
                         </f:facet>  
                     </h:panelGrid>
                 </h:form>

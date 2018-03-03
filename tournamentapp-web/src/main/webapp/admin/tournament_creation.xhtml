@@ -23,47 +23,52 @@ and open the template in the editor.
                 <div class="card-body">
                     <h4 class="card-title">Creating tournaments</h4>
                     <p class="card-text">Fill the form below to create a tournament</p>
-                    <h:form id="registrationForm">
-                        <h5>Details</h5>
-                        <p:outputLabel for="tournamentType" value="Type of the tournament: " />
-                        <h:selectOneMenu id="tournamentType" onchange="showTournamentType(this.value)" value="#{tournamentRegistrationBean.tournamentVo.tournamentType}">
+                    <h5>At first please specify the tournament type</h5>
+                    <h:form>
+                        <h:outputLabel for="tournamentType" value="Type of the tournament: " />
+                        <h:selectOneMenu id="tournamentType" value="#{tournamentRegistrationBean.tournamentType}">
                             <f:selectItems value="#{tournamentRegistrationBean.tournamentTypes}" var="tournamentType" itemValue="#{tournamentType}" itemLabel="#{tournamentType.name()}" />
+                            <f:ajax render=":roundRobin :elimination" />
                         </h:selectOneMenu>
-                        <div class="form-row">
-                            <div class="form-group col-sm-6">
-                                <h:outputLabel for="tournamentname" value="Tournament Name" styleClass="col-form-label"/>
-                                <h:inputText id="tournamentname" value="#{tournamentRegistrationBean.tournamentVo.name}" required="true" styleClass="form-control"/>
+                    </h:form>
+                    <h:panelGroup id="roundRobin">
+                        <h:form id="roundrobinForm" rendered="#{tournamentRegistrationBean.tournamentType eq 'ROUNDROBIN'}">
+                            <div class="form-row">
+                                <div class="form-group col-sm-6">
+                                    <h:outputLabel for="tournamentname" value="Tournament Name" styleClass="col-form-label"/>
+                                    <h:inputText id="tournamentname" value="#{tournamentRegistrationBean.tournamentVo.name}" required="true" styleClass="form-control"/>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <h:outputLabel for="competitorType" value="Competitor type" styleClass="col-form-label"/>
+                                    <h:selectOneRadio id="competitorType" value="#{tournamentRegistrationBean.tournamentVo.competitorType}" required="true">
+                                        <f:selectItems value="#{tournamentRegistrationBean.competitorTypes}" var="competitorType" itemValue="#{competitorType}" itemLabel="#{competitorType.name()}" />
+                                    </h:selectOneRadio>
+                                </div>
                             </div>
-                            <div class="form-group col-sm-6">
-                                <h:outputLabel for="competitorType" value="Competitor type" styleClass="col-form-label"/>
-                                <h:selectOneRadio id="competitorType" value="#{tournamentRegistrationBean.tournamentVo.competitorType}" required="true">
-                                    <f:selectItems value="#{tournamentRegistrationBean.competitorTypes}" var="competitorType" itemValue="#{competitorType}" itemLabel="#{competitorType.name()}" />
-                                </h:selectOneRadio>
+                            <div class="form-row">
+                                <div class="form-group col-sm-6">
+                                    <h:outputLabel for="tournamentDescription" value="Tournament Description" styleClass="col-form-label"/>
+                                    <p:inputTextarea id="tournamentDescription" rows="1" cols="90" counter="display" maxlength="100" required="true"
+                                                     counterTemplate="{0} characters remaining." autoResize="false" value="#{tournamentRegistrationBean.tournamentVo.description}"/>
+                                    <h:outputText id="display" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-sm-6">
-                                <h:outputLabel for="tournamentDescription" value="Tournament Description" styleClass="col-form-label"/>
-                                <p:inputTextarea id="tournamentDescription" rows="1" cols="90" counter="display" maxlength="100" 
-                                                 counterTemplate="{0} characters remaining." autoResize="false" value="#{tournamentRegistrationBean.tournamentVo.description}"/>
-                                <h:outputText id="display" />
+                            <div class="form-row">
+                                <div class="form-group col-sm-6">
+                                    <h:outputLabel for="tournamentStart" value="Start date" styleClass="col-form-label"/>
+                                    <h:inputText id="tournamentStart" value="#{tournamentRegistrationBean.tournamentVo.start}" required="true" styleClass="form-control">
+                                        <f:convertDateTime pattern="yyyy-MM-dd"/>
+                                    </h:inputText>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-sm-6">
-                                <h:outputLabel for="numberOfCompetitors" value="Number of Competitors" styleClass="col-form-label"/>
-                                <h:inputText id="numberOfCompetitors" value="#{tournamentRegistrationBean.tournamentVo.numberOfCompetitors}" required="true" styleClass="form-control"/>
-                            </div>
-                            <div class="form-group col-sm-6">
-                                <h:outputLabel for="tournamentStart" value="Start date" styleClass="col-form-label"/>
-                                <h:inputText id="tournamentStart" value="#{tournamentRegistrationBean.tournamentVo.start}" required="true" styleClass="form-control">
-                                    <f:convertDateTime pattern="yyyy-MM-dd"/>
+                            <hr/>
+                            <h5>Round Robin Parameters</h5>
+                            <div class="form-row">
+                                <h:outputLabel for="numberOfCompetitorsRRoundRobin" value="Number of Competitors" styleClass="col-form-label"/>
+                                <h:inputText id="numberOfCompetitorsRoundRobin" value="#{tournamentRegistrationBean.tournamentVo.numberOfCompetitors}" styleClass="form-control">
+                                    <f:validateLongRange minimum="2" maximum="30" />
                                 </h:inputText>
                             </div>
-                        </div>
-                        <hr/>
-                        <div id="roundrobin">
-                            <h5>Parameters</h5>
                             <div class="form-row">
                                 <div class="form-group col-sm-4">
                                     <h:outputLabel for="winpoint" value="Win point" styleClass="col-form-label"/>
@@ -83,10 +88,63 @@ and open the template in the editor.
                                     <h:commandButton id="submit" styleClass="btn btn-primary" value="CREATE" action="#{tournamentRegistrationBean.createTournament()}"/>
                                 </div>
                             </div>
-                        </div>
-                    </h:form>
+                        </h:form>
+                    </h:panelGroup>
+                    <h:panelGroup id="elimination">
+                        <h:form id="eliminationForm" rendered="#{tournamentRegistrationBean.tournamentType eq 'ELIMINATION'}">
+                            <div class="form-row">
+                                <div class="form-group col-sm-6">
+                                    <h:outputLabel for="tournamentname" value="Tournament Name" styleClass="col-form-label"/>
+                                    <h:inputText id="tournamentname" value="#{tournamentRegistrationBean.tournamentVo.name}" required="true" styleClass="form-control"/>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <h:outputLabel for="competitorType" value="Competitor type" styleClass="col-form-label"/>
+                                    <h:selectOneRadio id="competitorType" value="#{tournamentRegistrationBean.tournamentVo.competitorType}" required="true">
+                                        <f:selectItems value="#{tournamentRegistrationBean.competitorTypes}" var="competitorType" itemValue="#{competitorType}" itemLabel="#{competitorType.name()}" />
+                                    </h:selectOneRadio>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-sm-6">
+                                    <h:outputLabel for="tournamentDescription" value="Tournament Description" styleClass="col-form-label"/>
+                                    <p:inputTextarea id="tournamentDescription" rows="1" cols="90" counter="display" maxlength="100" required="true"
+                                                     counterTemplate="{0} characters remaining." autoResize="false" value="#{tournamentRegistrationBean.tournamentVo.description}"/>
+                                    <h:outputText id="display" />
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-sm-6">
+                                    <h:outputLabel for="tournamentStart" value="Start date" styleClass="col-form-label"/>
+                                    <h:inputText id="tournamentStart" value="#{tournamentRegistrationBean.tournamentVo.start}" required="true" styleClass="form-control">
+                                        <f:convertDateTime pattern="yyyy-MM-dd"/>
+                                    </h:inputText>
+                                </div>
+                            </div>
+                            <h5>Elimination Parameters</h5> 
+                            <div class="form-row">
+                                <h:outputLabel for="numberOfCompetitorsElimination" value="Number of Competitors" styleClass="col-form-label"/>
+                                <h:selectOneMenu id="numberOfCompetitorsElimination" value="#{tournamentRegistrationBean.tournamentVo.numberOfCompetitors}">
+                                    <f:selectItem itemValue = "2" itemLabel = "2" /> 
+                                    <f:selectItem itemValue = "4" itemLabel = "4" /> 
+                                    <f:selectItem itemValue = "8" itemLabel = "8" /> 
+                                    <f:selectItem itemValue = "16" itemLabel = "16" /> 
+                                    <f:selectItem itemValue = "32" itemLabel = "32" />
+                                    <f:selectItem itemValue = "64" itemLabel = "64" />
+                                    <f:selectItem itemValue = "128" itemLabel = "128" />
+                                </h:selectOneMenu>
+                            </div>
+                            <div class="row justify-content-end">
+                                <div class="col-4">
+                                    <h:commandButton id="submit" styleClass="btn btn-primary" value="CREATE" action="#{tournamentRegistrationBean.createTournament()}"/>
+                                </div>
+                            </div>
+                        </h:form>
+                    </h:panelGroup>
                 </div>
             </div>
+        </div>
+        <div class="col-12 col-md-3">
+            <h:messages showSummary="true" showDetail="false" />
         </div>
     </ui:define>
 </ui:composition>

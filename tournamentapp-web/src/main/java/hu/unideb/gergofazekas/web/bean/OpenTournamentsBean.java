@@ -5,6 +5,8 @@
  */
 package hu.unideb.gergofazekas.web.bean;
 
+import hu.unideb.gergofazekas.entity.EliminationTournamentEntity;
+import hu.unideb.gergofazekas.entity.RoundRobinTournamentEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
 import hu.unideb.gergofazekas.service.TournamentServiceLocal;
 import java.io.Serializable;
@@ -30,6 +32,15 @@ public class OpenTournamentsBean implements Serializable {
     private TournamentServiceLocal tournamentServiceLocal;
     
     public OpenTournamentsBean() {
+    }
+    
+    public String navigateToDetailPage(TournamentEntity tournamentEntity) {
+        if (tournamentEntity instanceof RoundRobinTournamentEntity) {
+            return "roundrobin";
+        } else if (tournamentEntity instanceof EliminationTournamentEntity) {
+            return "elimination";
+        }
+        return null;
     }
     
     @PostConstruct
