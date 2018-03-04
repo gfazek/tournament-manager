@@ -5,8 +5,6 @@
  */
 package hu.unideb.gergofazekas.entity;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -28,8 +26,8 @@ public class IndividualEliminationMatchEntity extends EliminationMatchEntity {
     public IndividualEliminationMatchEntity() {
     }
 
-    public IndividualEliminationMatchEntity(PersonEntity homeCompetitor, PersonEntity awayCompetitor, Long round, int homeScore, int awayScore) {
-        super(round, homeScore, awayScore);
+    public IndividualEliminationMatchEntity(PersonEntity homeCompetitor, PersonEntity awayCompetitor, Long round) {
+        super(round);
         this.homeCompetitor = homeCompetitor;
         this.awayCompetitor = awayCompetitor;
     }

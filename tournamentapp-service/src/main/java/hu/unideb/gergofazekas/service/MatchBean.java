@@ -5,6 +5,8 @@
  */
 package hu.unideb.gergofazekas.service;
 
+import hu.unideb.gergofazekas.entity.IndividualEliminationMatchEntity;
+import hu.unideb.gergofazekas.entity.IndividualEliminationTournamentEntity;
 import hu.unideb.gergofazekas.entity.IndividualMatchEntity;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinStandingEntity;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
@@ -36,7 +38,7 @@ public class MatchBean implements MatchServiceLocal {
 
     @EJB
     private StandingServiceLocal standingServiceLocal;
-    
+
     @EJB
     private TournamentServiceLocal tournamentServiceLocal;
 
@@ -49,7 +51,7 @@ public class MatchBean implements MatchServiceLocal {
         tournamentEntity.getMatches().add(individualMatchEntity);
         homePerson.getHomeMatches().add(individualMatchEntity);
         awayPerson.getAwayMatches().add(individualMatchEntity);
-        
+
         //Should be replaced, because it's specific
         IndividualRoundRobinTournamentEntity irrt = (IndividualRoundRobinTournamentEntity) tournamentEntity;
 
@@ -65,12 +67,12 @@ public class MatchBean implements MatchServiceLocal {
             awayStanding.setWon(awayStanding.getWon() + 1);
             awayStanding.setPoints(awayStanding.getPoints() + irrt.getWinPoint());
             homeStanding.setPoints(homeStanding.getPoints() + irrt.getLoosePoint());
-            homeStanding.setLost(homeStanding.getLost()+ 1);
+            homeStanding.setLost(homeStanding.getLost() + 1);
         } else {
             homeStanding.setPoints(homeStanding.getPoints() + irrt.getDrawPoint());
             awayStanding.setPoints(awayStanding.getPoints() + irrt.getDrawPoint());
-            homeStanding.setDrawn(homeStanding.getDrawn()+ 1);
-            awayStanding.setDrawn(awayStanding.getDrawn()+ 1);
+            homeStanding.setDrawn(homeStanding.getDrawn() + 1);
+            awayStanding.setDrawn(awayStanding.getDrawn() + 1);
         }
     }
 
@@ -85,6 +87,14 @@ public class MatchBean implements MatchServiceLocal {
     }
 
     @Override
+    public void persistMatch(PersonEntity homeCompetitor, PersonEntity awayCompetitor, IndividualEliminationTournamentEntity iet) {
+        IndividualEliminationMatchEntity match = new IndividualEliminationMatchEntity(homeCompetitor, awayCompetitor, 1l);
+        match.setTournament(iet);
+        em.persist(match);
+        iet.getMatches().add(match);
+    }
+
+    @Override
     public void scheduleMatch(MatchEntity matchEntity, Date time) {
         logger.debug("Schedule match: {}", matchEntity);
         logger.debug("Entitymanager contains match?: {}", em.contains(matchEntity));
@@ -95,7 +105,7 @@ public class MatchBean implements MatchServiceLocal {
     }
 
     @Override
-    public void registerResult(MatchEntity matchEntity, int homeScore, int awayScore) {
+    public void registerRoundRobinMatchResult(MatchEntity matchEntity, int homeScore, int awayScore) {
         logger.debug("Register match result for: {}", matchEntity);
         logger.debug("Entitymanager contains match?: {}", em.contains(matchEntity));
         matchEntity.setHomeScore(homeScore);
@@ -105,6 +115,14 @@ public class MatchBean implements MatchServiceLocal {
         standingServiceLocal.updateStandings((IndividualMatchEntity) matchEntity);
         tournamentServiceLocal.checkStatus(matchEntity.getTournament());
         logger.debug("Entitymanager contains match after merge?: {}", em.contains(tmp));
+    }
+
+    @Override
+    public void registerEliminationMatchResult(MatchEntity matchEntity, int homeScore, int awayScore) {
+        matchEntity.setHomeScore(homeScore);
+        matchEntity.setAwayScore(awayScore);
+        matchEntity.setStatus(MatchStatus.FINISHED);
+        em.merge(matchEntity);
     }
 
     @Override

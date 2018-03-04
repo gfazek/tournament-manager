@@ -23,8 +23,8 @@ public abstract class EliminationMatchEntity extends MatchEntity {
     public EliminationMatchEntity() {
     }
 
-    public EliminationMatchEntity(Long round, int homeScore, int awayScore) {
-        super(homeScore, awayScore);
+    public EliminationMatchEntity(Long round) {
+        super();
         this.round = round;
     }
 

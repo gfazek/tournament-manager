@@ -5,12 +5,12 @@
  */
 package hu.unideb.gergofazekas.service;
 
+import hu.unideb.gergofazekas.entity.IndividualEliminationTournamentEntity;
 import hu.unideb.gergofazekas.entity.IndividualMatchEntity;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinStandingEntity;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
 import hu.unideb.gergofazekas.entity.MatchEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
-import hu.unideb.gergofazekas.entity.StandingEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
 import java.util.Date;
 import javax.ejb.Local;
@@ -24,8 +24,10 @@ public interface MatchServiceLocal {
     
     void persistMatch(IndividualMatchEntity matchEntity, IndividualRoundRobinStandingEntity homeStanding, IndividualRoundRobinStandingEntity awayStanding, TournamentEntity tournamentEntity);
     void persistMatch(PersonEntity homeCompetitor, PersonEntity awayCompetitor, IndividualRoundRobinTournamentEntity irrt);
+    void persistMatch(PersonEntity homeCompetitor, PersonEntity awayCompetitor, IndividualEliminationTournamentEntity iet);
     void scheduleMatch(MatchEntity matchEntity, Date time);
-    void registerResult(MatchEntity matchEntity, int homeScore, int awayScore);
+    void registerRoundRobinMatchResult(MatchEntity matchEntity, int homeScore, int awayScore);
+    void registerEliminationMatchResult(MatchEntity matchEntity, int homeScore, int awayScore);
     MatchEntity findOne(Long id);
     
 }

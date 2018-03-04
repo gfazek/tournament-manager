@@ -40,7 +40,7 @@ public class MatchDetailBean implements Serializable {
     }
     
     public void registerResult() {
-        matchServiceLocal.registerResult(matchEntity, 0, 0);
+        matchServiceLocal.registerRoundRobinMatchResult(matchEntity, 0, 0);
     }
 
     public MatchEntity getMatchEntity() {

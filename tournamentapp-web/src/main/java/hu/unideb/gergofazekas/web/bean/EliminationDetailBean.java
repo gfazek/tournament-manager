@@ -7,8 +7,10 @@ package hu.unideb.gergofazekas.web.bean;
 
 import hu.unideb.gergofazekas.entity.EliminationMatchEntity;
 import hu.unideb.gergofazekas.entity.EliminationTournamentEntity;
+import hu.unideb.gergofazekas.entity.IndividualEliminationMatchEntity;
 import hu.unideb.gergofazekas.entity.IndividualEliminationTournamentEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
+import hu.unideb.gergofazekas.service.MatchServiceLocal;
 import hu.unideb.gergofazekas.service.PersonServiceLocal;
 import hu.unideb.gergofazekas.service.TournamentServiceLocal;
 import hu.unideb.gergofazekas.utility.CompetitorType;
@@ -18,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -40,6 +43,7 @@ public class EliminationDetailBean implements Serializable {
     private static final Logger logger = LogManager.getLogger(EliminationDetailBean.class);
 
     private EliminationTournamentEntity tournamentEntity;
+    private List<IndividualEliminationMatchEntity> matches;
     private EliminationMatchEntity selectedMatch;
     private Double homeScore, awayScore;
     private Date matchTime;
@@ -47,6 +51,9 @@ public class EliminationDetailBean implements Serializable {
 
     @EJB
     private TournamentServiceLocal tournamentServiceLocal;
+    
+    @EJB
+    private MatchServiceLocal matchServiceLocal;
     
     @EJB
     private PersonServiceLocal personServiceLocal;
@@ -74,6 +81,9 @@ public class EliminationDetailBean implements Serializable {
     }
     
     public boolean showDeleteEntry() {
+        if (tournamentEntity.getStatus() != TournamentStatus.OPEN) {
+            return false;
+        }
         if (tournamentEntity.getCompetitorType() == CompetitorType.PLAYER) {
             IndividualEliminationTournamentEntity tmp = (IndividualEliminationTournamentEntity) tournamentEntity;
             for (PersonEntity personEntity : tmp.getPeople()) {
@@ -92,20 +102,22 @@ public class EliminationDetailBean implements Serializable {
     }
     
     public String deleteEntry() {
-         String username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        String username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         tournamentServiceLocal.deleteEntry(tournamentEntity.getId(), username);
         return "tournaments?faces-redirect=true&deleteEntry=true";
     }
 
     public String kickoff() {
-        tournamentServiceLocal.kickoff(tournamentEntity.getId());
+        tournamentServiceLocal.kickoffElimination(tournamentEntity.getId());
         return "tournaments?faces-redirect=true&successKickoff=true";
     }
 
     public void registerResult() {
+        matchServiceLocal.registerEliminationMatchResult(selectedMatch, homeScore.intValue(), awayScore.intValue());
     }
 
     public void scheduleMatch() {
+        matchServiceLocal.scheduleMatch(selectedMatch, matchTime);
     }
 
     public int fetchRegisteredCompetitors() {
@@ -114,6 +126,13 @@ public class EliminationDetailBean implements Serializable {
             return tmp.getPeople().size();
         }
         return -1;
+    }
+    
+    public List<IndividualEliminationMatchEntity> getMatches() {
+        return tournamentEntity.getMatches()
+                .stream()
+                .map(e -> (IndividualEliminationMatchEntity) e)
+                .collect(Collectors.toList());
     }
 
     public EliminationTournamentEntity getTournamentEntity() {

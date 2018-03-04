@@ -47,10 +47,10 @@ and open the template in the editor.
                                 <h:outputText id="tournamentStatus" value="#{roundRobinDetailBean.tournamentEntity.status}" />
                             </div>
                             <div class="col-md-3">
-                                <h:outputLabel for="tournamentNo" value="Given number of competitors" styleClass="font-weight-bold" />
+                                <h:outputLabel for="tournamentNo" value="Competitors (Requuired/Registered)" styleClass="font-weight-bold" />
                             </div>
                             <div class="col-md-3">
-                                <h:outputText id="tournamentNo" value="#{roundRobinDetailBean.tournamentEntity.numberOfCompetitors}" />
+                                <h:outputText id="tournamentNo" value="#{roundRobinDetailBean.tournamentEntity.numberOfCompetitors}/#{roundRobinDetailBean.registeredCompetitors}" />
                             </div>
                         </div>
                         <div class="row">
@@ -62,13 +62,22 @@ and open the template in the editor.
                             </div>
                         </div>
                         <div class="row justify-content-around"> 
-                            <div class="col-md-2">
-                                <h:commandButton id="submit" rendered="#{roundRobinDetailBean.showEntry()}" styleClass="btn btn-lg btn-success" value="ENTRY" action="#{roundRobinDetailBean.submitEntry()}" />
-                            </div>
-                            <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
+                            <h:panelGroup layout="block" rendered="#{roundRobinDetailBean.showEntry()}">
                                 <div class="col-md-2">
-                                    <h:commandButton id="kickoff" rendered="#{roundRobinDetailBean.tournamentEntity.status eq 'OPEN'}" styleClass="btn btn-lg btn-primary" value="KICK OFF" action="#{roundRobinDetailBean.kickoff()}"/>
+                                    <h:commandButton id="submit" styleClass="btn btn-lg btn-success" value="ENTRY" action="#{roundRobinDetailBean.submitEntry()}" />
                                 </div>
+                            </h:panelGroup>
+                            <h:panelGroup layout="block" rendered="#{roundRobinDetailBean.showDeleteEntry()}">
+                                <div class="col-md-2">
+                                    <h:commandButton id="deleteEntry" styleClass="btn btn-lg btn-danger" value="DELETE ENTRY" action="#{roundRobinDetailBean.deleteEntry()}" />
+                                </div>
+                            </h:panelGroup>
+                            <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
+                                <h:panelGroup layout="block" rendered="#{roundRobinDetailBean.tournamentEntity.status eq 'OPEN'}">
+                                    <div class="col-md-2">
+                                        <h:commandButton id="kickoff" styleClass="btn btn-lg btn-primary" value="KICK OFF" action="#{roundRobinDetailBean.kickoff()}"/>
+                                    </div>
+                                </h:panelGroup>
                             </sec:authorize>
                         </div>
                     </div>

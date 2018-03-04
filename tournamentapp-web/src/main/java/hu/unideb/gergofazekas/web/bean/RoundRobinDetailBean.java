@@ -14,6 +14,7 @@ import hu.unideb.gergofazekas.entity.TournamentEntity;
 import hu.unideb.gergofazekas.service.MatchServiceLocal;
 import hu.unideb.gergofazekas.service.StandingServiceLocal;
 import hu.unideb.gergofazekas.service.TournamentServiceLocal;
+import hu.unideb.gergofazekas.utility.CompetitorType;
 import hu.unideb.gergofazekas.utility.TournamentStatus;
 import java.io.Serializable;
 import java.util.Date;
@@ -48,6 +49,7 @@ public class RoundRobinDetailBean implements Serializable {
     private IndividualMatchEntity selectedMatch;
     private Date matchTime;
     private Double homeScore, awayScore;
+        private int registeredCompetitors;
 
     @EJB
     private TournamentServiceLocal tournamentServiceLocal;
@@ -68,6 +70,7 @@ public class RoundRobinDetailBean implements Serializable {
         standings = standingServiceLocal.findByTournament(tournamentEntity.getId()).stream()
                 .map(e -> (IndividualRoundRobinStandingEntity) e)
                 .collect(Collectors.toList());
+        registeredCompetitors = fetchRegisteredCompetitors();
     }
 
     public TournamentEntity getTournamentEntity() {
@@ -82,6 +85,12 @@ public class RoundRobinDetailBean implements Serializable {
         String username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         tournamentServiceLocal.persistEntry(tournamentEntity.getId(), username);
         return "tournaments?faces-redirect=true&successEntry=true";
+    }
+    
+    public String deleteEntry() {
+        String username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        tournamentServiceLocal.deleteEntry(tournamentEntity.getId(), username);
+        return "tournaments?faces-redirect=true&deleteEntry=true";
     }
 
     public boolean showEntry() {
@@ -98,6 +107,21 @@ public class RoundRobinDetailBean implements Serializable {
         Optional<PersonEntity> competitor = s.findFirst();
         return !competitor.isPresent();
     }
+    
+    public boolean showDeleteEntry() {
+        if (tournamentEntity.getStatus() != TournamentStatus.OPEN) {
+            return false;
+        }
+        if (tournamentEntity.getCompetitorType() == CompetitorType.PLAYER) {
+            IndividualRoundRobinTournamentEntity tmp = (IndividualRoundRobinTournamentEntity) tournamentEntity;
+            for (PersonEntity personEntity : tmp.getPeople()) {
+                if (personEntity.getUsername().equals(((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     public void scheduleMatch() {
         matchServiceLocal.scheduleMatch(selectedMatch, matchTime);
@@ -106,7 +130,7 @@ public class RoundRobinDetailBean implements Serializable {
     public void registerResult() {
         logger.debug("registerResult() method got invoked.");
         logger.debug("SelectedMatch is: {}", selectedMatch);
-        matchServiceLocal.registerResult(selectedMatch, homeScore.intValue(), awayScore.intValue());
+        matchServiceLocal.registerRoundRobinMatchResult(selectedMatch, homeScore.intValue(), awayScore.intValue());
         List<StandingEntity> tmp = standingServiceLocal.findByTournament(tournamentEntity.getId());
         standings = tmp.stream()
                 .map(e -> (IndividualRoundRobinStandingEntity) e)
@@ -115,8 +139,16 @@ public class RoundRobinDetailBean implements Serializable {
     }
 
     public String kickoff() {
-        tournamentServiceLocal.kickoff(tournamentEntity.getId());
+        tournamentServiceLocal.kickoffRoundRobin(tournamentEntity.getId());
         return "tournaments?faces-redirect=true&successKickoff=true";
+    }
+    
+    public int fetchRegisteredCompetitors() {
+        if (tournamentEntity.getCompetitorType() == CompetitorType.PLAYER) {
+            IndividualRoundRobinTournamentEntity tmp = (IndividualRoundRobinTournamentEntity) tournamentEntity;
+            return tmp.getPeople().size();
+        }
+        return -1;
     }
 
     public TournamentServiceLocal getTournamentServiceLocal() {
@@ -186,4 +218,20 @@ public class RoundRobinDetailBean implements Serializable {
         this.selectedMatch = selectedMatch;
     }
 
+    public int getRegisteredCompetitors() {
+        return registeredCompetitors;
+    }
+
+    public void setRegisteredCompetitors(int registeredCompetitors) {
+        this.registeredCompetitors = registeredCompetitors;
+    }
+
+    public StandingServiceLocal getStandingServiceLocal() {
+        return standingServiceLocal;
+    }
+
+    public void setStandingServiceLocal(StandingServiceLocal standingServiceLocal) {
+        this.standingServiceLocal = standingServiceLocal;
+    }
+    
 }

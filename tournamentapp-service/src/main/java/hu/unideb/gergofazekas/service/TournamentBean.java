@@ -14,6 +14,7 @@ import hu.unideb.gergofazekas.utility.CompetitorType;
 import hu.unideb.gergofazekas.utility.MatchStatus;
 import hu.unideb.gergofazekas.utility.TournamentStatus;
 import hu.unideb.gergofazekas.utility.TournamentType;
+import java.util.Collections;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -103,7 +104,7 @@ public class TournamentBean implements TournamentServiceLocal {
     }
 
     @Override
-    public void kickoff(Long id) {
+    public void kickoffRoundRobin(Long id) {
         TournamentEntity tournamentEntity = findTournament(id);
         logger.debug("Kicking off: {}", tournamentEntity);
         tournamentEntity.setStatus(TournamentStatus.IN_PROGRESS);
@@ -120,6 +121,20 @@ public class TournamentBean implements TournamentServiceLocal {
                     logger.debug("p2: {}", p2);
                     matchServiceLocal.persistMatch(p1, p2, irrt);
                 }
+            }
+        }
+    }
+
+    @Override
+    public void kickoffElimination(Long id) {
+        TournamentEntity tournamentEntity = findTournament(id);
+        tournamentEntity.setStatus(TournamentStatus.IN_PROGRESS);
+        if (tournamentEntity.getCompetitorType() == CompetitorType.PLAYER) {
+            IndividualEliminationTournamentEntity iet = (IndividualEliminationTournamentEntity) tournamentEntity;
+            List<PersonEntity> competitors = iet.getPeople();
+            Collections.shuffle(competitors);
+            for (int i = 0; i < competitors.size() - 1; i = i + 2) {
+                matchServiceLocal.persistMatch(competitors.get(i), competitors.get(i + 1), iet);
             }
         }
     }
