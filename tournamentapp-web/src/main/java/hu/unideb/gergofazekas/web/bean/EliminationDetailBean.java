@@ -106,6 +106,10 @@ public class EliminationDetailBean implements Serializable {
         tournamentServiceLocal.deleteEntry(tournamentEntity.getId(), username);
         return "tournaments?faces-redirect=true&deleteEntry=true";
     }
+    
+    public void deleteEntry(String username) {
+        tournamentServiceLocal.deleteEntry(tournamentEntity.getId(), username);
+    }
 
     public String kickoff() {
         tournamentServiceLocal.kickoffElimination(tournamentEntity.getId());

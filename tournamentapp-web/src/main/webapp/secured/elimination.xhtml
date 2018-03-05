@@ -80,6 +80,24 @@ and open the template in the editor.
                                 </h:panelGroup> 
                             </sec:authorize>
                         </div>
+                        <p:panelGrid style="width: 100%;" id="competitorsgrid">
+                            <f:facet name="header">
+                                <p:row>
+                                    <p:column colspan="2">REGISTERED COMPETITORS</p:column>
+                                    
+                                </p:row>
+                            </f:facet>
+                            <p:repeat value="#{eliminationDetailBean.tournamentEntity.people}" rendered="#{eliminationDetailBean.tournamentEntity.status eq 'OPEN'}" var="competitor">
+                                <p:row>
+                                    <p:column>
+                                        <h:outputText value="#{competitor.username}" />
+                                        <p:commandLink update="detailsform:competitorsgrid" actionListener="#{eliminationDetailBean.deleteEntry(competitor.username)}">
+                                            <h:outputText value="Delete entry" />
+                                        </p:commandLink>
+                                    </p:column>
+                                </p:row>
+                            </p:repeat>
+                        </p:panelGrid>
                     </div>
                 </div>
             </h:form>
