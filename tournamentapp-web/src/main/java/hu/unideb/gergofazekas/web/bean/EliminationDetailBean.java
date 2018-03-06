@@ -44,6 +44,7 @@ public class EliminationDetailBean implements Serializable {
 
     private EliminationTournamentEntity tournamentEntity;
     private List<IndividualEliminationMatchEntity> matches;
+    private List<PersonEntity> competitors;
     private EliminationMatchEntity selectedMatch;
     private Double homeScore, awayScore;
     private Date matchTime;
@@ -66,14 +67,18 @@ public class EliminationDetailBean implements Serializable {
         Map<String, String> parameterMap = (Map<String, String>) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         tournamentEntity = (EliminationTournamentEntity) tournamentServiceLocal.findTournament(Long.parseLong(parameterMap.get("id")));
         registeredCompetitors = fetchRegisteredCompetitors();
+        if (tournamentEntity.getCompetitorType() == CompetitorType.PLAYER) {
+            IndividualEliminationTournamentEntity iet = (IndividualEliminationTournamentEntity) tournamentEntity;
+            competitors = iet.getPeople();
+        }
     }
 
     public boolean showEntry() {
         if (tournamentEntity.getStatus() != TournamentStatus.OPEN) {
             return false;
         }
-        IndividualEliminationTournamentEntity tmp = (IndividualEliminationTournamentEntity) tournamentEntity;
-        List<PersonEntity> competitors = tmp.getPeople();
+//        IndividualEliminationTournamentEntity tmp = (IndividualEliminationTournamentEntity) tournamentEntity;
+//        List<PersonEntity> competitors = tmp.getPeople();
         Stream<PersonEntity> s = competitors.stream()
                 .filter(p -> p.getUsername().equals(((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername()));
         Optional<PersonEntity> competitor = s.findFirst();
@@ -86,7 +91,7 @@ public class EliminationDetailBean implements Serializable {
         }
         if (tournamentEntity.getCompetitorType() == CompetitorType.PLAYER) {
             IndividualEliminationTournamentEntity tmp = (IndividualEliminationTournamentEntity) tournamentEntity;
-            for (PersonEntity personEntity : tmp.getPeople()) {
+            for (PersonEntity personEntity : competitors) {
                 if (personEntity.getUsername().equals(((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())) {
                     return true;
                 }
@@ -109,6 +114,7 @@ public class EliminationDetailBean implements Serializable {
     
     public void deleteEntry(String username) {
         tournamentServiceLocal.deleteEntry(tournamentEntity.getId(), username);
+        competitors = tournamentServiceLocal.getIndividualCompetitors(tournamentEntity.getId());
     }
 
     public String kickoff() {
@@ -193,6 +199,30 @@ public class EliminationDetailBean implements Serializable {
 
     public void setTournamentServiceLocal(TournamentServiceLocal tournamentServiceLocal) {
         this.tournamentServiceLocal = tournamentServiceLocal;
+    }
+
+    public List<PersonEntity> getCompetitors() {
+        return competitors;
+    }
+
+    public void setCompetitors(List<PersonEntity> competitors) {
+        this.competitors = competitors;
+    }
+
+    public MatchServiceLocal getMatchServiceLocal() {
+        return matchServiceLocal;
+    }
+
+    public void setMatchServiceLocal(MatchServiceLocal matchServiceLocal) {
+        this.matchServiceLocal = matchServiceLocal;
+    }
+
+    public PersonServiceLocal getPersonServiceLocal() {
+        return personServiceLocal;
+    }
+
+    public void setPersonServiceLocal(PersonServiceLocal personServiceLocal) {
+        this.personServiceLocal = personServiceLocal;
     }
 
 }
