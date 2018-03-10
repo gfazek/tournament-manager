@@ -6,8 +6,6 @@
 package hu.unideb.gergofazekas.entity;
 
 import java.io.Serializable;
-import javax.persistence.Basic;
-import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -50,7 +48,7 @@ public abstract class StandingEntity extends BaseEntity implements Serializable 
 
     @Override
     public String toString() {
-        return "StandingEntity{" + "tournamentEntity=" + tournamentEntity + '}';
+        return "StandingEntity{" + "tournamentEntity=" + tournamentEntity.getName() + '}';
     }
     
 }

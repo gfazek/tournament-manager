@@ -43,7 +43,7 @@ public class IndividualRoundRobinStandingEntity extends RoundRobinStandingEntity
 
     @Override
     public String toString() {
-        return "IndividualRoundRobinStandingEntity{" + "tournamentEntity=" + getTournamentEntity() + ", played=" + getPlayed() + ", won=" + getWon() + ", drawn=" + getDrawn() + ", lost=" + getLost() + ", points=" + getPoints() + ", person=" + person + '}';
+        return "IndividualRoundRobinStandingEntity{" + "tournamentEntity=" + getTournamentEntity().getName() + ", played=" + getPlayed() + ", won=" + getWon() + ", drawn=" + getDrawn() + ", lost=" + getLost() + ", points=" + getPoints() + ", person=" + person.getUsername() + '}';
     }
     
 }

@@ -103,7 +103,7 @@ public abstract class MatchEntity extends BaseEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "MatchEntity{" + "homeScore=" + homeScore + ", awayScore=" + awayScore + ", tournament=" + tournament + '}';
+        return "MatchEntity{" + "homeScore=" + homeScore + ", awayScore=" + awayScore + ", tournament=" + tournament.getName() + '}';
     }
     
 }

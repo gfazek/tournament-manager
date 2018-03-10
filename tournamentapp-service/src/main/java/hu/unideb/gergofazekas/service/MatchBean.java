@@ -97,28 +97,25 @@ public class MatchBean implements MatchServiceLocal {
     @Override
     public void scheduleMatch(MatchEntity matchEntity, Date time) {
         logger.debug("Schedule match: {}", matchEntity);
-        logger.debug("Entitymanager contains match?: {}", em.contains(matchEntity));
         matchEntity.setTime(time);
         matchEntity.setStatus(MatchStatus.SCHEDULED);
         MatchEntity tmp = em.merge(matchEntity);
-        logger.debug("Entitymanager contains match after merge?: {}", em.contains(tmp));
     }
 
     @Override
     public void registerRoundRobinMatchResult(MatchEntity matchEntity, int homeScore, int awayScore) {
-        logger.debug("Register match result for: {}", matchEntity);
-        logger.debug("Entitymanager contains match?: {}", em.contains(matchEntity));
+        logger.debug("Register round robin match result: {}", matchEntity);
         matchEntity.setHomeScore(homeScore);
         matchEntity.setAwayScore(awayScore);
         matchEntity.setStatus(MatchStatus.FINISHED);
         MatchEntity tmp = em.merge(matchEntity);
         standingServiceLocal.updateStandings((IndividualMatchEntity) matchEntity);
         tournamentServiceLocal.checkStatus(matchEntity.getTournament());
-        logger.debug("Entitymanager contains match after merge?: {}", em.contains(tmp));
     }
 
     @Override
     public void registerEliminationMatchResult(MatchEntity matchEntity, int homeScore, int awayScore) {
+        logger.debug("Register elimination match result: {}", matchEntity);
         matchEntity.setHomeScore(homeScore);
         matchEntity.setAwayScore(awayScore);
         matchEntity.setStatus(MatchStatus.FINISHED);

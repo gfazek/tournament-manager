@@ -15,6 +15,8 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
  *
@@ -22,6 +24,9 @@ import javax.persistence.ManyToMany;
  */
 @Entity
 @DiscriminatorValue(value = "IndividualElimination")
+@NamedQueries({
+    @NamedQuery(name = "IndividualEliminationTournament.findCompetitors", query = "SELECT t.people FROM IndividualEliminationTournamentEntity t WHERE t.id = :id"),
+})
 public class IndividualEliminationTournamentEntity extends EliminationTournamentEntity {
 
     @ManyToMany
@@ -50,7 +55,14 @@ public class IndividualEliminationTournamentEntity extends EliminationTournament
 
     @Override
     public String toString() {
-        return "IndividualEliminationTournamentEntity{" + "people=" + people + '}';
+        StringBuilder sb = new StringBuilder("IndividualEliminationTournamentEntity{");
+        sb.append("name=").append(getName()).append(", ");
+        sb.append("people=");
+        people.forEach(p -> {
+            sb.append(p.getUsername()).append(",");
+        });
+        sb.append("}");
+        return sb.toString();
     }
     
 }

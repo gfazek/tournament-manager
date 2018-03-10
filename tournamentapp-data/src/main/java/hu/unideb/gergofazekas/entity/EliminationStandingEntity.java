@@ -38,7 +38,7 @@ public abstract class EliminationStandingEntity extends StandingEntity {
 
     @Override
     public String toString() {
-        return "EliminationStandingEntity{" + "tournamentEntity=" + getTournamentEntity() + ", round=" + round + '}';
+        return "EliminationStandingEntity{" + "tournamentEntity=" + getTournamentEntity().getName() + ", round=" + round + '}';
     }
     
 }

@@ -80,6 +80,38 @@ and open the template in the editor.
                                 </h:panelGroup>
                             </sec:authorize>
                         </div>
+                        <p:panelGrid style="width: 100%;" id="competitorsgrid">
+                            <f:facet name="header">
+                                <p:row>
+                                    <p:column colspan="1">USERNAME</p:column>
+                                    <p:column colspan="1">FULL NAME</p:column>
+                                    <p:column colspan="1">GENDER</p:column>
+                                    <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
+                                        <p:column colspan="1">OPERATION</p:column>
+                                    </sec:authorize>
+                                </p:row>
+                            </f:facet>
+                            <p:repeat value="#{roundRobinDetailBean.competitors}" rendered="#{roundRobinDetailBean.tournamentEntity.status eq 'OPEN'}" var="competitor">
+                                <p:row>
+                                    <p:column>
+                                        <h:outputText value="#{competitor.username}" />
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{competitor.firstName} #{competitor.lastName}" />
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{competitor.gender}" />
+                                    </p:column>
+                                    <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
+                                        <p:column>
+                                            <p:commandLink update="detailsform" actionListener="#{roundRobinDetailBean.deleteEntry(competitor.username)}">
+                                                <h:outputText value="Delete entry" />
+                                            </p:commandLink>
+                                        </p:column>
+                                    </sec:authorize>
+                                </p:row>
+                            </p:repeat>
+                        </p:panelGrid>
                     </div>
                 </div>
             </h:form>

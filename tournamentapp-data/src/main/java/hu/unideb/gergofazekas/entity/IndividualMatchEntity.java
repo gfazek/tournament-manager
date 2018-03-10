@@ -55,7 +55,7 @@ public class IndividualMatchEntity extends MatchEntity {
 
     @Override
     public String toString() {
-        return "IndividualMatchEntity{" + "homeScore=" + getHomeScore() + ", awayScore=" + getAwayScore() + ", homeCompetitor=" + homeCompetitor + ", awayCompetitor=" + awayCompetitor + '}';
+        return "IndividualMatchEntity{" + "homeScore=" + getHomeScore() + ", awayScore=" + getAwayScore() + ", homeCompetitor=" + homeCompetitor.getUsername() + ", awayCompetitor=" + awayCompetitor.getUsername() + '}';
     }
     
 }

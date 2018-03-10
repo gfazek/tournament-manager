@@ -90,7 +90,7 @@ public class RoundRobinStandingEntity extends StandingEntity {
 
     @Override
     public String toString() {
-        return "RoundRobinStandingEntity{" + "tournamentEntity=" + getTournamentEntity() + ", played=" + played + ", won=" + won + ", drawn=" + drawn + ", lost=" + lost + ", points=" + points + '}';
+        return "RoundRobinStandingEntity{" + "tournamentEntity=" + getTournamentEntity().getName() + ", played=" + played + ", won=" + won + ", drawn=" + drawn + ", lost=" + lost + ", points=" + points + '}';
     }
     
     

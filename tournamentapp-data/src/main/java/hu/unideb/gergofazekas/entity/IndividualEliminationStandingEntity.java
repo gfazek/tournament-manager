@@ -38,7 +38,7 @@ public class IndividualEliminationStandingEntity extends EliminationStandingEnti
 
     @Override
     public String toString() {
-        return "IndividualEliminationStandingEntity{" + "tournamentEntity=" + getTournamentEntity() + ", round=" + getRound() + ", person=" + person + '}';
+        return "IndividualEliminationStandingEntity{" + "tournament=" + getTournamentEntity().getName() + ", round=" + getRound() + ", person=" + person.getUsername() + '}';
     } 
     
 }

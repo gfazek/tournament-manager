@@ -14,6 +14,7 @@ import hu.unideb.gergofazekas.utility.CompetitorType;
 import hu.unideb.gergofazekas.utility.MatchStatus;
 import hu.unideb.gergofazekas.utility.TournamentStatus;
 import hu.unideb.gergofazekas.utility.TournamentType;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.ejb.EJB;
@@ -97,9 +98,16 @@ public class TournamentBean implements TournamentServiceLocal {
     }
 
     @Override
-    public List<PersonEntity> getIndividualCompetitors(Long id) {
-        List<PersonEntity> competitors = em.createNamedQuery("IndividualRoundRobinTournament.findCompetitors", PersonEntity.class).setParameter("id", id).getResultList();
-        logger.debug("Individual Competitors: tournamentid: {} | competitors: {}", id, competitors);
+    public List<PersonEntity> getIndividualCompetitors(Long id, TournamentType tournamentType) {
+        List<PersonEntity> competitors = new ArrayList<>();
+        if (tournamentType == TournamentType.ELIMINATION) {
+         competitors = em.createNamedQuery("IndividualEliminationTournament.findCompetitors", PersonEntity.class).setParameter("id", id).getResultList();
+        } else if (tournamentType == TournamentType.ROUNDROBIN) {
+         competitors = em.createNamedQuery("IndividualRoundRobinTournament.findCompetitors", PersonEntity.class).setParameter("id", id).getResultList();
+        }
+        if (competitors.get(0) == null && competitors.size() == 1) {
+            return new ArrayList<>();
+        }
         return competitors;
     }
 
@@ -163,6 +171,7 @@ public class TournamentBean implements TournamentServiceLocal {
         } else if (isIndividualElimination(tournamentEntity)) {
             IndividualEliminationTournamentEntity iet  = (IndividualEliminationTournamentEntity) tournamentEntity;
             iet.getPeople().remove(personEntity);
+            logger.debug("after remove: {}", iet.getPeople());
         }
     }
     

@@ -47,9 +47,10 @@ public class RoundRobinDetailBean implements Serializable {
     private List<IndividualMatchEntity> matches;
     private List<IndividualRoundRobinStandingEntity> standings;
     private IndividualMatchEntity selectedMatch;
+    private List<PersonEntity> competitors;
     private Date matchTime;
     private Double homeScore, awayScore;
-        private int registeredCompetitors;
+    private int registeredCompetitors;
 
     @EJB
     private TournamentServiceLocal tournamentServiceLocal;
@@ -71,6 +72,11 @@ public class RoundRobinDetailBean implements Serializable {
                 .map(e -> (IndividualRoundRobinStandingEntity) e)
                 .collect(Collectors.toList());
         registeredCompetitors = fetchRegisteredCompetitors();
+        if (tournamentEntity.getCompetitorType() == CompetitorType.PLAYER) {
+            IndividualRoundRobinTournamentEntity irrt = (IndividualRoundRobinTournamentEntity) tournamentEntity;
+            competitors = irrt.getPeople();
+            logger.debug("competitors are: {}", competitors);
+        }
     }
 
     public TournamentEntity getTournamentEntity() {
@@ -86,35 +92,35 @@ public class RoundRobinDetailBean implements Serializable {
         tournamentServiceLocal.persistEntry(tournamentEntity.getId(), username);
         return "tournaments?faces-redirect=true&successEntry=true";
     }
-    
+
     public String deleteEntry() {
         String username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         tournamentServiceLocal.deleteEntry(tournamentEntity.getId(), username);
         return "tournaments?faces-redirect=true&deleteEntry=true";
     }
 
+    public void deleteEntry(String username) {
+        tournamentServiceLocal.deleteEntry(tournamentEntity.getId(), username);
+        competitors = tournamentServiceLocal.getIndividualCompetitors(tournamentEntity.getId(), tournamentEntity.getType());
+        logger.debug("competitors after delete: {}", competitors);
+    }
+
     public boolean showEntry() {
-        logger.debug("TournamentEntity: {}", tournamentEntity);
         if (tournamentEntity.getStatus() != TournamentStatus.OPEN) {
             return false;
         }
-        IndividualRoundRobinTournamentEntity tmp = (IndividualRoundRobinTournamentEntity) tournamentEntity;
-        List<PersonEntity> competitors = tmp.getPeople();
-        logger.debug("CompetitorS: {}", competitors);
         Stream<PersonEntity> s = competitors.stream()
                 .filter(p -> p.getUsername().equals(((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername()));
-        logger.debug("It gets null value?: {}", s);
         Optional<PersonEntity> competitor = s.findFirst();
         return !competitor.isPresent();
     }
-    
+
     public boolean showDeleteEntry() {
         if (tournamentEntity.getStatus() != TournamentStatus.OPEN) {
             return false;
         }
         if (tournamentEntity.getCompetitorType() == CompetitorType.PLAYER) {
-            IndividualRoundRobinTournamentEntity tmp = (IndividualRoundRobinTournamentEntity) tournamentEntity;
-            for (PersonEntity personEntity : tmp.getPeople()) {
+            for (PersonEntity personEntity : competitors) {
                 if (personEntity.getUsername().equals(((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())) {
                     return true;
                 }
@@ -142,7 +148,7 @@ public class RoundRobinDetailBean implements Serializable {
         tournamentServiceLocal.kickoffRoundRobin(tournamentEntity.getId());
         return "tournaments?faces-redirect=true&successKickoff=true";
     }
-    
+
     public int fetchRegisteredCompetitors() {
         if (tournamentEntity.getCompetitorType() == CompetitorType.PLAYER) {
             IndividualRoundRobinTournamentEntity tmp = (IndividualRoundRobinTournamentEntity) tournamentEntity;
@@ -226,6 +232,14 @@ public class RoundRobinDetailBean implements Serializable {
         this.registeredCompetitors = registeredCompetitors;
     }
 
+    public List<PersonEntity> getCompetitors() {
+        return competitors;
+    }
+
+    public void setCompetitors(List<PersonEntity> competitors) {
+        this.competitors = competitors;
+    }
+
     public StandingServiceLocal getStandingServiceLocal() {
         return standingServiceLocal;
     }
@@ -233,5 +247,5 @@ public class RoundRobinDetailBean implements Serializable {
     public void setStandingServiceLocal(StandingServiceLocal standingServiceLocal) {
         this.standingServiceLocal = standingServiceLocal;
     }
-    
+
 }

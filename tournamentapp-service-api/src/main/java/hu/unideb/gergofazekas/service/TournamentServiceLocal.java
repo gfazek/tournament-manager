@@ -8,6 +8,7 @@ package hu.unideb.gergofazekas.service;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
+import hu.unideb.gergofazekas.utility.TournamentType;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -24,7 +25,7 @@ public interface TournamentServiceLocal {
     List<TournamentEntity> getOpens();
     TournamentEntity findTournament(Long id);
     void persistEntry(Long tournamentId, String username);
-    List<PersonEntity> getIndividualCompetitors(Long id);
+    List<PersonEntity> getIndividualCompetitors(Long id, TournamentType tournamentType);
     void kickoffRoundRobin(Long id);
     void kickoffElimination(Long id);
     void checkStatus(TournamentEntity tournamentEntity);

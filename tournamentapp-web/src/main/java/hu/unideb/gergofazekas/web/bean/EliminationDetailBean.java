@@ -90,7 +90,6 @@ public class EliminationDetailBean implements Serializable {
             return false;
         }
         if (tournamentEntity.getCompetitorType() == CompetitorType.PLAYER) {
-            IndividualEliminationTournamentEntity tmp = (IndividualEliminationTournamentEntity) tournamentEntity;
             for (PersonEntity personEntity : competitors) {
                 if (personEntity.getUsername().equals(((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())) {
                     return true;
@@ -114,7 +113,8 @@ public class EliminationDetailBean implements Serializable {
     
     public void deleteEntry(String username) {
         tournamentServiceLocal.deleteEntry(tournamentEntity.getId(), username);
-        competitors = tournamentServiceLocal.getIndividualCompetitors(tournamentEntity.getId());
+        competitors = tournamentServiceLocal.getIndividualCompetitors(tournamentEntity.getId(), tournamentEntity.getType());
+        logger.debug("competitors after delete: {}", competitors);
     }
 
     public String kickoff() {
