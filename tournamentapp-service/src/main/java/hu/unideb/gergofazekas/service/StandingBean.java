@@ -5,6 +5,9 @@
  */
 package hu.unideb.gergofazekas.service;
 
+import hu.unideb.gergofazekas.entity.IndividualEliminationMatchEntity;
+import hu.unideb.gergofazekas.entity.IndividualEliminationStandingEntity;
+import hu.unideb.gergofazekas.entity.IndividualEliminationTournamentEntity;
 import hu.unideb.gergofazekas.entity.IndividualMatchEntity;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinStandingEntity;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
@@ -27,10 +30,10 @@ import org.apache.logging.log4j.Logger;
 public class StandingBean implements StandingServiceLocal {
 
     private static final Logger logger = LogManager.getLogger(StandingBean.class);
-    
+
     @PersistenceContext
     private EntityManager em;
-    
+
     @Override
     public void persistStanding(IndividualRoundRobinStandingEntity standingEntity) {
         em.persist(standingEntity);
@@ -39,8 +42,13 @@ public class StandingBean implements StandingServiceLocal {
     }
 
     @Override
-    public StandingEntity findOne(Long pid, Long tid) {
-        return em.createNamedQuery("Standing.findOne", StandingEntity.class).setParameter("pid", pid).setParameter("tid", tid).getSingleResult();
+    public IndividualRoundRobinStandingEntity findIndividualRoundRobinOne(Long pid, Long tid) {
+        return em.createNamedQuery("Standing.findIndividualRoundRobinOne", IndividualRoundRobinStandingEntity.class).setParameter("pid", pid).setParameter("tid", tid).getSingleResult();
+    }
+
+    @Override
+    public IndividualEliminationStandingEntity findIndividualEliminationOne(Long pid, Long tid) {
+        return em.createNamedQuery("Standing.findIndividualEliminationOne", IndividualEliminationStandingEntity.class).setParameter("pid", pid).setParameter("tid", tid).getSingleResult();
     }
 
     @Override
@@ -54,8 +62,8 @@ public class StandingBean implements StandingServiceLocal {
 
     @Override
     public void updateStandings(IndividualMatchEntity individualMatchEntity) {
-        IndividualRoundRobinStandingEntity homeStanding = (IndividualRoundRobinStandingEntity) findOne(individualMatchEntity.getHomeCompetitor().getId(), individualMatchEntity.getTournament().getId());
-        IndividualRoundRobinStandingEntity awayStanding =  (IndividualRoundRobinStandingEntity) findOne(individualMatchEntity.getAwayCompetitor().getId(), individualMatchEntity.getTournament().getId());
+        IndividualRoundRobinStandingEntity homeStanding = (IndividualRoundRobinStandingEntity) findIndividualRoundRobinOne(individualMatchEntity.getHomeCompetitor().getId(), individualMatchEntity.getTournament().getId());
+        IndividualRoundRobinStandingEntity awayStanding = (IndividualRoundRobinStandingEntity) findIndividualRoundRobinOne(individualMatchEntity.getAwayCompetitor().getId(), individualMatchEntity.getTournament().getId());
         IndividualRoundRobinTournamentEntity irrt = (IndividualRoundRobinTournamentEntity) individualMatchEntity.getTournament();
         homeStanding.setPlayed(homeStanding.getPlayed() + 1);
         awayStanding.setPlayed(awayStanding.getPlayed() + 1);
@@ -69,21 +77,48 @@ public class StandingBean implements StandingServiceLocal {
             awayStanding.setWon(awayStanding.getWon() + 1);
             awayStanding.setPoints(awayStanding.getPoints() + irrt.getWinPoint());
             homeStanding.setPoints(homeStanding.getPoints() + irrt.getLoosePoint());
-            homeStanding.setLost(homeStanding.getLost()+ 1);
+            homeStanding.setLost(homeStanding.getLost() + 1);
         } else {
             homeStanding.setPoints(homeStanding.getPoints() + irrt.getDrawPoint());
             awayStanding.setPoints(awayStanding.getPoints() + irrt.getDrawPoint());
-            homeStanding.setDrawn(homeStanding.getDrawn()+ 1);
-            awayStanding.setDrawn(awayStanding.getDrawn()+ 1);
+            homeStanding.setDrawn(homeStanding.getDrawn() + 1);
+            awayStanding.setDrawn(awayStanding.getDrawn() + 1);
         }
-        
+
+    }
+
+    @Override
+    public void updateStandings(IndividualEliminationMatchEntity match) {
+        IndividualEliminationStandingEntity standing;
+//        IndividualEliminationTournamentEntity tournament;
+        if (match.getHomeScore() > match.getAwayScore()) {
+            standing = findIndividualEliminationOne(match.getHomeCompetitor().getId(), match.getTournament().getId());
+        } else {
+            standing = findIndividualEliminationOne(match.getAwayCompetitor().getId(), match.getTournament().getId());
+        }
+        logger.debug("Update individual elimination standing: {}", standing);
+        standing.setRound(standing.getRound() + 1);
+//        tournament = (IndividualEliminationTournamentEntity) match.getTournament();
+//        Long rounds = tournament.getNumberOfRounds();
     }
 
     @Override
     public List<StandingEntity> findByTournament(Long tournamentId) {
         return em.createNamedQuery("Standing.findByTournament", StandingEntity.class).setParameter("id", tournamentId).getResultList();
     }
-    
-    
-        
+
+    @Override
+    public List<IndividualEliminationStandingEntity> findByTournamentAndRound(IndividualEliminationTournamentEntity tournament, Long round) {
+        return em.createNamedQuery("Standing.findByTournamentAndRound",
+                IndividualEliminationStandingEntity.class).setParameter("tournamentid", tournament.getId()).setParameter("round", round).getResultList();
+    }
+
+    @Override
+    public void persistStanding(IndividualEliminationTournamentEntity tournament, PersonEntity person) {
+        logger.debug("Persisting individual elimination standing...");
+        IndividualEliminationStandingEntity ies = new IndividualEliminationStandingEntity(person, 1l, tournament);
+        em.persist(ies);
+        tournament.getStandings().add(ies);
+    }
+
 }

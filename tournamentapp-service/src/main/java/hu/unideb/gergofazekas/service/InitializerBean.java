@@ -104,6 +104,15 @@ public class InitializerBean {
         
         IndividualEliminationTournamentEntity tmp = new IndividualEliminationTournamentEntity(2l, "UK OPEN", "Darts championship", 4, calendarToDate(2018, 2, 1));
         tournamentServiceLocal.persistTournament(tmp);
+        
+        IndividualEliminationTournamentEntity carabaoCup = new IndividualEliminationTournamentEntity(2l, "Carabao Cup 2018", "English football competition", 4, calendarToDate(2018, 2, 1));
+        carabaoCup.setStatus(TournamentStatus.IN_PROGRESS);
+        tournamentServiceLocal.persistTournament(carabaoCup);
+        tournamentServiceLocal.persistEntry(carabaoCup.getId(), "geri");
+        tournamentServiceLocal.persistEntry(carabaoCup.getId(), "jonas");
+        tournamentServiceLocal.persistEntry(carabaoCup.getId(), "zoe45");
+        tournamentServiceLocal.persistEntry(carabaoCup.getId(), "lottaro");
+        tournamentServiceLocal.kickoffElimination(carabaoCup.getId());
 
         tournamentServiceLocal.persistCompetitor((IndividualRoundRobinTournamentEntity) tournamentEntity, personEntity1);
         tournamentServiceLocal.persistCompetitor((IndividualRoundRobinTournamentEntity) tournamentEntity, personEntity2);

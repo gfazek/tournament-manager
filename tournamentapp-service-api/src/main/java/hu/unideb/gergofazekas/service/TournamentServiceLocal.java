@@ -5,6 +5,7 @@
  */
 package hu.unideb.gergofazekas.service;
 
+import hu.unideb.gergofazekas.entity.IndividualEliminationTournamentEntity;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
@@ -30,4 +31,7 @@ public interface TournamentServiceLocal {
     void kickoffElimination(Long id);
     void checkStatus(TournamentEntity tournamentEntity);
     void deleteEntry(Long tournamentId, String username);
+    boolean isFinishedRound(Long tournamentId, Long round);
+    void registerNextRound(IndividualEliminationTournamentEntity tournament, Long round);
+    void close(TournamentEntity tournamentEntity);
 }

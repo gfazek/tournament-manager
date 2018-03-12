@@ -120,8 +120,8 @@ and open the template in the editor.
                 <div class="custom-card">
                     <h4 class="custom-card-header">Matches</h4>
                     <div class="card-body">
-                        <p:tabView id="roundTab">
-                            <p:tab title="Round 1">
+                        <p:tabView id="roundTab" value="#{eliminationDetailBean.rounds}" var="round">
+                            <p:tab title="Round #{round}">
                                 <p:panelGrid style="width: 100%" id="matchesgrid">
                                     <f:facet name="header">
                                         <p:row>
@@ -129,7 +129,7 @@ and open the template in the editor.
                                             <p:column colspan="2">RESULT/STATUS</p:column>
                                         </p:row>
                                     </f:facet>
-                                    <p:repeat value="#{eliminationDetailBean.matches}" var="match">
+                                    <p:repeat value="#{eliminationDetailBean.getMatchesByRound(round)}" var="match">
                                         <p:row>
                                             <p:column colspan="3" style="font-weight: bold; text-align: center">#{match.homeCompetitor.username}</p:column>
                                             <p:column colspan="1" rendered="#{match.status eq 'FINISHED'}" style="font-weight: bold; text-align: center">#{match.homeScore}</p:column>
@@ -173,7 +173,7 @@ and open the template in the editor.
                         <p:outputLabel for="awayScore" value="#{eliminationDetailBean.selectedMatch.awayCompetitor.username}: " />
                         <p:inputNumber id="awayScore" value="#{eliminationDetailBean.awayScore}" />
                         <f:facet name="footer">
-                            <p:commandButton update=":matchesform:roundTab:matchesgrid :detailsform" value="Register result" action="#{eliminationDetailBean.registerResult}" oncomplete="PF('resultdlgwdg').hide();" />
+                            <p:commandButton update=":matchesform :detailsform" value="Register result" action="#{eliminationDetailBean.registerResult}" oncomplete="PF('resultdlgwdg').hide();" />
                         </f:facet>  
                     </h:panelGrid>
                 </h:form>
@@ -184,7 +184,7 @@ and open the template in the editor.
                         <p:outputLabel for="startTime" value="Start time: " />
                         <p:calendar id="startTime" value="#{eliminationDetailBean.matchTime}" pattern="MM/dd/yyyy HH:mm" showOn="button" />
                         <f:facet name="footer">
-                            <p:commandButton update=":matchesform:roundTab:matchesgrid" value="Set match time" action="#{eliminationDetailBean.scheduleMatch}" oncomplete="PF('scheduledlgwdg').hide();" />
+                            <p:commandButton update=":matchesform" value="Set match time" action="#{eliminationDetailBean.scheduleMatch}" oncomplete="PF('scheduledlgwdg').hide();" />
                         </f:facet>  
                     </h:panelGrid>
                 </h:form>

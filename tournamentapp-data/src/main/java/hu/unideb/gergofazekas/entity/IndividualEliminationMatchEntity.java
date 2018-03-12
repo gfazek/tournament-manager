@@ -8,6 +8,8 @@ package hu.unideb.gergofazekas.entity;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
  *
@@ -15,6 +17,10 @@ import javax.persistence.ManyToOne;
  */
 @Entity
 @DiscriminatorValue(value = "IndividualElimination")
+@NamedQueries({
+    @NamedQuery(name = "IndividualEliminationMatch.getMatchesByRound", 
+            query = "SELECT m FROM IndividualEliminationMatchEntity m WHERE m.tournament.id = :tournamentid and m.round = :round")
+})
 public class IndividualEliminationMatchEntity extends EliminationMatchEntity {
     
     @ManyToOne

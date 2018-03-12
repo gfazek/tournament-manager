@@ -18,21 +18,21 @@ import javax.persistence.NamedQuery;
 @Entity
 @DiscriminatorValue(value = "IndividualRoundRobin")
 @NamedQueries({
-    @NamedQuery(name = "Standing.findOne", query = "SELECT s FROM IndividualRoundRobinStandingEntity s WHERE s.person.id = :pid AND s.tournamentEntity.id = :tid")
+    @NamedQuery(name = "Standing.findIndividualRoundRobinOne", query = "SELECT s FROM IndividualRoundRobinStandingEntity s WHERE s.person.id = :pid AND s.tournamentEntity.id = :tid")
 })
 public class IndividualRoundRobinStandingEntity extends RoundRobinStandingEntity {
-    
+
     @ManyToOne
     private PersonEntity person;
 
     public IndividualRoundRobinStandingEntity() {
     }
-    
+
     public IndividualRoundRobinStandingEntity(PersonEntity person, int played, int won, int drawn, int lost, int points, TournamentEntity tournamentEntity) {
         super(played, won, drawn, lost, points, tournamentEntity);
         this.person = person;
     }
-    
+
     public PersonEntity getPersonEntity() {
         return person;
     }
@@ -45,5 +45,5 @@ public class IndividualRoundRobinStandingEntity extends RoundRobinStandingEntity
     public String toString() {
         return "IndividualRoundRobinStandingEntity{" + "tournamentEntity=" + getTournamentEntity().getName() + ", played=" + getPlayed() + ", won=" + getWon() + ", drawn=" + getDrawn() + ", lost=" + getLost() + ", points=" + getPoints() + ", person=" + person.getUsername() + '}';
     }
-    
+
 }

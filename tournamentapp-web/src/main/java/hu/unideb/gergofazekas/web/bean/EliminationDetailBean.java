@@ -16,6 +16,7 @@ import hu.unideb.gergofazekas.service.TournamentServiceLocal;
 import hu.unideb.gergofazekas.utility.CompetitorType;
 import hu.unideb.gergofazekas.utility.TournamentStatus;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,7 @@ public class EliminationDetailBean implements Serializable {
     private List<IndividualEliminationMatchEntity> matches;
     private List<PersonEntity> competitors;
     private EliminationMatchEntity selectedMatch;
+    private List<Long> rounds;
     private Double homeScore, awayScore;
     private Date matchTime;
     private int registeredCompetitors;
@@ -70,7 +72,22 @@ public class EliminationDetailBean implements Serializable {
         if (tournamentEntity.getCompetitorType() == CompetitorType.PLAYER) {
             IndividualEliminationTournamentEntity iet = (IndividualEliminationTournamentEntity) tournamentEntity;
             competitors = iet.getPeople();
+            rounds = initializeRoundsList();
         }
+    }
+    
+    private List<Long> initializeRoundsList() {
+        List<Long> ret = new ArrayList<>();
+        for (long l = 0l; l < tournamentEntity.getNumberOfRounds(); l++) {
+            ret.add(l + 1);
+        }
+        logger.debug("Rounds list: {}", ret);
+        return ret;
+    }
+    
+    public List<IndividualEliminationMatchEntity> getMatchesByRound(Long round) {
+        logger.debug("getMatchesByRound invoked with: {}", round);
+        return matchServiceLocal.getMatchesByRound(tournamentEntity.getId(), round);
     }
 
     public boolean showEntry() {
@@ -123,7 +140,7 @@ public class EliminationDetailBean implements Serializable {
     }
 
     public void registerResult() {
-        matchServiceLocal.registerEliminationMatchResult(selectedMatch, homeScore.intValue(), awayScore.intValue());
+        matchServiceLocal.registerMatchResult((IndividualEliminationMatchEntity) selectedMatch, homeScore.intValue(), awayScore.intValue());
     }
 
     public void scheduleMatch() {
@@ -223,6 +240,14 @@ public class EliminationDetailBean implements Serializable {
 
     public void setPersonServiceLocal(PersonServiceLocal personServiceLocal) {
         this.personServiceLocal = personServiceLocal;
+    }
+
+    public List<Long> getRounds() {
+        return rounds;
+    }
+
+    public void setRounds(List<Long> rounds) {
+        this.rounds = rounds;
     }
 
 }

@@ -15,6 +15,7 @@ import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
 import hu.unideb.gergofazekas.utility.MatchStatus;
 import java.util.Date;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Named;
@@ -87,8 +88,9 @@ public class MatchBean implements MatchServiceLocal {
     }
 
     @Override
-    public void persistMatch(PersonEntity homeCompetitor, PersonEntity awayCompetitor, IndividualEliminationTournamentEntity iet) {
-        IndividualEliminationMatchEntity match = new IndividualEliminationMatchEntity(homeCompetitor, awayCompetitor, 1l);
+    public void persistMatch(PersonEntity homeCompetitor, PersonEntity awayCompetitor, IndividualEliminationTournamentEntity iet, Long round) {
+        logger.debug("Persisting individual elimination match...");
+        IndividualEliminationMatchEntity match = new IndividualEliminationMatchEntity(homeCompetitor, awayCompetitor, round);
         match.setTournament(iet);
         em.persist(match);
         iet.getMatches().add(match);
@@ -114,17 +116,24 @@ public class MatchBean implements MatchServiceLocal {
     }
 
     @Override
-    public void registerEliminationMatchResult(MatchEntity matchEntity, int homeScore, int awayScore) {
-        logger.debug("Register elimination match result: {}", matchEntity);
+    public void registerMatchResult(IndividualEliminationMatchEntity matchEntity, int homeScore, int awayScore) {
+        logger.debug("Register individual elimination match result: {}", matchEntity);
         matchEntity.setHomeScore(homeScore);
         matchEntity.setAwayScore(awayScore);
         matchEntity.setStatus(MatchStatus.FINISHED);
         em.merge(matchEntity);
+        standingServiceLocal.updateStandings(matchEntity);
+        tournamentServiceLocal.registerNextRound((IndividualEliminationTournamentEntity) matchEntity.getTournament(), matchEntity.getRound());
     }
 
     @Override
     public MatchEntity findOne(Long id) {
         return em.find(MatchEntity.class, id);
+    }
+
+    @Override
+    public List<IndividualEliminationMatchEntity> getMatchesByRound(Long tournamentId, Long round) {
+        return em.createNamedQuery("IndividualEliminationMatch.getMatchesByRound", IndividualEliminationMatchEntity.class).setParameter("tournamentid", tournamentId).setParameter("round", round).getResultList();
     }
 
 }

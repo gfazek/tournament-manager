@@ -5,6 +5,8 @@
  */
 package hu.unideb.gergofazekas.service;
 
+import hu.unideb.gergofazekas.entity.IndividualEliminationMatchEntity;
+import hu.unideb.gergofazekas.entity.IndividualEliminationStandingEntity;
 import hu.unideb.gergofazekas.entity.IndividualEliminationTournamentEntity;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
 import hu.unideb.gergofazekas.entity.MatchEntity;
@@ -50,6 +52,7 @@ public class TournamentBean implements TournamentServiceLocal {
     @Override
     public void persistTournament(TournamentEntity tournamentEntity) {
         em.persist(tournamentEntity);
+        em.flush();
     }
 
     @Override
@@ -92,7 +95,7 @@ public class TournamentBean implements TournamentServiceLocal {
             tmp.getPeople().add(personEntity);
             personEntity.getRoundRobinTournaments().add((IndividualRoundRobinTournamentEntity) tournamentEntity);
         } else if (isIndividualElimination(tournamentEntity)) {
-            IndividualEliminationTournamentEntity iet  = (IndividualEliminationTournamentEntity) tournamentEntity;
+            IndividualEliminationTournamentEntity iet = (IndividualEliminationTournamentEntity) tournamentEntity;
             iet.getPeople().add(personEntity);
         }
     }
@@ -101,9 +104,9 @@ public class TournamentBean implements TournamentServiceLocal {
     public List<PersonEntity> getIndividualCompetitors(Long id, TournamentType tournamentType) {
         List<PersonEntity> competitors = new ArrayList<>();
         if (tournamentType == TournamentType.ELIMINATION) {
-         competitors = em.createNamedQuery("IndividualEliminationTournament.findCompetitors", PersonEntity.class).setParameter("id", id).getResultList();
+            competitors = em.createNamedQuery("IndividualEliminationTournament.findCompetitors", PersonEntity.class).setParameter("id", id).getResultList();
         } else if (tournamentType == TournamentType.ROUNDROBIN) {
-         competitors = em.createNamedQuery("IndividualRoundRobinTournament.findCompetitors", PersonEntity.class).setParameter("id", id).getResultList();
+            competitors = em.createNamedQuery("IndividualRoundRobinTournament.findCompetitors", PersonEntity.class).setParameter("id", id).getResultList();
         }
         if (competitors.get(0) == null && competitors.size() == 1) {
             return new ArrayList<>();
@@ -140,9 +143,12 @@ public class TournamentBean implements TournamentServiceLocal {
         if (tournamentEntity.getCompetitorType() == CompetitorType.PLAYER) {
             IndividualEliminationTournamentEntity iet = (IndividualEliminationTournamentEntity) tournamentEntity;
             List<PersonEntity> competitors = iet.getPeople();
+            for (PersonEntity competitor : competitors) {
+                standingServiceLocal.persistStanding(iet, competitor);
+            }
             Collections.shuffle(competitors);
             for (int i = 0; i < competitors.size() - 1; i = i + 2) {
-                matchServiceLocal.persistMatch(competitors.get(i), competitors.get(i + 1), iet);
+                matchServiceLocal.persistMatch(competitors.get(i), competitors.get(i + 1), iet, 1l);
             }
         }
     }
@@ -169,19 +175,57 @@ public class TournamentBean implements TournamentServiceLocal {
             tmp.getPeople().remove(personEntity);
             personEntity.getRoundRobinTournaments().remove((IndividualRoundRobinTournamentEntity) tournamentEntity);
         } else if (isIndividualElimination(tournamentEntity)) {
-            IndividualEliminationTournamentEntity iet  = (IndividualEliminationTournamentEntity) tournamentEntity;
+            IndividualEliminationTournamentEntity iet = (IndividualEliminationTournamentEntity) tournamentEntity;
             iet.getPeople().remove(personEntity);
             logger.debug("after remove: {}", iet.getPeople());
         }
     }
-    
+
+    @Override
+    public void registerNextRound(IndividualEliminationTournamentEntity tournament, Long round) {
+        logger.debug("Managing next round: {}", tournament);
+        if (isFinishedRound(tournament.getId(), round)) {
+            List<IndividualEliminationStandingEntity> standings = standingServiceLocal.findByTournamentAndRound(tournament, round + 1);
+            List<PersonEntity> competitors = new ArrayList<>();
+            for (IndividualEliminationStandingEntity standing : standings) {
+                competitors.add(standing.getPerson());
+            }
+            if (competitors.size() == 1) {
+                close(tournament);
+                return;
+            }
+            Collections.shuffle(competitors);
+            for (int i = 0; i < competitors.size() - 1; i = i + 2) {
+                matchServiceLocal.persistMatch(competitors.get(i), competitors.get(i + 1), tournament, round + 1);
+            }
+        }
+    }
+
+    @Override
+    public void close(TournamentEntity tournamentEntity) {
+        logger.debug("Closing tournament: {}", tournamentEntity);
+        tournamentEntity.setStatus(TournamentStatus.CLOSED);
+        em.merge(tournamentEntity); // MAYBE IT'S NECESSARY
+    }
+
+    @Override
+    public boolean isFinishedRound(Long tournamentId, Long round) {
+        List<IndividualEliminationMatchEntity> matches = matchServiceLocal.getMatchesByRound(tournamentId, round);
+        for (IndividualEliminationMatchEntity match : matches) {
+            if (match.getStatus() != MatchStatus.FINISHED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private boolean isIndividualRoundRobin(TournamentEntity tournamentEntity) {
-        return tournamentEntity.getType() == TournamentType.ROUNDROBIN 
+        return tournamentEntity.getType() == TournamentType.ROUNDROBIN
                 && tournamentEntity.getCompetitorType() == CompetitorType.PLAYER;
     }
-    
+
     private boolean isIndividualElimination(TournamentEntity tournamentEntity) {
-        return tournamentEntity.getType() == TournamentType.ELIMINATION 
+        return tournamentEntity.getType() == TournamentType.ELIMINATION
                 && tournamentEntity.getCompetitorType() == CompetitorType.PLAYER;
     }
 
