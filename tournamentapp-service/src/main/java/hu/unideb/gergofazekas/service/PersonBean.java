@@ -85,8 +85,25 @@ public class PersonBean implements PersonServiceLocal {
 
     @Override
     public void updatePerson(PersonEntity personEntity) {
+        personEntity.setPassword(encoder.encode(personEntity.getPassword()));
         logger.debug("Updating person: {}", personEntity);
-//        em.merge(personEntity);
+        em.merge(personEntity);
+    }
+
+    @Override
+    public void makeSupervisor(Long id) {
+        PersonEntity personEntity = em.find(PersonEntity.class, id);
+        RoleEntity supervisorRole = em.createNamedQuery("Role.findByName", RoleEntity.class).setParameter("rolename", Role.SUPERVISOR).getSingleResult();
+        personEntity.getRoles().add(supervisorRole);
+        supervisorRole.getPeople().add(personEntity);
+    }
+
+    @Override
+    public void makeUser(Long id) {
+        PersonEntity personEntity = em.find(PersonEntity.class, id);
+        RoleEntity supervisorRole = em.createNamedQuery("Role.findByName", RoleEntity.class).setParameter("rolename", Role.SUPERVISOR).getSingleResult();
+        personEntity.getRoles().remove(supervisorRole);
+        supervisorRole.getPeople().remove(personEntity);
     }
 
 }

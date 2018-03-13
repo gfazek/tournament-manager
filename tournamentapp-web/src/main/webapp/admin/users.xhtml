@@ -41,10 +41,11 @@ and open the template in the editor.
                                 <h:outputText value="#{user.email}" />
                             </p:column>
                             <p:column headerText="Status">
-                                <h:outputText value="#{user.enabled ? 'Active' : 'Inactive'}" />
+                                <h:outputText class="#{user.enabled ? 'text-success' : 'text-danger'}" value="#{user.enabled ? 'Active' : 'Inactive'}" />
                             </p:column>
                             <p:column headerText="Operations">
-                                <h:commandLink value="Delete"  actionListener="#{usersBean.deleteUser(user.id)}"/><br/>
+                                <h:commandLink rendered="#{not usersBean.isSupervisor(user)}" value="Make supervisor"  actionListener="#{usersBean.makeSupervisor(user.id)}"/><br/>
+                                <h:commandLink rendered="#{usersBean.isSupervisor(user)}" value="Make user"  actionListener="#{usersBean.makeUser(user.id)}"/><br/>
                                 <h:commandLink value="Change Status"  actionListener="#{usersBean.changeUserStatus(user.id)}"/>
                             </p:column>
                         </p:dataTable>

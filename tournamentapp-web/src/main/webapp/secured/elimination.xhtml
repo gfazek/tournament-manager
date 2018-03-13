@@ -80,6 +80,8 @@ and open the template in the editor.
                                 </h:panelGroup> 
                             </sec:authorize>
                         </div>
+                        <p:separator />
+                        <p class="font-weight-bold text-center">Registered competitors</p>
                         <p:panelGrid style="width: 100%;" id="competitorsgrid">
                             <f:facet name="header">
                                 <p:row>
@@ -87,11 +89,11 @@ and open the template in the editor.
                                     <p:column colspan="1">FULL NAME</p:column>
                                     <p:column colspan="1">GENDER</p:column>
                                     <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
-                                        <p:column colspan="1">OPERATION</p:column>
+                                        <p:column rendered="#{eliminationDetailBean.tournamentEntity.status eq 'OPEN'}" colspan="1">OPERATION</p:column>
                                     </sec:authorize>
                                 </p:row>
                             </f:facet>
-                            <p:repeat value="#{eliminationDetailBean.competitors}" rendered="#{eliminationDetailBean.tournamentEntity.status eq 'OPEN'}" var="competitor">
+                            <p:repeat value="#{eliminationDetailBean.competitors}" var="competitor">
                                 <p:row>
                                     <p:column>
                                         <h:outputText value="#{competitor.username}" />
@@ -103,7 +105,7 @@ and open the template in the editor.
                                         <h:outputText value="#{competitor.gender}" />
                                     </p:column>
                                     <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
-                                        <p:column>
+                                        <p:column rendered="#{eliminationDetailBean.tournamentEntity.status eq 'OPEN'}">
                                             <p:commandLink update="detailsform" actionListener="#{eliminationDetailBean.deleteEntry(competitor.username)}">
                                                 <h:outputText value="Delete entry" />
                                             </p:commandLink>
@@ -145,12 +147,12 @@ and open the template in the editor.
                                                 <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
                                                     <p:commandButton update=":resultform:resultpanel" oncomplete="PF('resultdlgwdg').show()" value="Add result" action="#{eliminationDetailBean.setSelectedMatch(match)}"/>
                                                 </sec:authorize>
-                                                <sec:authorize access="!hasRole('ROLE_SUPERVISOR')">
+<!--                                                <sec:authorize access="!hasRole('ROLE_SUPERVISOR')">-->
                                                     <h:outputText value="Will be played at, " />
                                                     <h:outputText value="#{match.time}">
                                                         <f:convertDateTime pattern="yyyy.MM.dd HH:mm" />
                                                     </h:outputText>
-                                                </sec:authorize>
+                                                <!--</sec:authorize>-->
                                             </p:column>
                                         </p:row>
                                         <p:row> 

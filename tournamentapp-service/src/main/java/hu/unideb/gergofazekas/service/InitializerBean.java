@@ -78,12 +78,21 @@ public class InitializerBean {
                 .firstName("Lotta").lastName("Aro").gender(Gender.FEMALE).dob(calendarToDate(2000, 1, 29)).createPerson();
         PersonEntity personEntity5 = new PersonEntity.PersonBuilder().username("sara1997").email("sara.brun@example.com").password("pass5")
                 .firstName("Sara").lastName("Brun").gender(Gender.FEMALE).dob(calendarToDate(1997, 12, 18)).createPerson();
+        PersonEntity personEntity6 = new PersonEntity.PersonBuilder().username("david").email("sara.brun@example.com").password("pass5")
+                .firstName("Sara").lastName("Brun").gender(Gender.FEMALE).dob(calendarToDate(1997, 12, 18)).createPerson();
+        PersonEntity personEntity7 = new PersonEntity.PersonBuilder().username("michael").email("sara.brun@example.com").password("pass5")
+                .firstName("Sara").lastName("Brun").gender(Gender.FEMALE).dob(calendarToDate(1997, 12, 18)).createPerson();
+        PersonEntity personEntity8 = new PersonEntity.PersonBuilder().username("lincoln").email("sara.brun@example.com").password("pass5")
+                .firstName("Sara").lastName("Brun").gender(Gender.FEMALE).dob(calendarToDate(1997, 12, 18)).createPerson();
 
         personServiceLocal.persistPerson(personEntity1, Role.ADMIN);
         personServiceLocal.persistPerson(personEntity2, Role.SUPERVISOR);
         personServiceLocal.persistPerson(personEntity3, Role.USER);
         personServiceLocal.persistPerson(personEntity4, Role.USER);
         personServiceLocal.persistPerson(personEntity5, Role.USER);
+        personServiceLocal.persistPerson(personEntity6, Role.USER);
+        personServiceLocal.persistPerson(personEntity7, Role.USER);
+        personServiceLocal.persistPerson(personEntity8, Role.USER);
 
         TeamEntity teamEntity1 = new TeamEntity("Manchester City");
         TeamEntity teamEntity2 = new TeamEntity("FC Barcelona");
@@ -105,13 +114,17 @@ public class InitializerBean {
         IndividualEliminationTournamentEntity tmp = new IndividualEliminationTournamentEntity(2l, "UK OPEN", "Darts championship", 4, calendarToDate(2018, 2, 1));
         tournamentServiceLocal.persistTournament(tmp);
         
-        IndividualEliminationTournamentEntity carabaoCup = new IndividualEliminationTournamentEntity(2l, "Carabao Cup 2018", "English football competition", 4, calendarToDate(2018, 2, 1));
+        IndividualEliminationTournamentEntity carabaoCup = new IndividualEliminationTournamentEntity(3l, "Carabao Cup 2018", "English football competition", 8, calendarToDate(2018, 2, 1));
         carabaoCup.setStatus(TournamentStatus.IN_PROGRESS);
         tournamentServiceLocal.persistTournament(carabaoCup);
         tournamentServiceLocal.persistEntry(carabaoCup.getId(), "geri");
         tournamentServiceLocal.persistEntry(carabaoCup.getId(), "jonas");
         tournamentServiceLocal.persistEntry(carabaoCup.getId(), "zoe45");
         tournamentServiceLocal.persistEntry(carabaoCup.getId(), "lottaro");
+        tournamentServiceLocal.persistEntry(carabaoCup.getId(), "sara1997");
+        tournamentServiceLocal.persistEntry(carabaoCup.getId(), "david");
+        tournamentServiceLocal.persistEntry(carabaoCup.getId(), "michael");
+        tournamentServiceLocal.persistEntry(carabaoCup.getId(), "lincoln");
         tournamentServiceLocal.kickoffElimination(carabaoCup.getId());
 
         tournamentServiceLocal.persistCompetitor((IndividualRoundRobinTournamentEntity) tournamentEntity, personEntity1);

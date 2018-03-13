@@ -6,7 +6,6 @@
 package hu.unideb.gergofazekas.service;
 
 import hu.unideb.gergofazekas.entity.PersonEntity;
-import hu.unideb.gergofazekas.entity.RoleEntity;
 import hu.unideb.gergofazekas.utility.Role;
 import java.util.List;
 import javax.ejb.Local;
@@ -24,5 +23,7 @@ public interface PersonServiceLocal {
     void changeUserStatus(Long id);
     PersonEntity findByUsername(String username);
     void updatePerson(PersonEntity personEntity);
+    void makeSupervisor(Long id);
+    void makeUser(Long id);
     
 }

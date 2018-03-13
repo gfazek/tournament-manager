@@ -74,3 +74,15 @@ body {
     background-color: transparent;
     -webkit-text-decoration-skip: objects;
 }
+
+.bg-champion {
+    background-color: #ffd700!important
+}
+
+.bg-runnerup {
+    background-color: #ededed!important
+}
+
+.bg-third {
+    background-color: #e8c6a4!important
+}
