@@ -5,15 +5,21 @@
  */
 package hu.unideb.gergofazekas.entity;
 
+import hu.unideb.gergofazekas.utility.MatchStatus;
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -22,7 +28,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "MATCH")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "TYPE")
+@DiscriminatorColumn(name = "DTYPE")
 public abstract class MatchEntity extends BaseEntity implements Serializable {
     
 //    @Basic(optional = false)
@@ -33,15 +39,26 @@ public abstract class MatchEntity extends BaseEntity implements Serializable {
     @Column(name = "AWAY_SCORE")
     private int awayScore;
     
+    @Basic(optional = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "STATUS")
+    private MatchStatus status;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "TIME")
+    private Date time;
+    
     @ManyToOne
     private TournamentEntity tournament;
 
     public MatchEntity() {
+        this.status = MatchStatus.NEW;
     }
 
     public MatchEntity(int homeScore, int awayScore) {
         this.homeScore = homeScore;
         this.awayScore = awayScore;
+        this.status = MatchStatus.NEW;
     }
 
     public int getHomeScore() {
@@ -60,6 +77,22 @@ public abstract class MatchEntity extends BaseEntity implements Serializable {
         this.awayScore = awayScore;
     }
 
+    public MatchStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(MatchStatus status) {
+        this.status = status;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
+    
     public TournamentEntity getTournament() {
         return tournament;
     }
@@ -70,7 +103,7 @@ public abstract class MatchEntity extends BaseEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "MatchEntity{" + "homeScore=" + homeScore + ", awayScore=" + awayScore + ", tournament=" + tournament + '}';
+        return "MatchEntity{" + "homeScore=" + homeScore + ", awayScore=" + awayScore + ", tournament=" + tournament.getName() + '}';
     }
     
 }

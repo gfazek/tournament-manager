@@ -11,6 +11,7 @@ and open the template in the editor.
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:dt="http://java.sun.com/jsf/composite/components"
                 template="../template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
                 xmlns:sec="http://www.springframework.org/security/tags">
 
     <ui:define name="customHead">
@@ -21,10 +22,26 @@ and open the template in the editor.
             <h1 class="display-3">Administration interface</h1>
             <p class="lead"></p>
             <hr class="my-4"/>
-                <p></p>
-                <p class="lead">
-                    <!--<a class="btn btn-primary btn-lg" href="#" role="button">Register</a>-->
-                </p>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">User management</h5>
+                            <p class="card-text">Handling users in the application</p>
+                            <a href="users.xhtml" class="btn btn-info">Users</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Creating tournaments</h5>
+                            <p class="card-text">Register a new tournament dynamically by parameters</p>
+                            <a href="tournament_creation.xhtml" class="btn btn-info">Create tournament</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </ui:define>
 </ui:composition>

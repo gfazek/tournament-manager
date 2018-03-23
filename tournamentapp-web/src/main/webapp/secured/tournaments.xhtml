@@ -22,6 +22,15 @@ and open the template in the editor.
                 <h4 class="custom-card-header">List of the open tournaments</h4>
                 <div class="card-body">
                     <h:form>
+                        <h:panelGroup layout="block" styleClass="alert alert-info" rendered="#{param.successKickoff != null}">
+                            <h:outputText  value="The tournament has been kicked off successfully!"/>
+                        </h:panelGroup>
+                        <h:panelGroup layout="block" styleClass="alert alert-success" rendered="#{param.successEntry != null}">
+                            <h:outputText  value="You have been registered to the tournament!"/>
+                        </h:panelGroup>
+                        <h:panelGroup layout="block" styleClass="alert alert-info" rendered="#{param.deleteEntry != null}">
+                            <h:outputText  value="You have been deleted from the tournament!"/>
+                        </h:panelGroup>
                         <p:dataTable id="openTournaments" value="#{openTournamentsBean.tournaments}" var="tournament" widgetVar="openTournaments" 
                                      rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" 
                                      reflow="true" filteredValue="#{openTournamentsBean.filteredTournaments}" sortBy="#{tournament.name}"> <!-- styleClass="table table-striped" -->
@@ -32,7 +41,7 @@ and open the template in the editor.
                                                             </p:outputPanel>
                                                         </f:facet>-->
                             <p:column headerText="Name" filterBy="#{tournament.name}">
-                                <p:link value="#{tournament.name}" outcome="/secured/tournament">
+                                <p:link value="#{tournament.name}" outcome="#{openTournamentsBean.navigateToDetailPage(tournament)}">
                                     <f:param name="id" value="#{tournament.id}" />
                                 </p:link>
                             </p:column>

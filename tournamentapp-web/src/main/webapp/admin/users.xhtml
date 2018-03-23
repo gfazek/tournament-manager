@@ -32,20 +32,23 @@ and open the template in the editor.
                                                             </p:outputPanel>
                                                         </f:facet>-->
                             <p:column headerText="Username" filterBy="#{user.username}">
-                                <h:outputText value="#{user.username}"/>
+                                <div style="text-align: center;"><h:outputText value="#{user.username}" class="#{usersBean.isAdmin(user) ? 'text-danger' : (usersBean.isSupervisor(user) ? 'text-success' : '')}"/></div>
                             </p:column>
                             <p:column headerText="Name" >
-                                <h:outputText value="#{user.firstName} #{user.lastName}" />
+                                <div style="text-align: center;"><h:outputText value="#{user.firstName} #{user.lastName}" /></div>
                             </p:column>
                             <p:column headerText="Email" filterBy="#{user.email}">
-                                <h:outputText value="#{user.email}" />
+                                <div style="text-align: center;"><h:outputText value="#{user.email}" /></div>
                             </p:column>
                             <p:column headerText="Status">
-                                <h:outputText value="#{user.enabled ? 'Active' : 'Inactive'}" />
+                                <div style="text-align: center;"><h:outputText class="#{user.enabled ? 'text-success' : 'text-danger'}" value="#{user.enabled ? 'Active' : 'Inactive'}" /></div>
                             </p:column>
                             <p:column headerText="Operations">
-                                <h:commandLink value="Delete"  actionListener="#{usersBean.deleteUser(user.id)}"/><br/>
-                                <h:commandLink value="Change Status"  actionListener="#{usersBean.changeUserStatus(user.id)}"/>
+                                <div style="text-align: center;"><h:commandLink rendered="#{(not usersBean.isSupervisor(user)) and (not usersBean.isAdmin(user))}" value="Make supervisor" actionListener="#{usersBean.makeSupervisor(user.id)}"/></div>
+                                <ui:fragment rendered="#{(not usersBean.isSupervisor(user)) and (not usersBean.isAdmin(user))}"><br /></ui:fragment>
+                                <h:commandLink rendered="#{usersBean.isSupervisor(user) and (not usersBean.isAdmin(user))}" value="Make user"  actionListener="#{usersBean.makeUser(user.id)}"/>
+                                <ui:fragment rendered="#{usersBean.isSupervisor(user) and (not usersBean.isAdmin(user))}"><br /></ui:fragment>
+                                <h:commandLink value="Change Status" rendered="#{not usersBean.isAdmin(user)}" actionListener="#{usersBean.changeUserStatus(user.id)}"/>
                             </p:column>
                         </p:dataTable>
                     </h:form>

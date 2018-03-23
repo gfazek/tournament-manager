@@ -23,28 +23,30 @@ import javax.persistence.NamedQuery;
  * @author gfazekas
  */
 @Entity
-@DiscriminatorValue(value = "IndividualRoundRobin")
+@DiscriminatorValue(value = "IndividualElimination")
 @NamedQueries({
-    @NamedQuery(name = "IndividualRoundRobinTournament.findCompetitors", query = "SELECT t.people FROM IndividualRoundRobinTournamentEntity t WHERE t.id = :id"),
+    @NamedQuery(name = "IndividualEliminationTournament.findCompetitors", query = "SELECT t.people FROM IndividualEliminationTournamentEntity t WHERE t.id = :id"),
 })
-public class IndividualRoundRobinTournamentEntity extends RoundRobinTournamentEntity {
-    
+public class IndividualEliminationTournamentEntity extends EliminationTournamentEntity {
+
     @ManyToMany
-    @JoinTable(name = "PERSON_ROUNDROBIN", joinColumns = {
+    @JoinTable(name = "PERSON_ELIMINATION", joinColumns = {
         @JoinColumn(name = "TOURNAMENT_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
         @JoinColumn(name = "PERSON_ID", referencedColumnName = "ID")})
     private List<PersonEntity> people;
-
-    public IndividualRoundRobinTournamentEntity() {
+    
+    public IndividualEliminationTournamentEntity() {
     }
 
-    public IndividualRoundRobinTournamentEntity(int winPoint, int loosePoint, int drawPoint, String name, String description, int numberOfCompetitors, Date start) {
-        super(winPoint, loosePoint, drawPoint, name, description, CompetitorType.PLAYER, TournamentType.ROUNDROBIN, numberOfCompetitors, start);
+    public IndividualEliminationTournamentEntity(Long numberOfRounds, String name, String description, int numberOfCompetitors, Date start) {
+        super(numberOfRounds, name, description, CompetitorType.PLAYER, TournamentType.ELIMINATION, numberOfCompetitors, start);
         this.people = new ArrayList<>();
     }
 
+   
+
     public List<PersonEntity> getPeople() {
-        return this.people;
+        return people;
     }
 
     public void setPeople(List<PersonEntity> people) {
@@ -53,13 +55,14 @@ public class IndividualRoundRobinTournamentEntity extends RoundRobinTournamentEn
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("IndividualRoundRobinTournamentEntity{"  + "name=" + getName() + ", description=" + getDescription() + ", status=" + getStatus() + ", numberOfCompetitors=" + getNumberOfCompetitors() + ", start=" + getStart() + ", matches=" + getMatches() + ", winPoint=" + getWinPoint() + ", loosePoint=" + getLoosePoint() + ", drawPoint=" + getDrawPoint() + ", people=");
-        people.forEach(person -> {
-            sb.append(person.getUsername()).append(",");
+        StringBuilder sb = new StringBuilder("IndividualEliminationTournamentEntity{");
+        sb.append("name=").append(getName()).append(", ");
+        sb.append("people=");
+        people.forEach(p -> {
+            sb.append(p.getUsername()).append(",");
         });
         sb.append("}");
         return sb.toString();
     }
-    
     
 }

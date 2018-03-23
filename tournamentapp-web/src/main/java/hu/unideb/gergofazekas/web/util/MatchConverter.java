@@ -1,22 +1,18 @@
-/*7 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package hu.unideb.gergofazekas.web.util;
 
-import hu.unideb.gergofazekas.entity.TournamentEntity;
-import hu.unideb.gergofazekas.service.TournamentServiceLocal;
-import java.io.Serializable;
-import java.util.logging.Level;
+import hu.unideb.gergofazekas.entity.MatchEntity;
+import hu.unideb.gergofazekas.service.MatchServiceLocal;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
-import javax.faces.convert.FacesConverter;
-import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,43 +23,43 @@ import org.apache.logging.log4j.Logger;
  */
 @Named
 @RequestScoped
-public class TournamentConverter implements Converter {
+public class MatchConverter implements Converter {
     
     private static final Logger logger = LogManager.getLogger(TournamentConverter.class);
     
     @EJB
-    private TournamentServiceLocal tournamentServiceLocal;
+    private MatchServiceLocal matchServiceLocal;
     
-    public TournamentConverter() {
+    public MatchConverter() {
     }
-    
+
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
-        logger.debug("TournamentConverter getAsObject called with String value: called with {}: ", value);
+        logger.debug("MatchConverter getAsObject called with String value: called with {}: ", value);
         if (value == null || value.isEmpty()) {
             return null;
         }
         try {
             Long id = Long.valueOf(value);
-            TournamentEntity tmp = tournamentServiceLocal.findTournament(id);
-            logger.debug("TournamentEntity: {}", tmp);
+            MatchEntity tmp = matchServiceLocal.findOne(id);
+            logger.debug("Matchentity: {}", tmp);
             return tmp;
         } catch (NumberFormatException e) {
-            throw new ConverterException("The value is not a valid Tournament ID: " + value, e);
+            throw new ConverterException("The value is not a valid match ID: " + value, e);
         }
     }
 
     @Override
     public String getAsString(FacesContext context, UIComponent component, Object value) {
-        logger.debug("TournamentConverter getAsSttring called with Object value: {}", value);
+        logger.debug("MatchConverter getAsSttring called with Object value: {}", value);
         if (value == null) {
             return "";
         }
-        if (value instanceof TournamentEntity) {
-            Long id = ((TournamentEntity) value).getId();
+        if (value instanceof MatchEntity) {
+            Long id = ((MatchEntity) value).getId();
             return (id != null) ? String.valueOf(id) : null;
         } else {
-            throw new ConverterException("The value is not a valid Tournament instance: " + value);
+            throw new ConverterException("The value is not a valid Match instance: " + value);
         }
     }
 }

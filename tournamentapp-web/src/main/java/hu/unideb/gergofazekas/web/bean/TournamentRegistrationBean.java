@@ -5,16 +5,16 @@
  */
 package hu.unideb.gergofazekas.web.bean;
 
+import hu.unideb.gergofazekas.entity.IndividualEliminationTournamentEntity;
 import hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity;
-import hu.unideb.gergofazekas.entity.RoundRobinTournamentEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
 import hu.unideb.gergofazekas.service.TournamentServiceLocal;
 import hu.unideb.gergofazekas.web.utility.CompetitorType;
 import hu.unideb.gergofazekas.web.utility.TournamentType;
-import java.util.logging.Level;
+import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,14 +24,15 @@ import org.apache.logging.log4j.Logger;
  * @author gfazekas
  */
 @Named
-@RequestScoped
-public class TournamentRegistrationBean {
+@ViewScoped
+public class TournamentRegistrationBean implements Serializable {
     
     private static final Logger logger = LogManager.getLogger(TournamentRegistrationBean.class);
     
     private TournamentEntity tournamentEntity;
     private CompetitorType[] competitorTypes;
     private TournamentType[] tournamentTypes;
+    private TournamentType tournamentType;
     private TournamentVo tournamentVo;
     
     @EJB
@@ -47,13 +48,20 @@ public class TournamentRegistrationBean {
     }
     
     public String createTournament() {
-        if (tournamentVo.getTournamentType() == TournamentType.ROUNDROBIN 
+        if (tournamentType == TournamentType.ROUNDROBIN 
                 && tournamentVo.getCompetitorType() == CompetitorType.PLAYER) {
-            tournamentEntity = new IndividualRoundRobinTournamentEntity(tournamentVo.getName(), tournamentVo.getDescription(), tournamentVo.getNumberOfCompetitors(), tournamentVo.getStart(), 
-                    tournamentVo.getWinPoint(), tournamentVo.getDrawPoint(), tournamentVo.getLoosePoint());
+            tournamentEntity = new IndividualRoundRobinTournamentEntity(tournamentVo.getWinPoint(), tournamentVo.getLoosePoint(), tournamentVo.getDrawPoint(), 
+                    tournamentVo.getName(), tournamentVo.getDescription(), tournamentVo.getNumberOfCompetitors(), tournamentVo.getStart());
+        } else if (tournamentType == TournamentType.ELIMINATION) {
+            tournamentEntity = new IndividualEliminationTournamentEntity(calculateNumberOfRounds(tournamentVo.getNumberOfCompetitors()), tournamentVo.getName(), 
+                    tournamentVo.getDescription(), tournamentVo.getNumberOfCompetitors(), tournamentVo.getStart());
         }
         tournamentServiceLocal.persistTournament(tournamentEntity);
         return "index";
+    }
+    
+    public Long calculateNumberOfRounds(int numberOfCompetitors) {
+        return (long)(Math.log(numberOfCompetitors) / Math.log(2));
     }
 
     public TournamentEntity getTournamentEntity() {
@@ -78,6 +86,14 @@ public class TournamentRegistrationBean {
     
     public TournamentType[] getTournamentTypes() {
         return TournamentType.values();
+    }
+
+    public TournamentType getTournamentType() {
+        return tournamentType;
+    }
+
+    public void setTournamentType(TournamentType tournamentType) {
+        this.tournamentType = tournamentType;
     }
 
     public TournamentServiceLocal getTournamentServiceLocal() {

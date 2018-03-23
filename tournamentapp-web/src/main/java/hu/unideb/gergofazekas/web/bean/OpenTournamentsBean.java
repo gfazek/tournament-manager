@@ -7,11 +7,11 @@ package hu.unideb.gergofazekas.web.bean;
 
 import hu.unideb.gergofazekas.entity.TournamentEntity;
 import hu.unideb.gergofazekas.service.TournamentServiceLocal;
+import hu.unideb.gergofazekas.utility.TournamentType;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
@@ -30,6 +30,15 @@ public class OpenTournamentsBean implements Serializable {
     private TournamentServiceLocal tournamentServiceLocal;
     
     public OpenTournamentsBean() {
+    }
+    
+    public String navigateToDetailPage(TournamentEntity tournamentEntity) {
+        if (tournamentEntity.getType() == TournamentType.ROUNDROBIN) {
+            return "roundrobin";
+        } else if (tournamentEntity.getType() == TournamentType.ELIMINATION) {
+            return "elimination";
+        }
+        return null;
     }
     
     @PostConstruct

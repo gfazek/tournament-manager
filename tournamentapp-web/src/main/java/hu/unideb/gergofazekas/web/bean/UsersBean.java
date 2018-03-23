@@ -6,13 +6,13 @@
 package hu.unideb.gergofazekas.web.bean;
 
 import hu.unideb.gergofazekas.entity.PersonEntity;
+import hu.unideb.gergofazekas.entity.RoleEntity;
 import hu.unideb.gergofazekas.service.PersonServiceLocal;
+import hu.unideb.gergofazekas.utility.Role;
 import java.io.Serializable;
 import java.util.List;
-import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import org.apache.logging.log4j.LogManager;
@@ -41,6 +41,34 @@ public class UsersBean implements Serializable {
     @PostConstruct
     public void init() {
         users = personServiceLocal.getPeople();
+    }
+    
+    public boolean isSupervisor(PersonEntity personEntity) {
+        for (RoleEntity role : personEntity.getRoles()) {
+            if (role.getRole() == Role.SUPERVISOR) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isAdmin(PersonEntity personEntity) {
+        for (RoleEntity role : personEntity.getRoles()) {
+            if (role.getRole() == Role.ADMIN) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public void makeSupervisor(Long id) {
+        personServiceLocal.makeSupervisor(id);
+        init();
+    }
+    
+    public void makeUser(Long id) {
+        personServiceLocal.makeUser(id);
+        init();
     }
     
     public void deleteUser(Long id) {

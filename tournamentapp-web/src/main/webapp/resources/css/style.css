@@ -8,6 +8,16 @@ and open the template in the editor.
     Author     : gfazekas
 */
 
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 80px;
+}
+
 .footer {
     position: absolute;
     bottom: 0;
@@ -63,4 +73,16 @@ and open the template in the editor.
     text-decoration: none;
     background-color: transparent;
     -webkit-text-decoration-skip: objects;
+}
+
+.bg-champion {
+    background-color: #ffd700!important
+}
+
+.bg-runnerup {
+    background-color: #ededed!important
+}
+
+.bg-third {
+    background-color: #e8c6a4!important
 }

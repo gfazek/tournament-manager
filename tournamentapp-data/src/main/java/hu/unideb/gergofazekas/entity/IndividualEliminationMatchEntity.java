@@ -8,14 +8,20 @@ package hu.unideb.gergofazekas.entity;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
  *
  * @author gfazekas
  */
 @Entity
-@DiscriminatorValue(value = "Individual")
-public class IndividualMatchEntity extends MatchEntity {
+@DiscriminatorValue(value = "IndividualElimination")
+@NamedQueries({
+    @NamedQuery(name = "IndividualEliminationMatch.getMatchesByRound", 
+            query = "SELECT m FROM IndividualEliminationMatchEntity m WHERE m.tournament.id = :tournamentid and m.round = :round")
+})
+public class IndividualEliminationMatchEntity extends EliminationMatchEntity {
     
     @ManyToOne
     private PersonEntity homeCompetitor;
@@ -23,16 +29,11 @@ public class IndividualMatchEntity extends MatchEntity {
     @ManyToOne
     private PersonEntity awayCompetitor;
 
-    public IndividualMatchEntity() {
+    public IndividualEliminationMatchEntity() {
     }
 
-    public IndividualMatchEntity(int homeScore, int awayScore, PersonEntity homeCompetitor, PersonEntity awayCompetitor) {
-        super(homeScore, awayScore);
-        this.homeCompetitor = homeCompetitor;
-        this.awayCompetitor = awayCompetitor;
-    }
-    
-    public IndividualMatchEntity(PersonEntity homeCompetitor, PersonEntity awayCompetitor) {
+    public IndividualEliminationMatchEntity(PersonEntity homeCompetitor, PersonEntity awayCompetitor, Long round) {
+        super(round);
         this.homeCompetitor = homeCompetitor;
         this.awayCompetitor = awayCompetitor;
     }
@@ -51,11 +52,6 @@ public class IndividualMatchEntity extends MatchEntity {
 
     public void setAwayCompetitor(PersonEntity awayCompetitor) {
         this.awayCompetitor = awayCompetitor;
-    }
-
-    @Override
-    public String toString() {
-        return "IndividualMatchEntity{" + "homeScore=" + getHomeScore() + ", awayScore=" + getAwayScore() + ", homeCompetitor=" + homeCompetitor.getUsername() + ", awayCompetitor=" + awayCompetitor.getUsername() + '}';
     }
     
 }

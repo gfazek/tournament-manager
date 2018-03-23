@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:dt="http://java.sun.com/jsf/composite/components"
+                xmlns:p="http://primefaces.org/ui"
+                template="../template.xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:sec="http://www.springframework.org/security/tags">
+
+    <ui:define name="customHead">
+        <title>Tournament Details</title>
+    </ui:define>
+    <ui:define name="customContent">
+        <h:messages />
+        <div class="container">
+            <h:form id="detailsform" rendered="#{not empty roundRobinDetailBean.tournamentEntity}">
+                <div class="custom-card">
+                    <h4 class="custom-card-header">#{roundRobinDetailBean.tournamentEntity.name}</h4>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h:outputLabel for="tournamentName" value="Name" styleClass="font-weight-bold"/>
+                            </div>
+                            <div class="col-md-3">
+                                <h:outputText id="tournamentName" value="#{roundRobinDetailBean.tournamentEntity.name}"/>
+                            </div>
+                            <div class="col-md-3">
+                                <h:outputLabel for="tournamentType" value="Type" styleClass="font-weight-bold"/>
+                            </div>
+                            <div class="col-md-3">
+                                <h:outputText id="tournamentType" value="Round Robin" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h:outputLabel for="tournamentStatus" value="Status" styleClass="font-weight-bold" />
+                            </div>
+                            <div class="col-md-3">
+                                <h:outputText id="tournamentStatus" value="#{roundRobinDetailBean.tournamentEntity.status}" />
+                            </div>
+                            <div class="col-md-3">
+                                <h:outputLabel for="tournamentNo" value="Competitors (Required/Registered)" styleClass="font-weight-bold" />
+                            </div>
+                            <div class="col-md-3">
+                                <h:outputText id="tournamentNo" value="#{roundRobinDetailBean.tournamentEntity.numberOfCompetitors}/#{roundRobinDetailBean.registeredCompetitors}" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h:outputLabel for="tournamentDescription" value="Description" styleClass="font-weight-bold" />
+                            </div>
+                            <div class="col-md-9">
+                                <h:outputText id="tournamentDescription" value="#{roundRobinDetailBean.tournamentEntity.description}" />
+                            </div>
+                        </div>
+                        <div class="row justify-content-around"> 
+                            <h:panelGroup layout="block" rendered="#{roundRobinDetailBean.showEntry()}">
+                                <div class="col-md-2">
+                                    <h:commandButton id="submit" styleClass="btn btn-lg btn-success" value="ENTRY" action="#{roundRobinDetailBean.submitEntry()}" />
+                                </div>
+                            </h:panelGroup>
+                            <h:panelGroup layout="block" rendered="#{roundRobinDetailBean.showDeleteEntry()}">
+                                <div class="col-md-2">
+                                    <h:commandButton id="deleteEntry" styleClass="btn btn-lg btn-danger" value="DELETE ENTRY" action="#{roundRobinDetailBean.deleteEntry()}" />
+                                </div>
+                            </h:panelGroup>
+                            <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
+                                <h:panelGroup layout="block" rendered="#{(roundRobinDetailBean.tournamentEntity.status eq 'OPEN') or (roundRobinDetailBean.tournamentEntity.status eq 'WAITING_FOR_KICKOFF')}">
+                                    <div class="col-md-2">
+                                        <h:commandButton id="kickoff" styleClass="btn btn-lg btn-primary" value="KICK OFF" action="#{roundRobinDetailBean.kickoff()}"/>
+                                    </div>
+                                </h:panelGroup>
+                            </sec:authorize>
+                        </div>
+                        <p:separator />
+                        <p class="font-weight-bold text-center">Registered competitors</p>
+                        <p:panelGrid style="width: 100%;" id="competitorsgrid">
+                            <f:facet name="header">
+                                <p:row>
+                                    <p:column colspan="1">USERNAME</p:column>
+                                    <p:column colspan="1">FULL NAME</p:column>
+                                    <p:column colspan="1">GENDER</p:column>
+                                    <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
+                                        <p:column rendered="#{(roundRobinDetailBean.tournamentEntity.status eq 'OPEN') or (roundRobinDetailBean.tournamentEntity.status eq 'WAITING_FOR_KICKOFF')}" colspan="1">OPERATION</p:column>
+                                    </sec:authorize>
+                                </p:row>
+                            </f:facet>
+                            <p:repeat value="#{roundRobinDetailBean.competitors}" var="competitor">
+                                <p:row>
+                                    <p:column>
+                                        <h:outputText value="#{competitor.username}" />
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{competitor.firstName} #{competitor.lastName}" />
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{competitor.gender}" />
+                                    </p:column>
+                                    <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
+                                        <p:column rendered="#{(roundRobinDetailBean.tournamentEntity.status eq 'OPEN') or (roundRobinDetailBean.tournamentEntity.status eq 'WAITING_FOR_KICKOFF')}">
+                                            <p:commandLink update="detailsform" actionListener="#{roundRobinDetailBean.deleteEntry(competitor.username)}">
+                                                <h:outputText value="Delete entry" />
+                                            </p:commandLink>
+                                        </p:column>
+                                    </sec:authorize>
+                                </p:row>
+                            </p:repeat>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </h:form>
+            <h:form id="standingsform" rendered="#{not empty roundRobinDetailBean.tournamentEntity and 
+                                                   (roundRobinDetailBean.tournamentEntity.status eq 'IN_PROGRESS' or roundRobinDetailBean.tournamentEntity.status eq 'CLOSED')}">
+                <div class="custom-card">
+                    <h4 class="custom-card-header">Standings</h4>
+                    <div class="card-body">
+                        <p:panelGrid style="width: 100%" id="standingsgrid">
+                            <f:facet name="header">
+                                <p:row>
+                                    <p:column>Position</p:column>
+                                    <p:column>Competitor</p:column>
+                                    <p:column>Played</p:column>
+                                    <p:column>Won</p:column>
+                                    <p:column>Drawn</p:column>
+                                    <p:column>Lost</p:column>
+                                    <p:column>Points</p:column>
+                                </p:row>
+                            </f:facet>
+                            <p:repeat value="#{roundRobinDetailBean.standings}" var="standing" varStatus="standingStatus">
+                                <p:row>
+                                    <p:column rendered="#{standingStatus.index + 1 eq 1}" style="font-weight: bold; text-align: center" styleClass="bg-champion">#{standingStatus.index + 1}.</p:column>
+                                    <p:column rendered="#{standingStatus.index + 1 eq 2}" style="font-weight: bold; text-align: center" styleClass="bg-runnerup">#{standingStatus.index + 1}.</p:column>
+                                    <p:column rendered="#{standingStatus.index + 1 eq 3}" style="font-weight: bold; text-align: center" styleClass="bg-third">#{standingStatus.index + 1}.</p:column>
+                                    <p:column rendered="#{standingStatus.index + 1 gt 3}" style="font-weight: bold; text-align: center">#{standingStatus.index + 1}.</p:column>
+                                    <p:column style="font-weight: bold; text-align: center">#{standing.personEntity.username}</p:column>
+                                    <p:column style="font-weight: bold; text-align: center">#{standing.played}</p:column>
+                                    <p:column style="font-weight: bold; text-align: center">#{standing.won}</p:column>
+                                    <p:column style="font-weight: bold; text-align: center">#{standing.drawn}</p:column>
+                                    <p:column style="font-weight: bold; text-align: center">#{standing.lost}</p:column>
+                                    <p:column style="font-weight: bold; text-align: center">#{standing.points}</p:column>
+                                </p:row>
+                            </p:repeat>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </h:form>
+            <h:form id="matchesform" rendered="#{not empty roundRobinDetailBean.tournamentEntity and 
+                                                 (roundRobinDetailBean.tournamentEntity.status eq 'IN_PROGRESS' or roundRobinDetailBean.tournamentEntity.status eq 'CLOSED')}">
+                <div class="custom-card">
+                    <h4 class="custom-card-header">Matches</h4>
+                    <div class="card-body">
+                        <p:panelGrid style="width: 100%" id="matchesgrid">
+                            <f:facet name="header">
+                                <p:row>
+                                    <p:column colspan="2">COMPETITORS</p:column>
+                                    <p:column colspan="2">RESULT/STATUS</p:column>
+                                </p:row>
+                            </f:facet>
+                            <p:repeat value="#{roundRobinDetailBean.matches}" var="match">
+                                <p:row>
+                                    <p:column colspan="3" style="font-weight: bold; text-align: center">#{match.homeCompetitor.username}</p:column>
+                                    <p:column colspan="1" rendered="#{match.status eq 'FINISHED'}" style="font-weight: bold; text-align: center">#{match.homeScore}</p:column>
+                                    <p:column colspan="2" rowspan="2" rendered="#{match.status eq 'NEW'}" style="font-weight: bold; text-align: center; border-bottom-width: 3px;">
+                                        <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
+                                            <p:commandButton update=":scheduleform:schedulepanel" oncomplete="PF('scheduledlgwdg').show()" value="Schedule" action="#{roundRobinDetailBean.setSelectedMatch(match)}"/>
+                                        </sec:authorize>
+                                        <sec:authorize access="!hasRole('ROLE_SUPERVISOR')">
+                                            NOT SCHEDULED YET
+                                        </sec:authorize>
+                                    </p:column>
+                                    <p:column colspan="2" rowspan="2" rendered="#{match.status eq 'SCHEDULED'}" style="font-weight: bold; text-align: center; border-bottom-width: 3px;">
+                                        <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
+                                            <p:commandButton update=":resultform:resultpanel" oncomplete="PF('resultdlgwdg').show()" value="Add result" action="#{roundRobinDetailBean.setSelectedMatch(match)}"/>
+                                            <p:commandButton update=":scheduleform:schedulepanel" oncomplete="PF('scheduledlgwdg').show()" value="Edit Schedule" action="#{roundRobinDetailBean.setSelectedMatch(match)}"/>
+                                        </sec:authorize>
+                                        <h:outputText value="Will be played at, " />
+                                        <h:outputText value="#{match.time}">
+                                            <f:convertDateTime pattern="yyyy.MM.dd HH:mm" />
+                                        </h:outputText>
+                                    </p:column>
+                                </p:row>
+                                <p:row> 
+                                    <p:column colspan="3" style="font-weight: bold; text-align: center; border-bottom-width: 3px;">#{match.awayCompetitor.username}</p:column>
+                                    <p:column colspan="1" rendered="#{match.status eq 'FINISHED'}" style="font-weight: bold; text-align: center; border-bottom-width: 3px;">#{match.awayScore}</p:column>
+                                </p:row>
+                            </p:repeat>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </h:form>
+
+            <p:dialog header="Add result" widgetVar="resultdlgwdg" resizable="false" id="resultdlg">
+                <h:form id="resultform">
+                    <h:panelGrid columns="2" cellpadding="5" id="resultpanel">
+                        <p:outputLabel for="homeScore" value="#{roundRobinDetailBean.selectedMatch.homeCompetitor.username}: " />
+                        <p:inputNumber id="homeScore" value="#{roundRobinDetailBean.homeScore}" />
+                        <p:outputLabel for="awayScore" value="#{roundRobinDetailBean.selectedMatch.awayCompetitor.username}: " />
+                        <p:inputNumber id="awayScore" value="#{roundRobinDetailBean.awayScore}" />
+                        <f:facet name="footer">
+                            <p:commandButton update=":matchesform:matchesgrid :standingsform:standingsgrid :detailsform" value="Register result" action="#{roundRobinDetailBean.registerResult}" oncomplete="PF('resultdlgwdg').hide();" />
+                        </f:facet>  
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>
+            <p:dialog header="Add schedule" widgetVar="scheduledlgwdg" resizable="false" id="scheduledlg">
+                <h:form id="scheduleform">
+                    <h:panelGrid columns="2" cellpadding="5" id="schedulepanel">
+                        <p:outputLabel for="startTime" value="Start time: " />
+                        <p:calendar id="startTime" value="#{roundRobinDetailBean.matchTime}" pattern="MM/dd/yyyy HH:mm" showOn="button" />
+                        <f:facet name="footer">
+                            <p:commandButton update=":matchesform:matchesgrid" value="Set match time" action="#{roundRobinDetailBean.scheduleMatch}" oncomplete="PF('scheduledlgwdg').hide();" />
+                        </f:facet>  
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>
+            <p:messages />
+        </div>
+    </ui:define>
+</ui:composition>

@@ -8,22 +8,15 @@ package hu.unideb.gergofazekas.service;
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.RoleEntity;
 import hu.unideb.gergofazekas.service.util.PersonPasswordEncoder;
-import hu.unideb.gergofazekas.utility.Gender;
 import hu.unideb.gergofazekas.utility.Role;
 import java.util.List;
-import java.util.logging.Level;
 import javax.ejb.Stateless;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  *
@@ -92,8 +85,25 @@ public class PersonBean implements PersonServiceLocal {
 
     @Override
     public void updatePerson(PersonEntity personEntity) {
+        personEntity.setPassword(encoder.encode(personEntity.getPassword()));
         logger.debug("Updating person: {}", personEntity);
-//        em.merge(personEntity);
+        em.merge(personEntity);
+    }
+
+    @Override
+    public void makeSupervisor(Long id) {
+        PersonEntity personEntity = em.find(PersonEntity.class, id);
+        RoleEntity supervisorRole = em.createNamedQuery("Role.findByName", RoleEntity.class).setParameter("rolename", Role.SUPERVISOR).getSingleResult();
+        personEntity.getRoles().add(supervisorRole);
+        supervisorRole.getPeople().add(personEntity);
+    }
+
+    @Override
+    public void makeUser(Long id) {
+        PersonEntity personEntity = em.find(PersonEntity.class, id);
+        RoleEntity supervisorRole = em.createNamedQuery("Role.findByName", RoleEntity.class).setParameter("rolename", Role.SUPERVISOR).getSingleResult();
+        personEntity.getRoles().remove(supervisorRole);
+        supervisorRole.getPeople().remove(personEntity);
     }
 
 }

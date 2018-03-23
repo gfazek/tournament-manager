@@ -7,7 +7,6 @@ package hu.unideb.gergofazekas.service;
 
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.RoleEntity;
-import hu.unideb.gergofazekas.utility.Role;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Named;

@@ -18,14 +18,41 @@ and open the template in the editor.
     </ui:define>
     <ui:define name="customContent">
         <div class="jumbotron">
-            <h1 class="display-3">Have you ever thought about creating and managing your own tournaments?</h1>
-            <p class="lead">This is the application you're looking for. </p>
-            <hr class="my-4"/>
             <sec:authorize access="isAnonymous()"> 
+                <h1 class="display-3">Have you ever thought about creating and managing your own tournaments?</h1>
+                <p class="lead">This is the application you're looking for. </p>
+                <hr class="my-4"/>
+
                 <p>Feel free to register or if you've already had an account log in.</p>
                 <p class="lead">
                     <a class="btn btn-primary btn-lg" href="registration.xhtml" role="button">Register</a>
+                    <a class="btn btn-primary btn-lg" href="login.xhtml" role="button">Log in</a>
                 </p>
+            </sec:authorize>
+            <sec:authorize access="isAuthenticated()">
+                <h1 class="display-3">Welcome, #{request.userPrincipal.name}!</h1>
+                <p class="lead">Check your dashboard options below</p>
+                <hr class="my-4"/>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Profile</h5>
+                                <p class="card-text">Edit your account</p>
+                                <a href="secured/profile.xhtml" class="btn btn-info">Go to my profile</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Tournaments</h5>
+                                <p class="card-text">View the tournaments list. You are able to submit an entry to the open tournaments and compete with others!</p>
+                                <a href="secured/tournaments.xhtml" class="btn btn-info">Tournaments lists</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </sec:authorize>
         </div>
     </ui:define>
