@@ -52,6 +52,15 @@ public class UsersBean implements Serializable {
         return false;
     }
     
+    public boolean isAdmin(PersonEntity personEntity) {
+        for (RoleEntity role : personEntity.getRoles()) {
+            if (role.getRole() == Role.ADMIN) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public void makeSupervisor(Long id) {
         personServiceLocal.makeSupervisor(id);
         init();

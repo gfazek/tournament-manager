@@ -73,7 +73,7 @@ and open the template in the editor.
                                 </div>
                             </h:panelGroup>
                             <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
-                                <h:panelGroup layout="block" rendered="#{roundRobinDetailBean.tournamentEntity.status eq 'OPEN'}">
+                                <h:panelGroup layout="block" rendered="#{(roundRobinDetailBean.tournamentEntity.status eq 'OPEN') or (roundRobinDetailBean.tournamentEntity.status eq 'WAITING_FOR_KICKOFF')}">
                                     <div class="col-md-2">
                                         <h:commandButton id="kickoff" styleClass="btn btn-lg btn-primary" value="KICK OFF" action="#{roundRobinDetailBean.kickoff()}"/>
                                     </div>
@@ -89,7 +89,7 @@ and open the template in the editor.
                                     <p:column colspan="1">FULL NAME</p:column>
                                     <p:column colspan="1">GENDER</p:column>
                                     <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
-                                        <p:column rendered="#{roundRobinDetailBean.tournamentEntity.status eq 'OPEN'}" colspan="1">OPERATION</p:column>
+                                        <p:column rendered="#{(roundRobinDetailBean.tournamentEntity.status eq 'OPEN') or (roundRobinDetailBean.tournamentEntity.status eq 'WAITING_FOR_KICKOFF')}" colspan="1">OPERATION</p:column>
                                     </sec:authorize>
                                 </p:row>
                             </f:facet>
@@ -105,7 +105,7 @@ and open the template in the editor.
                                         <h:outputText value="#{competitor.gender}" />
                                     </p:column>
                                     <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
-                                        <p:column rendered="#{roundRobinDetailBean.tournamentEntity.status eq 'OPEN'}">
+                                        <p:column rendered="#{(roundRobinDetailBean.tournamentEntity.status eq 'OPEN') or (roundRobinDetailBean.tournamentEntity.status eq 'WAITING_FOR_KICKOFF')}">
                                             <p:commandLink update="detailsform" actionListener="#{roundRobinDetailBean.deleteEntry(competitor.username)}">
                                                 <h:outputText value="Delete entry" />
                                             </p:commandLink>

@@ -90,13 +90,19 @@ public class TournamentBean implements TournamentServiceLocal {
         logger.debug("Persisting entry: tournamentid: {} | usernsme: {}", tournamentId, username);
         TournamentEntity tournamentEntity = findTournament(tournamentId);
         PersonEntity personEntity = personServiceLocal.findByUsername(username);
+        int numberOfCompetitors = 0;
         if (isIndividualRoundRobin(tournamentEntity)) {
             IndividualRoundRobinTournamentEntity tmp = (IndividualRoundRobinTournamentEntity) tournamentEntity;
             tmp.getPeople().add(personEntity);
+            numberOfCompetitors = tmp.getPeople().size();
             personEntity.getRoundRobinTournaments().add((IndividualRoundRobinTournamentEntity) tournamentEntity);
         } else if (isIndividualElimination(tournamentEntity)) {
             IndividualEliminationTournamentEntity iet = (IndividualEliminationTournamentEntity) tournamentEntity;
             iet.getPeople().add(personEntity);
+            numberOfCompetitors = iet.getPeople().size();
+        }
+        if (numberOfCompetitors == tournamentEntity.getNumberOfCompetitors()) {
+            tournamentEntity.setStatus(TournamentStatus.WAITING_FOR_KICKOFF);
         }
     }
 

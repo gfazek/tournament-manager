@@ -10,5 +10,5 @@ package hu.unideb.gergofazekas.utility;
  * @author gfazekas
  */
 public enum TournamentStatus {
-    OPEN, IN_PROGRESS, CLOSED
+    OPEN, WAITING_FOR_KICKOFF, IN_PROGRESS, CLOSED
 }
