@@ -179,13 +179,12 @@ and open the template in the editor.
                                     <p:column colspan="2" rowspan="2" rendered="#{match.status eq 'SCHEDULED'}" style="font-weight: bold; text-align: center; border-bottom-width: 3px;">
                                         <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
                                             <p:commandButton update=":resultform:resultpanel" oncomplete="PF('resultdlgwdg').show()" value="Add result" action="#{roundRobinDetailBean.setSelectedMatch(match)}"/>
+                                            <p:commandButton update=":scheduleform:schedulepanel" oncomplete="PF('scheduledlgwdg').show()" value="Edit Schedule" action="#{roundRobinDetailBean.setSelectedMatch(match)}"/>
                                         </sec:authorize>
-                                        <!--<sec:authorize access="!hasRole('ROLE_SUPERVISOR')">-->
-                                            <h:outputText value="Will be played at, " />
-                                            <h:outputText value="#{match.time}">
-                                                <f:convertDateTime pattern="yyyy.MM.dd HH:mm" />
-                                            </h:outputText>
-                                        <!--</sec:authorize>-->
+                                        <h:outputText value="Will be played at, " />
+                                        <h:outputText value="#{match.time}">
+                                            <f:convertDateTime pattern="yyyy.MM.dd HH:mm" />
+                                        </h:outputText>
                                     </p:column>
                                 </p:row>
                                 <p:row> 
