@@ -6,7 +6,9 @@
 package hu.unideb.gergofazekas.web.bean;
 
 import hu.unideb.gergofazekas.web.utility.CompetitorType;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -22,6 +24,7 @@ public class TournamentVo {
     private int drawPoint;
     private int loosePoint;
     private int numberOfCompetitors;
+    private List<String> drawStrategy = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -85,6 +88,14 @@ public class TournamentVo {
 
     public void setNumberOfCompetitors(int numberOfCompetitors) {
         this.numberOfCompetitors = numberOfCompetitors;
+    }
+
+    public List<String> getDrawStrategy() {
+        return drawStrategy;
+    }
+
+    public void setDrawStrategy(List<String> drawStrategy) {
+        this.drawStrategy = drawStrategy;
     }
     
 }

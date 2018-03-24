@@ -13,7 +13,6 @@
         <class>hu.unideb.gergofazekas.entity.EliminationTournamentEntity</class>
         <class>hu.unideb.gergofazekas.entity.IndividualRoundRobinTournamentEntity</class>
         <class>hu.unideb.gergofazekas.entity.IndividualEliminationTournamentEntity</class>
-        <class>hu.unideb.gergofazekas.entity.TeamRoundRobinTournamentEntity</class>
         <class>hu.unideb.gergofazekas.entity.IndividualMatchEntity</class>
         <class>hu.unideb.gergofazekas.entity.EliminationMatchEntity</class>
         <class>hu.unideb.gergofazekas.entity.IndividualEliminationMatchEntity</class>

@@ -13,6 +13,7 @@ import hu.unideb.gergofazekas.entity.MatchEntity;
 import hu.unideb.gergofazekas.entity.PersonEntity;
 import hu.unideb.gergofazekas.entity.RoleEntity;
 import hu.unideb.gergofazekas.entity.TournamentEntity;
+import hu.unideb.gergofazekas.utility.DrawStrategy;
 import hu.unideb.gergofazekas.utility.Gender;
 import hu.unideb.gergofazekas.utility.MatchStatus;
 import hu.unideb.gergofazekas.utility.Role;
@@ -22,6 +23,7 @@ import java.time.Month;
 import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TreeMap;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
@@ -143,13 +145,21 @@ public class InitializerBean {
 
     private void initLigue1() {
         logger.info("Initializing Ligue1...");
-        TournamentEntity ligue1 = new IndividualRoundRobinTournamentEntity(3, 0, 1, "Ligue 1", "French first class championship", 20, calendarToDate(2018, 2, 1));
+        TreeMap<Integer, DrawStrategy> drawstrategy = new TreeMap<>();
+        drawstrategy.put(1, DrawStrategy.WIN);
+        drawstrategy.put(3, DrawStrategy.BATTLE);
+        drawstrategy.put(2, DrawStrategy.SCORE);
+        TournamentEntity ligue1 = new IndividualRoundRobinTournamentEntity(3, 0, 1, "Ligue 1", "French first class championship", 20, calendarToDate(2018, 2, 1), drawstrategy);
         tournamentServiceLocal.persistTournament(ligue1);
     }
 
     private void initPremierLeague(PersonEntity[] people) {
         logger.info("Initializing Premier League...");
-        TournamentEntity premierLeague = new IndividualRoundRobinTournamentEntity(3, 0, 1, "Premier League", "English first class championship", 5, calendarToDate(2018, 2, 1));
+        TreeMap<Integer, DrawStrategy> drawstrategy = new TreeMap<>();
+        drawstrategy.put(2, DrawStrategy.WIN);
+        drawstrategy.put(1, DrawStrategy.BATTLE);
+        drawstrategy.put(3, DrawStrategy.SCORE);
+        IndividualRoundRobinTournamentEntity premierLeague = new IndividualRoundRobinTournamentEntity(3, 0, 1, "Premier League", "English first class championship", 5, calendarToDate(2018, 2, 1), drawstrategy);
         premierLeague.setStatus(TournamentStatus.CLOSED);
         tournamentServiceLocal.persistTournament(premierLeague);
 

@@ -17,6 +17,7 @@ import hu.unideb.gergofazekas.service.TournamentServiceLocal;
 import hu.unideb.gergofazekas.utility.CompetitorType;
 import hu.unideb.gergofazekas.utility.TournamentStatus;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -72,7 +73,8 @@ public class RoundRobinDetailBean implements Serializable {
         standings = standingServiceLocal.findByTournament(tournamentEntity.getId()).stream()
                 .map(e -> (IndividualRoundRobinStandingEntity) e)
                 .collect(Collectors.toList());
-        standings.sort(Comparator.comparing(IndividualRoundRobinStandingEntity::getPoints).reversed());
+//        standings.sort(Comparator.comparing(IndividualRoundRobinStandingEntity::getPoints).reversed());
+          Collections.sort(standings);
         registeredCompetitors = fetchRegisteredCompetitors();
         if (tournamentEntity.getCompetitorType() == CompetitorType.PLAYER) {
             IndividualRoundRobinTournamentEntity irrt = (IndividualRoundRobinTournamentEntity) tournamentEntity;

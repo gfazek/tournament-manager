@@ -75,6 +75,11 @@ body {
     -webkit-text-decoration-skip: objects;
 }
 
+.ui-orderlist .ui-orderlist-list {
+    height: 100px;
+    width: 250px;
+}
+
 .bg-champion {
     background-color: #ffd700!important
 }

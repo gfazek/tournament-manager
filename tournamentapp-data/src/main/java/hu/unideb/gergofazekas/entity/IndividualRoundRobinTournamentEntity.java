@@ -6,10 +6,12 @@
 package hu.unideb.gergofazekas.entity;
 
 import hu.unideb.gergofazekas.utility.CompetitorType;
+import hu.unideb.gergofazekas.utility.DrawStrategy;
 import hu.unideb.gergofazekas.utility.TournamentType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -38,8 +40,8 @@ public class IndividualRoundRobinTournamentEntity extends RoundRobinTournamentEn
     public IndividualRoundRobinTournamentEntity() {
     }
 
-    public IndividualRoundRobinTournamentEntity(int winPoint, int loosePoint, int drawPoint, String name, String description, int numberOfCompetitors, Date start) {
-        super(winPoint, loosePoint, drawPoint, name, description, CompetitorType.PLAYER, TournamentType.ROUNDROBIN, numberOfCompetitors, start);
+    public IndividualRoundRobinTournamentEntity(int winPoint, int loosePoint, int drawPoint, String name, String description, int numberOfCompetitors, Date start, Map<Integer, DrawStrategy> drawStrategy) {
+        super(winPoint, loosePoint, drawPoint, name, description, CompetitorType.PLAYER, TournamentType.ROUNDROBIN, numberOfCompetitors, start, drawStrategy);
         this.people = new ArrayList<>();
     }
 

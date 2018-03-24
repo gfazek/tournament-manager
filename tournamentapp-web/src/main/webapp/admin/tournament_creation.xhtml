@@ -83,6 +83,12 @@ and open the template in the editor.
                                     <h:inputText id="loosepoint" value="#{tournamentRegistrationBean.tournamentVo.loosePoint}" required="true" requiredMessage="Loose point is required." styleClass="form-control"/>
                                 </div>
                             </div>
+                            <div class="form-row">
+                                <div class="form-group col-sm-6">
+                                    <h:outputLabel for="drawstrategy" value="Draw Strategy" styleClass="col-form-label"/>
+                                    <p:orderList id="drawstrategy" value="#{tournamentRegistrationBean.tournamentVo.drawStrategy}" var="drawstrategy" controlsLocation="none" itemLabel="#{drawstrategy}" itemValue="#{drawstrategy}" />
+                                </div>
+                            </div>
                             <div class="row justify-content-end">
                                 <div class="col-4">
                                     <h:commandButton id="submit" styleClass="btn btn-primary" value="CREATE" action="#{tournamentRegistrationBean.createTournament()}"/>
