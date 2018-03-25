@@ -136,4 +136,9 @@ public class MatchBean implements MatchServiceLocal {
         return em.createNamedQuery("IndividualEliminationMatch.getMatchesByRound", IndividualEliminationMatchEntity.class).setParameter("tournamentid", tournamentId).setParameter("round", round).getResultList();
     }
 
+    @Override
+    public List<IndividualMatchEntity> findByCompetitors(IndividualRoundRobinTournamentEntity tournament, PersonEntity homeCompetitor, PersonEntity awayCompetitor) {
+        return em.createNamedQuery("IndividualMatchEntity.findByCompetitors", IndividualMatchEntity.class).setParameter("tournamentid", tournament.getId()).setParameter("homecompetitorid", homeCompetitor.getId()).setParameter("awaycompetitorid", awayCompetitor.getId()).getResultList();
+    }
+
 }

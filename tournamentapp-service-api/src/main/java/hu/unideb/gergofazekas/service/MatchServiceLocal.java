@@ -32,5 +32,6 @@ public interface MatchServiceLocal {
     void registerMatchResult(IndividualEliminationMatchEntity matchEntity, int homeScore, int awayScore);
     List<IndividualEliminationMatchEntity> getMatchesByRound(Long tournamentId, Long round);
     MatchEntity findOne(Long id);
+    List<IndividualMatchEntity> findByCompetitors(IndividualRoundRobinTournamentEntity tournament, PersonEntity homeCompetitor, PersonEntity awayCompetitor);
     
 }

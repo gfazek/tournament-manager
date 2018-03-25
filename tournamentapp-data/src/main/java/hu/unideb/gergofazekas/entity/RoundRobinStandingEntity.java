@@ -5,9 +5,6 @@
  */
 package hu.unideb.gergofazekas.entity;
 
-import hu.unideb.gergofazekas.utility.DrawStrategy;
-import java.util.Map;
-import java.util.TreeMap;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -17,7 +14,7 @@ import javax.persistence.MappedSuperclass;
  * @author gfazekas
  */
 @MappedSuperclass
-public abstract class RoundRobinStandingEntity extends StandingEntity implements Comparable<RoundRobinStandingEntity> {
+public abstract class RoundRobinStandingEntity extends StandingEntity {
 
     @Basic(optional = false)
     @Column(name = "PLAYED")
@@ -89,34 +86,6 @@ public abstract class RoundRobinStandingEntity extends StandingEntity implements
 
     public void setPoints(int points) {
         this.points = points;
-    }
-
-    @Override
-    public int compareTo(RoundRobinStandingEntity o) {
-        RoundRobinTournamentEntity rrt = (RoundRobinTournamentEntity) getTournamentEntity();
-        TreeMap<Integer, DrawStrategy> drawstrategies = new TreeMap<>(rrt.getDrawStrategy());
-        if (this.points > o.points) {
-            return -1;
-        } else if (this.points < o.points) {
-            return 1;
-        } else {
-            for (Map.Entry<Integer, DrawStrategy> drawstrategy : drawstrategies.entrySet()) {
-                switch (drawstrategy.getValue()) {
-                    case BATTLE:
-                        break;
-                    case SCORE:
-                        break;
-                    case WIN:
-                        if (this.won > o.won) {
-                            return -1;
-                        } else if (this.won < o.won) {
-                            return 1;
-                        }
-                        break;
-                }
-            }
-        }
-        return 0;
     }
 
     @Override
